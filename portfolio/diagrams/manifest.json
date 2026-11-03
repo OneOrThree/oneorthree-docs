@@ -260,11 +260,23 @@
     "detailHref": "/spec/system-architecture",
     "versions": [
       {
-        "id": "v8",
-        "label": "v8 · 현재",
+        "id": "v9",
+        "label": "v9 · 현재",
         "date": "2026-11-03",
         "artifactId": "04-system",
-        "status": "컨테이너·포트·로그 경로",
+        "status": "S3 수집 범위·확인 상태 구분",
+        "summary": "호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "V2 시스템 로그의 Fluent Bit→S3 경로는 구현·설정 ON입니다. 별도 user-activity 파일은 V2 배포 코드에 업로더 기동이 없지만 호스트 설치·실제 전송은 미확인으로 표시합니다. AWS SSO 만료로 최신 객체는 직접 확인하지 못했습니다.",
+        "detailHref": "/spec/system-architecture",
+        "sourceHref": "https://github.com/OneOrThree/cattus-infra/tree/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2"
+      },
+      {
+        "id": "v8",
+        "label": "v8 · 이전",
+        "date": "2026-11-03",
+        "artifactId": "04-system.v8",
+        "status": "파일 업로더 상태 표현 정정 전",
         "summary": "호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
         "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
         "evidenceSummary": "phone의 운영 Infra revision 변수에 고정된 설정을 대조했습니다. 설정상 활성화와 실제 수신 상태를 구분하며, 이번 갱신은 AWS 실행 상태를 새로 측정하지 않습니다.",
@@ -410,11 +422,23 @@
     "format": "html",
     "versions": [
       {
-        "id": "v1",
-        "label": "v1 · 현재",
+        "id": "v2",
+        "label": "v2 · 현재",
         "date": "2026-11-03",
         "artifactId": "06-logging",
-        "status": "수집·보관·조회·누락 범위",
+        "status": "S3 수집 범위·확인 상태 구분",
+        "summary": "네 서버·nginx의 S3 업로드 경로와 별도 사용자 행동 파일을 구분하고, 파일 업로더의 운영 상태는 미확인으로 정정합니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "V2 시스템 로그의 Fluent Bit→S3 경로는 구현·설정 ON입니다. 별도 user-activity 파일은 V2 배포 코드에 업로더 기동이 없지만 호스트 설치·실제 전송은 미확인으로 표시합니다. AWS SSO 만료로 최신 객체는 직접 확인하지 못했습니다.",
+        "detailHref": "/spec/logging-and-observability",
+        "sourceHref": "https://github.com/OneOrThree/phone/tree/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability"
+      },
+      {
+        "id": "v1",
+        "label": "v1 · 이전",
+        "date": "2026-11-03",
+        "artifactId": "06-logging.v1",
+        "status": "파일 업로더 상태 표현 정정 전",
         "summary": "실제 수집 입력, Agent·Fluent Bit 분기, 저장소·버퍼·보관 기간, request/trace/event ID 연결을 설명합니다.",
         "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
         "evidenceSummary": "Fluent Bit·Loki·S3는 설정상 ON, Grafana는 OFF입니다. Data 사용자 행동 파일의 V2 업로더 부재를 표시합니다. 최신 운영 수신·Athena 적용 상태는 확인하지 않았습니다.",

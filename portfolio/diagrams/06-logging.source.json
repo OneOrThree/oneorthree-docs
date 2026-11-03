@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
   "title": "Cattus · 로그 수집·보관·요청 추적",
   "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
@@ -219,11 +219,11 @@
         "/app/logs/user-activity.log",
         "호스트 /var/log/catus-V2/data-api",
         "로컬 30일 · 1GiB cap",
-        "V2 S3 업로더 없음"
+        "V2 파일 업로더: 운영 설치 미확인"
       ],
       "kind": "future",
-      "stage": "현재 Fluent Bit·Datadog stdout 수집 밖",
-      "state": "off"
+      "stage": "위 stdout 수집과 별개 · 배포 코드에 기동 없음",
+      "state": "unknown"
     },
     {
       "id": "httpIds",

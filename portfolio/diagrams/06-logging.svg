@@ -16,7 +16,7 @@
 <text x="64" y="1161" font-size="16" fill="#4d5a66" font-weight="400">Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인</text>
 <rect x="40" y="1630" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="1664" font-size="19" fill="#334d61" font-weight="700">04 · 조회 도구·수집 한계·빠진 범위</text>
-<text x="64" y="1691" font-size="16" fill="#4d5a66" font-weight="400">점선 상자는 비활성 또는 미구현 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.</text>
+<text x="64" y="1691" font-size="16" fill="#4d5a66" font-weight="400">점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.</text>
 <rect x="40" y="2070" width="1680" height="660" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="2104" font-size="19" fill="#334d61" font-weight="700">05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름</text>
 <text x="64" y="2131" font-size="16" fill="#4d5a66" font-weight="400">request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다.</text>
@@ -184,14 +184,14 @@
 <text x="675" y="1945" font-size="14" fill="#607583" font-weight="700">기존 canary 관찰 · 새 트래픽 생성 불필요</text>
 </g>
 <g data-cell-id="ua">
-<rect x="1240" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="8 5"/>
+<rect x="1240" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
 <text x="1260" y="1760" font-size="21" fill="#172b3a" font-weight="700">Data user-activity · 별도 파일</text>
 <text x="1260" y="1789" font-size="16" fill="#4d5a66" font-weight="400">additivity=false · stdout에 안 섞임</text>
 <text x="1260" y="1813" font-size="16" fill="#4d5a66" font-weight="400">/app/logs/user-activity.log</text>
 <text x="1260" y="1837" font-size="16" fill="#4d5a66" font-weight="400">호스트 /var/log/catus-V2/data-api</text>
 <text x="1260" y="1861" font-size="16" fill="#4d5a66" font-weight="400">로컬 30일 · 1GiB cap</text>
-<text x="1260" y="1885" font-size="16" fill="#4d5a66" font-weight="400">V2 S3 업로더 없음</text>
-<text x="1260" y="1945" font-size="14" fill="#a67b26" font-weight="700">현재 Fluent Bit·Datadog stdout 수집 밖</text>
+<text x="1260" y="1885" font-size="16" fill="#4d5a66" font-weight="400">V2 파일 업로더: 운영 설치 미확인</text>
+<text x="1260" y="1945" font-size="14" fill="#a67b26" font-weight="700">위 stdout 수집과 별개 · 배포 코드에 기동 없음</text>
 </g>
 <g data-cell-id="httpIds">
 <rect x="70" y="2170" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>

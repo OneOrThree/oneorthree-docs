@@ -63,7 +63,7 @@ def system():
            '설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다.')
     box(d, 'sources', 70, 1790, '실제 수집 입력', ['네 JVM: JSON stdout + DD tracer', 'nginx: JSON access / stderr error', 'Docker json-file: 50MiB × 4', '기타 3호스트: 각자 Datadog Agent'], 'Data user-activity 파일은 별도 경로', h=230)
     box(d, 'collectors', 655, 1790, '두 수집 경로', ['Datadog: Docker 로그·APM·지표', 'APM :8126 / DogStatsD UDP :8125', 'OpenMetrics: 각 앱 :9091 allowlist', 'Fluent Bit: 허용한 앱·nginx만 tail', 'fluent_bit_state: offset·디스크 버퍼'], '앱 stdout 파일을 두 수집기가 각각 읽음', 'external', h=230)
-    box(d, 'sinks', 1240, 1790, '검색·보관', ['Datadog SaaS: 로그·APM·지표', 'Loki: 127.0.0.1:3100 · 로컬 7일', 'S3: system_log/v2/ · 만료 90일', 'Grafana OFF · 조회는 로그 안내 참고', 'user-activity S3 업로더는 V2에 없음'], '상세 도면: 로그·추적 / 수신 상태 미확인', 'data', h=230)
+    box(d, 'sinks', 1240, 1790, '검색·보관', ['Datadog SaaS: 로그·APM·지표', 'Loki: 127.0.0.1:3100 · 로컬 7일', 'S3: system_log/v2/ · 만료 90일', 'Grafana OFF · 조회는 로그 안내 참고', 'user-activity 파일 전송: 운영 미확인'], '상세 도면: 로그·추적 / 수신 상태 미확인', 'data', h=230)
     edge(d, 'collectLogs', 'sources', 'collectors', [(520,1890),(655,1890)], '각각 수집', (588,1880))
     edge(d, 'storeLogs', 'collectors', 'sinks', [(1105,1890),(1240,1890)], '분기 전송', (1172,1880))
 
@@ -115,10 +115,10 @@ def logging():
     edge(d, 's3Output', 'fluent', 's3', [(1105,870),(1170,870),(1170,1175),(1465,1175),(1465,1210)], '복제 → S3 HTTPS', (1430,1165))
 
     d.band(40, 1630, 1680, 400, '04 · 조회 도구·수집 한계·빠진 범위',
-           '점선 상자는 비활성 또는 미구현 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.')
+           '점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.')
     box(d, 'grafana', 70, 1730, 'Grafana · OFF', ['구성은 있으나 배포 스위치 false', '활성화 시 Loki datasource 사용', 'Cloudflare Access JWT · JWKS/aud', '현재 Grafana 접속 주소 없음'], '대신 Datadog / 승인된 Loki 접근 사용', 'future', 'off', h=230)
     box(d, 'buffer', 655, 1730, '유실·지연을 판별할 지점', ['Loki 엔진 버퍼 128MiB', 'S3 엔진 64MiB + store_dir 64MiB', '상한·회전·재시도 소진 시 유실 가능', 'canary 60초 간격 · 목적지별 도착 확인', 'canary 도착 ≠ 모든 앱 로그 수집 성공'], '기존 canary 관찰 · 새 트래픽 생성 불필요', 'external', h=230)
-    box(d, 'ua', 1240, 1730, 'Data user-activity · 별도 파일', ['additivity=false · stdout에 안 섞임', '/app/logs/user-activity.log', '호스트 /var/log/catus-V2/data-api', '로컬 30일 · 1GiB cap', 'V2 S3 업로더 없음'], '현재 Fluent Bit·Datadog stdout 수집 밖', 'future', 'off', h=230)
+    box(d, 'ua', 1240, 1730, 'Data user-activity · 별도 파일', ['additivity=false · stdout에 안 섞임', '/app/logs/user-activity.log', '호스트 /var/log/catus-V2/data-api', '로컬 30일 · 1GiB cap', 'V2 파일 업로더: 운영 설치 미확인'], '위 stdout 수집과 별개 · 배포 코드에 기동 없음', 'future', 'unknown', h=230)
     edge(d, 'grafanaQuery', 'grafana', 'loki', [(295,1730),(295,1540),(880,1540),(880,1460)], '활성화할 때 Loki 조회', (610,1530), 'off')
 
     d.band(40, 2070, 1680, 660, '05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름',

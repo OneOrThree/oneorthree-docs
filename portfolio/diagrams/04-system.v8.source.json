@@ -1,0 +1,891 @@
+{
+  "version": 8,
+  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "title": "Cattus · 운영 호스트·컨테이너·포트",
+  "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
+  "nodes": [
+    {
+      "id": "client",
+      "x": 70,
+      "y": 225,
+      "w": 450,
+      "h": 190,
+      "title": "모바일 앱",
+      "lines": [
+        "HTTPS REST · WSS",
+        "catus-api-v2.oneorthree.world",
+        "단체 채팅: REST + 10초 폴링"
+      ],
+      "kind": "external",
+      "stage": "React Native · Expo",
+      "state": "code"
+    },
+    {
+      "id": "cf",
+      "x": 655,
+      "y": 225,
+      "w": 450,
+      "h": 190,
+      "title": "Cloudflare",
+      "lines": [
+        "DNS · 프록시",
+        "Origin 인증서로 nginx에 HTTPS",
+        "ALB 없이 EC2 nginx로 진입"
+      ],
+      "kind": "external",
+      "stage": "앱 / 백오피스 호스트 별도",
+      "state": "code"
+    },
+    {
+      "id": "nginx",
+      "x": 1240,
+      "y": 225,
+      "w": 450,
+      "h": 190,
+      "title": "nginx · 앱 호스트",
+      "lines": [
+        "호스트 :80 → HTTPS / :443 TLS",
+        "공개 경로 allowlist → Business",
+        "/ws/realtime → Realtime",
+        "/internal · /actuator → 404"
+      ],
+      "kind": "core",
+      "stage": "nginx:1.28-alpine · 로그 stdout/stderr",
+      "state": "code"
+    },
+    {
+      "id": "business",
+      "x": 70,
+      "y": 580,
+      "w": 450,
+      "h": 190,
+      "title": "Business · :8080",
+      "lines": [
+        "공개 인증·응답·/screens 조합",
+        "Data·Realtime·Notification 내부 HTTP",
+        "DB 없음 · Redis :6380 사용",
+        "mem 2GiB · cpu 2 · read_only"
+      ],
+      "kind": "core",
+      "stage": "business-api · /actuator :9091",
+      "state": "code"
+    },
+    {
+      "id": "data",
+      "x": 655,
+      "y": 580,
+      "w": 450,
+      "h": 190,
+      "title": "Data · app:8080",
+      "lines": [
+        "내부 권한·도메인 명령·정산",
+        "제품 상태 + outbox 같은 TX",
+        "PostgreSQL · Shared Redis",
+        "mem 1536MiB"
+      ],
+      "kind": "core",
+      "stage": "app = data-api · /actuator :9091",
+      "state": "code"
+    },
+    {
+      "id": "realtime",
+      "x": 1240,
+      "y": 580,
+      "w": 450,
+      "h": 190,
+      "title": "Realtime · :8081",
+      "lines": [
+        "WSS /ws/realtime · 내부 REST",
+        "채팅 DB · 이동·presence·fanout",
+        "Data에 현재 권한 조회",
+        "mem 768MiB · Shared Redis :6379"
+      ],
+      "kind": "event",
+      "stage": "realtime · /actuator :9091",
+      "state": "code"
+    },
+    {
+      "id": "gateway",
+      "x": 70,
+      "y": 880,
+      "w": 450,
+      "h": 190,
+      "title": "관리 전용 nginx",
+      "lines": [
+        "사설 :18080 → app:8080",
+        "사설 :18082 → notification:8082",
+        "정해진 /internal/admin 경로만",
+        "SG: 백오피스 호스트만 허용"
+      ],
+      "kind": "core",
+      "stage": "backoffice-gateway · 별도 프로젝트",
+      "state": "code"
+    },
+    {
+      "id": "notification",
+      "x": 655,
+      "y": 880,
+      "w": 450,
+      "h": 190,
+      "title": "Notification · :8082",
+      "lines": [
+        "내부 HTTP: 기기·설정·관리",
+        "Kafka 사건 소비 → FCM HTTPS",
+        "알림 DB · 중복·발송·재시도",
+        "mem 768MiB"
+      ],
+      "kind": "event",
+      "stage": "notification · /actuator :9091",
+      "state": "code"
+    },
+    {
+      "id": "localObs",
+      "x": 1240,
+      "y": 880,
+      "w": 450,
+      "h": 190,
+      "title": "앱 호스트 관측 컨테이너",
+      "lines": [
+        "Datadog Agent 512MiB · app-network",
+        "Fluent Bit 256MiB · host network",
+        "Loki 512MiB · observability network",
+        "Grafana: 구성 있음 · OFF"
+      ],
+      "kind": "external",
+      "stage": "수집·저장 흐름은 04절 / 로그 도면",
+      "state": "code"
+    },
+    {
+      "id": "sqlClients",
+      "x": 70,
+      "y": 1230,
+      "w": 450,
+      "h": 135,
+      "title": "Data · Realtime · Notification",
+      "lines": [
+        "각 서비스 JDBC → 자신의 DB",
+        "Business는 DB에 직접 연결하지 않음"
+      ],
+      "kind": "core",
+      "stage": "PostgreSQL TCP :5432",
+      "state": "code"
+    },
+    {
+      "id": "eventClients",
+      "x": 655,
+      "y": 1230,
+      "w": 450,
+      "h": 135,
+      "title": "Data relay · Notification 소비자",
+      "lines": [
+        "알림: notification-events · DLT",
+        "Realtime Kafka 소비는 선택 경로"
+      ],
+      "kind": "event",
+      "stage": "Kafka TCP :9092",
+      "state": "code"
+    },
+    {
+      "id": "redisClients",
+      "x": 1240,
+      "y": 1230,
+      "w": 450,
+      "h": 135,
+      "title": "Data·Realtime / Business",
+      "lines": [
+        "Shared: presence·fanout·이동 상태",
+        "Business: 폐기 세션 등 전용 키"
+      ],
+      "kind": "core",
+      "stage": "Shared :6379 / Business :6380",
+      "state": "code"
+    },
+    {
+      "id": "rds",
+      "x": 70,
+      "y": 1440,
+      "w": 450,
+      "h": 190,
+      "title": "기존 RDS · catus-prod-db",
+      "lines": [
+        "db.t4g.small · PostgreSQL :5432",
+        "gromo / gromo_chat / gromo_notification",
+        "별도 catus-prod-db-v2는 미사용"
+      ],
+      "kind": "data",
+      "stage": "물리 인스턴스 공유 · 논리 DB 분리",
+      "state": "code"
+    },
+    {
+      "id": "kafka",
+      "x": 655,
+      "y": 1440,
+      "w": 450,
+      "h": 190,
+      "title": "catus-kafka-prod-V2",
+      "lines": [
+        "m6g.medium · Kafka 3.8.1",
+        "1 broker + controller · RF 1",
+        "사설 :9092 · controller :9093 내부",
+        "/var/lib/catus-V2/kafka 영속 저장"
+      ],
+      "kind": "event",
+      "stage": "SG: app 호스트 → :9092",
+      "state": "code"
+    },
+    {
+      "id": "redis",
+      "x": 1240,
+      "y": 1440,
+      "w": 450,
+      "h": 190,
+      "title": "catus-redis-prod-V2",
+      "lines": [
+        "m6g.medium · Redis 7.4.11 두 개",
+        ":6379→6379 / :6380→6379",
+        "maxmemory 384 / 128MiB · noeviction",
+        "AOF · ACL · shared/business 경로 분리"
+      ],
+      "kind": "data",
+      "stage": "SG: app 호스트 → :6379 / :6380",
+      "state": "code"
+    },
+    {
+      "id": "sources",
+      "x": 70,
+      "y": 1790,
+      "w": 450,
+      "h": 230,
+      "title": "실제 수집 입력",
+      "lines": [
+        "네 JVM: JSON stdout + DD tracer",
+        "nginx: JSON access / stderr error",
+        "Docker json-file: 50MiB × 4",
+        "기타 3호스트: 각자 Datadog Agent"
+      ],
+      "kind": "core",
+      "stage": "Data user-activity 파일은 별도 경로",
+      "state": "code"
+    },
+    {
+      "id": "collectors",
+      "x": 655,
+      "y": 1790,
+      "w": 450,
+      "h": 230,
+      "title": "두 수집 경로",
+      "lines": [
+        "Datadog: Docker 로그·APM·지표",
+        "APM :8126 / DogStatsD UDP :8125",
+        "OpenMetrics: 각 앱 :9091 allowlist",
+        "Fluent Bit: 허용한 앱·nginx만 tail",
+        "fluent_bit_state: offset·디스크 버퍼"
+      ],
+      "kind": "external",
+      "stage": "앱 stdout 파일을 두 수집기가 각각 읽음",
+      "state": "code"
+    },
+    {
+      "id": "sinks",
+      "x": 1240,
+      "y": 1790,
+      "w": 450,
+      "h": 230,
+      "title": "검색·보관",
+      "lines": [
+        "Datadog SaaS: 로그·APM·지표",
+        "Loki: 127.0.0.1:3100 · 로컬 7일",
+        "S3: system_log/v2/ · 만료 90일",
+        "Grafana OFF · 조회는 로그 안내 참고",
+        "user-activity S3 업로더는 V2에 없음"
+      ],
+      "kind": "data",
+      "stage": "상세 도면: 로그·추적 / 수신 상태 미확인",
+      "state": "code"
+    },
+    {
+      "id": "operator",
+      "x": 70,
+      "y": 2240,
+      "w": 450,
+      "h": 190,
+      "title": "운영자 브라우저",
+      "lines": [
+        "backoffice-v2.oneorthree.world",
+        "HTTPS → Cloudflare → nginx :443",
+        "구 backoffice 주소는 302 이동"
+      ],
+      "kind": "external",
+      "stage": "운영자 인증",
+      "state": "code"
+    },
+    {
+      "id": "backoffice",
+      "x": 655,
+      "y": 2240,
+      "w": 450,
+      "h": 190,
+      "title": "catus-backoffice-prod-V2",
+      "lines": [
+        "t4g.small · nginx → app:4310",
+        "/var/lib/catus-V2/backoffice → /state",
+        "별도 Datadog Agent · APM OFF",
+        "일일 상태 백업 → S3"
+      ],
+      "kind": "core",
+      "stage": "백오피스 UI와 로컬 상태",
+      "state": "code"
+    },
+    {
+      "id": "adminTargets",
+      "x": 1240,
+      "y": 2240,
+      "w": 450,
+      "h": 190,
+      "title": "앱 호스트 관리 프록시",
+      "lines": [
+        "사설 :18080 → Data :8080",
+        "사설 :18082 → Notification :8082",
+        "관리 API allowlist + 서비스 인증",
+        "공개 nginx의 /internal은 404"
+      ],
+      "kind": "core",
+      "stage": "02절 backoffice-gateway 재표시",
+      "state": "code"
+    },
+    {
+      "id": "devApp",
+      "x": 70,
+      "y": 2670,
+      "w": 450,
+      "h": 190,
+      "title": "catus-dev-v2-app · e2-medium",
+      "lines": [
+        "nginx + 서버 4종",
+        "운영과 같은 서비스 경계",
+        "data VM · redis VM에 사설 연결"
+      ],
+      "kind": "core",
+      "stage": "개발 앱 호스트",
+      "state": "code"
+    },
+    {
+      "id": "devData",
+      "x": 655,
+      "y": 2670,
+      "w": 450,
+      "h": 190,
+      "title": "catus-dev-v2-data · e2-small",
+      "lines": [
+        "PostgreSQL 16.14 :5432",
+        "Kafka 3.8.1 :9092 · RF 1",
+        "운영 RDS·Kafka와 다른 배치"
+      ],
+      "kind": "data",
+      "stage": "개발 DB + broker",
+      "state": "code"
+    },
+    {
+      "id": "devRedis",
+      "x": 1240,
+      "y": 2670,
+      "w": 450,
+      "h": 190,
+      "title": "catus-dev-v2-redis · e2-micro",
+      "lines": [
+        "Shared·Business Redis 7.4.11",
+        ":6379 / :6380 · ACL · AOF",
+        "운영보다 작은 메모리 한도"
+      ],
+      "kind": "data",
+      "stage": "개발 Redis",
+      "state": "code"
+    }
+  ],
+  "edges": [
+    {
+      "id": "internet",
+      "source": "client",
+      "target": "cf",
+      "points": [
+        [
+          520,
+          310
+        ],
+        [
+          655,
+          310
+        ]
+      ],
+      "label": "443",
+      "at": [
+        588,
+        300
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "origin",
+      "source": "cf",
+      "target": "nginx",
+      "points": [
+        [
+          1105,
+          310
+        ],
+        [
+          1240,
+          310
+        ]
+      ],
+      "label": "443",
+      "at": [
+        1172,
+        300
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "publicHttp",
+      "source": "nginx",
+      "target": "business",
+      "points": [
+        [
+          1370,
+          415
+        ],
+        [
+          1370,
+          455
+        ],
+        [
+          50,
+          455
+        ],
+        [
+          50,
+          620
+        ],
+        [
+          70,
+          620
+        ]
+      ],
+      "label": "허용한 공개 HTTP",
+      "at": [
+        760,
+        445
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "publicWs",
+      "source": "nginx",
+      "target": "realtime",
+      "points": [
+        [
+          1570,
+          415
+        ],
+        [
+          1570,
+          580
+        ]
+      ],
+      "label": "WSS",
+      "at": [
+        1570,
+        554
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "bizData",
+      "source": "business",
+      "target": "data",
+      "points": [
+        [
+          520,
+          645
+        ],
+        [
+          655,
+          645
+        ]
+      ],
+      "label": "HTTP",
+      "at": [
+        588,
+        635
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "bizChat",
+      "source": "business",
+      "target": "realtime",
+      "points": [
+        [
+          420,
+          770
+        ],
+        [
+          420,
+          795
+        ],
+        [
+          1450,
+          795
+        ],
+        [
+          1450,
+          770
+        ]
+      ],
+      "label": "Business → Realtime 내부 채팅 REST",
+      "at": [
+        1170,
+        785
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dataEvents",
+      "source": "data",
+      "target": "realtime",
+      "points": [
+        [
+          1105,
+          645
+        ],
+        [
+          1240,
+          645
+        ]
+      ],
+      "label": "사건 HTTP",
+      "at": [
+        1172,
+        635
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "realtimeAuth",
+      "source": "realtime",
+      "target": "data",
+      "points": [
+        [
+          1240,
+          705
+        ],
+        [
+          1105,
+          705
+        ]
+      ],
+      "label": "권한 조회",
+      "at": [
+        1172,
+        695
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "bizNoti",
+      "source": "business",
+      "target": "notification",
+      "points": [
+        [
+          520,
+          735
+        ],
+        [
+          600,
+          735
+        ],
+        [
+          600,
+          945
+        ],
+        [
+          655,
+          945
+        ]
+      ],
+      "label": "기기·설정 HTTP",
+      "at": [
+        600,
+        808
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "adminData",
+      "source": "gateway",
+      "target": "data",
+      "points": [
+        [
+          490,
+          880
+        ],
+        [
+          490,
+          835
+        ],
+        [
+          880,
+          835
+        ],
+        [
+          880,
+          770
+        ]
+      ],
+      "label": "관리 HTTP :18080 → :8080",
+      "at": [
+        910,
+        825
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "adminNoti",
+      "source": "gateway",
+      "target": "notification",
+      "points": [
+        [
+          520,
+          1010
+        ],
+        [
+          655,
+          1010
+        ]
+      ],
+      "label": ":18082",
+      "at": [
+        588,
+        1000
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "jdbc",
+      "source": "sqlClients",
+      "target": "rds",
+      "points": [
+        [
+          295,
+          1365
+        ],
+        [
+          295,
+          1440
+        ]
+      ],
+      "label": "JDBC :5432",
+      "at": [
+        295,
+        1410
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "broker",
+      "source": "eventClients",
+      "target": "kafka",
+      "points": [
+        [
+          880,
+          1365
+        ],
+        [
+          880,
+          1440
+        ]
+      ],
+      "label": ":9092",
+      "at": [
+        880,
+        1410
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "redisTcp",
+      "source": "redisClients",
+      "target": "redis",
+      "points": [
+        [
+          1465,
+          1365
+        ],
+        [
+          1465,
+          1440
+        ]
+      ],
+      "label": ":6379 / :6380",
+      "at": [
+        1465,
+        1410
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "collectLogs",
+      "source": "sources",
+      "target": "collectors",
+      "points": [
+        [
+          520,
+          1890
+        ],
+        [
+          655,
+          1890
+        ]
+      ],
+      "label": "각각 수집",
+      "at": [
+        588,
+        1880
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "storeLogs",
+      "source": "collectors",
+      "target": "sinks",
+      "points": [
+        [
+          1105,
+          1890
+        ],
+        [
+          1240,
+          1890
+        ]
+      ],
+      "label": "분기 전송",
+      "at": [
+        1172,
+        1880
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "consoleWeb",
+      "source": "operator",
+      "target": "backoffice",
+      "points": [
+        [
+          520,
+          2330
+        ],
+        [
+          655,
+          2330
+        ]
+      ],
+      "label": "443",
+      "at": [
+        588,
+        2320
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "consoleInternal",
+      "source": "backoffice",
+      "target": "adminTargets",
+      "points": [
+        [
+          1105,
+          2330
+        ],
+        [
+          1240,
+          2330
+        ]
+      ],
+      "label": "사설 HTTP",
+      "at": [
+        1172,
+        2320
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "devDb",
+      "source": "devApp",
+      "target": "devData",
+      "points": [
+        [
+          520,
+          2760
+        ],
+        [
+          655,
+          2760
+        ]
+      ],
+      "label": "사설 TCP",
+      "at": [
+        588,
+        2750
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "devRedisTcp",
+      "source": "devApp",
+      "target": "devRedis",
+      "points": [
+        [
+          295,
+          2860
+        ],
+        [
+          295,
+          2920
+        ],
+        [
+          1465,
+          2920
+        ],
+        [
+          1465,
+          2860
+        ]
+      ],
+      "label": "앱 → Redis 사설 TCP",
+      "at": [
+        880,
+        2910
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}
