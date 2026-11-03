@@ -44,7 +44,7 @@
         <mxCell id="bandTitle3" value="04 · 조회 도구·수집 한계·빠진 범위" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="64" y="1642" width="1632" height="30" />
         </mxCell>
-        <mxCell id="bandSub3" value="점선 상자는 비활성 또는 미구현 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+        <mxCell id="bandSub3" value="점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="1673" width="1632" height="26" />
         </mxCell>
         <mxCell id="band4" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -178,7 +178,7 @@
         <mxCell id="buffer" value="&lt;b&gt;유실·지연을 판별할 지점&lt;/b&gt;&lt;br&gt;Loki 엔진 버퍼 128MiB&lt;br&gt;S3 엔진 64MiB + store_dir 64MiB&lt;br&gt;상한·회전·재시도 소진 시 유실 가능&lt;br&gt;canary 60초 간격 · 목적지별 도착 확인&lt;br&gt;canary 도착 ≠ 모든 앱 로그 수집 성공&lt;br&gt;&lt;b&gt;기존 canary 관찰 · 새 트래픽 생성 불필요&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="1730" width="450" height="230" />
         </mxCell>
-        <mxCell id="ua" value="&lt;b&gt;Data user-activity · 별도 파일&lt;/b&gt;&lt;br&gt;additivity=false · stdout에 안 섞임&lt;br&gt;/app/logs/user-activity.log&lt;br&gt;호스트 /var/log/catus-V2/data-api&lt;br&gt;로컬 30일 · 1GiB cap&lt;br&gt;V2 S3 업로더 없음&lt;br&gt;&lt;b&gt;현재 Fluent Bit·Datadog stdout 수집 밖&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=8 5;">
+        <mxCell id="ua" value="&lt;b&gt;Data user-activity · 별도 파일&lt;/b&gt;&lt;br&gt;additivity=false · stdout에 안 섞임&lt;br&gt;/app/logs/user-activity.log&lt;br&gt;호스트 /var/log/catus-V2/data-api&lt;br&gt;로컬 30일 · 1GiB cap&lt;br&gt;V2 파일 업로더: 운영 설치 미확인&lt;br&gt;&lt;b&gt;위 stdout 수집과 별개 · 배포 코드에 기동 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=2 5;">
           <mxGeometry as="geometry" x="1240" y="1730" width="450" height="230" />
         </mxCell>
         <mxCell id="httpIds" value="&lt;b&gt;HTTP → Business → Data&lt;/b&gt;&lt;br&gt;Business가 request_id 생성&lt;br&gt;응답 X-Request-Id / 내부 호출 전파&lt;br&gt;nginx upstream_request_id와 연결&lt;br&gt;dd.trace_id는 실제 tracer context&lt;br&gt;&lt;b&gt;request_id를 APM trace ID로 쓰지 않음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">

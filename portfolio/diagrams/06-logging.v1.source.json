@@ -1,0 +1,678 @@
+{
+  "version": 1,
+  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "title": "Cattus · 로그 수집·보관·요청 추적",
+  "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
+  "nodes": [
+    {
+      "id": "jvm",
+      "x": 70,
+      "y": 240,
+      "w": 450,
+      "h": 230,
+      "title": "Business·Data·Realtime·Noti",
+      "lines": [
+        "ObservationJsonProvider → stdout",
+        "schema_version=1 · log_id · timestamp",
+        "service / env / version / log_kind",
+        "request_id · dd.trace_id · 사건 ID",
+        "허용 필드·민감값 마스킹·크기 제한"
+      ],
+      "kind": "core",
+      "stage": "prod JSON · Business는 access 로그 포함",
+      "state": "code"
+    },
+    {
+      "id": "nginxLogs",
+      "x": 655,
+      "y": 240,
+      "w": 450,
+      "h": 230,
+      "title": "nginx · access / error",
+      "lines": [
+        "access: JSON → /dev/stdout",
+        "edge_request_id / upstream_request_id",
+        "method · uri · status · request_time",
+        "query·요청 헤더·client IP 제외",
+        "error: /dev/stderr · warn 이상"
+      ],
+      "kind": "core",
+      "stage": "Fluent Bit에서 정규화·경로 정제",
+      "state": "code"
+    },
+    {
+      "id": "docker",
+      "x": 1240,
+      "y": 240,
+      "w": 450,
+      "h": 230,
+      "title": "Docker json-file",
+      "lines": [
+        "/var/lib/docker/containers/",
+        "<id>/<id>-json.log",
+        "앱·nginx: max-size 50m × 4",
+        "두 수집기에 read-only mount",
+        "회전 파일 .1 등은 Fluent Bit tail 제외"
+      ],
+      "kind": "data",
+      "stage": "유한한 호스트 버퍼 · 장기 보관소 아님",
+      "state": "code"
+    },
+    {
+      "id": "ddAgent",
+      "x": 70,
+      "y": 680,
+      "w": 450,
+      "h": 270,
+      "title": "앱 Datadog Agent · 512MiB",
+      "lines": [
+        "Docker 파일에서 로그 수집",
+        "JVM tracer → :8126 APM",
+        "JVM runtime → :8125 UDP",
+        "Agent → 앱 :9091/actuator/prometheus",
+        "허용한 Micrometer 지표만 수집",
+        "JVM 부팅 잡음 필터는 DD 경로에만"
+      ],
+      "kind": "external",
+      "stage": "app-network · DD_SITE 기본 us5",
+      "state": "code"
+    },
+    {
+      "id": "fluent",
+      "x": 655,
+      "y": 680,
+      "w": 450,
+      "h": 270,
+      "title": "Fluent Bit 4.2.8 · 256MiB",
+      "lines": [
+        "host network · Docker 파일 read-only",
+        "catus-app-v2 프로젝트만 허용",
+        "app → data-api 이름 매핑",
+        "네 서버·nginx 외 컨테이너 drop",
+        "JSON parse / raw·nginx 정제·마스킹",
+        "fluent_bit_state: tail.db + 버퍼",
+        "Loki 원본 + S3 복제본을 따로 전송"
+      ],
+      "kind": "external",
+      "stage": "tail → Lua → parser → Lua → outputs",
+      "state": "code"
+    },
+    {
+      "id": "hostAgents",
+      "x": 1240,
+      "y": 680,
+      "w": 450,
+      "h": 270,
+      "title": "Kafka·Redis·백오피스 Agent",
+      "lines": [
+        "각 EC2에 별도 Datadog Agent",
+        "각 호스트 Docker 로그·호스트 지표",
+        "APM OFF · Agent 한도 256MiB",
+        "Redis :6379/:6380 health 계정 체크",
+        "이 세 호스트는 Fluent Bit 경로 없음",
+        "Kafka JMX 별도 체크는 미설정"
+      ],
+      "kind": "external",
+      "stage": "11/02 Agent health PASS 기록",
+      "state": "code"
+    },
+    {
+      "id": "datadog",
+      "x": 70,
+      "y": 1210,
+      "w": 450,
+      "h": 250,
+      "title": "Datadog SaaS",
+      "lines": [
+        "Agent → HTTPS 전송",
+        "로그·trace·호스트·컨테이너 지표",
+        "로그에서 dd.trace_id로 APM 연결",
+        "보관 기간: 조직 설정에서 확인",
+        "dev V2에는 Agent 없음"
+      ],
+      "kind": "external",
+      "stage": "Agent healthy ≠ SaaS 최신 수신",
+      "state": "code"
+    },
+    {
+      "id": "loki",
+      "x": 655,
+      "y": 1210,
+      "w": 450,
+      "h": 250,
+      "title": "Loki 3.3.2 · 로컬 7일",
+      "lines": [
+        "Fluent Bit → 127.0.0.1:3100",
+        "별도 observability network",
+        "loki_data → /loki · 단일 인스턴스",
+        "retention 168h + compactor ON",
+        "라벨은 env / service / log_kind",
+        "ID는 JSON 필드로 조회"
+      ],
+      "kind": "data",
+      "stage": "app-network에 미연결 · 인증 없는 API",
+      "state": "code"
+    },
+    {
+      "id": "s3",
+      "x": 1240,
+      "y": 1210,
+      "w": 450,
+      "h": 250,
+      "title": "S3 · system_log/v2/",
+      "lines": [
+        "gzip JSONL · env/service/date/hour",
+        "10MiB 또는 5분 단위 업로드",
+        "앱 EC2 IAM: prod 접두 쓰기만",
+        "로그 만료 규칙: 90일",
+        "Loki 청크 저장소가 아닌 별도 아카이브",
+        "객체 파티션 시간 = 첫 레코드 시각"
+      ],
+      "kind": "data",
+      "stage": "ap-northeast-2 · retry_limit 60",
+      "state": "code"
+    },
+    {
+      "id": "grafana",
+      "x": 70,
+      "y": 1730,
+      "w": 450,
+      "h": 230,
+      "title": "Grafana · OFF",
+      "lines": [
+        "구성은 있으나 배포 스위치 false",
+        "활성화 시 Loki datasource 사용",
+        "Cloudflare Access JWT · JWKS/aud",
+        "현재 Grafana 접속 주소 없음"
+      ],
+      "kind": "future",
+      "stage": "대신 Datadog / 승인된 Loki 접근 사용",
+      "state": "off"
+    },
+    {
+      "id": "buffer",
+      "x": 655,
+      "y": 1730,
+      "w": 450,
+      "h": 230,
+      "title": "유실·지연을 판별할 지점",
+      "lines": [
+        "Loki 엔진 버퍼 128MiB",
+        "S3 엔진 64MiB + store_dir 64MiB",
+        "상한·회전·재시도 소진 시 유실 가능",
+        "canary 60초 간격 · 목적지별 도착 확인",
+        "canary 도착 ≠ 모든 앱 로그 수집 성공"
+      ],
+      "kind": "external",
+      "stage": "기존 canary 관찰 · 새 트래픽 생성 불필요",
+      "state": "code"
+    },
+    {
+      "id": "ua",
+      "x": 1240,
+      "y": 1730,
+      "w": 450,
+      "h": 230,
+      "title": "Data user-activity · 별도 파일",
+      "lines": [
+        "additivity=false · stdout에 안 섞임",
+        "/app/logs/user-activity.log",
+        "호스트 /var/log/catus-V2/data-api",
+        "로컬 30일 · 1GiB cap",
+        "V2 S3 업로더 없음"
+      ],
+      "kind": "future",
+      "stage": "현재 Fluent Bit·Datadog stdout 수집 밖",
+      "state": "off"
+    },
+    {
+      "id": "httpIds",
+      "x": 70,
+      "y": 2170,
+      "w": 450,
+      "h": 190,
+      "title": "HTTP → Business → Data",
+      "lines": [
+        "Business가 request_id 생성",
+        "응답 X-Request-Id / 내부 호출 전파",
+        "nginx upstream_request_id와 연결",
+        "dd.trace_id는 실제 tracer context"
+      ],
+      "kind": "core",
+      "stage": "request_id를 APM trace ID로 쓰지 않음",
+      "state": "code"
+    },
+    {
+      "id": "eventIds",
+      "x": 655,
+      "y": 2170,
+      "w": 450,
+      "h": 190,
+      "title": "outbox → Kafka/HTTP",
+      "lines": [
+        "event_id를 전달·재시도 동안 유지",
+        "origin_request_id / origin_trace_id",
+        "새 consumer trace와 원요청을 연결",
+        "outbox.delivery → consumer.accept"
+      ],
+      "kind": "event",
+      "stage": "저장한 carrier context를 비동기로 전파",
+      "state": "code"
+    },
+    {
+      "id": "deliveryIds",
+      "x": 1240,
+      "y": 2170,
+      "w": 450,
+      "h": 190,
+      "title": "Notification → FCM",
+      "lines": [
+        "operation.link → transport.result",
+        "→ dispatch.settle",
+        "operation_id / delivery_id / attempt",
+        "FCM 성공 ≠ 기기 도착"
+      ],
+      "kind": "event",
+      "stage": "dispatch.settle은 delivery_id+attempt",
+      "state": "code"
+    },
+    {
+      "id": "fanoutIds",
+      "x": 70,
+      "y": 2460,
+      "w": 450,
+      "h": 190,
+      "title": "Realtime · Redis fanout",
+      "lines": [
+        "fanout.publish → fanout.receive",
+        "message_id / origin trace context",
+        "인스턴스 간 사건을 연결"
+      ],
+      "kind": "event",
+      "stage": "Pub/Sub 전달은 영속 재생 로그 아님",
+      "state": "code"
+    },
+    {
+      "id": "queryIds",
+      "x": 655,
+      "y": 2460,
+      "w": 450,
+      "h": 190,
+      "title": "Loki · 최근 로그 조회",
+      "lines": [
+        "env/service/log_kind로 범위 제한",
+        "| json → request_id / event_id 필터",
+        "같은 log_id 사본은 자동 제거 안 됨"
+      ],
+      "kind": "data",
+      "stage": "Grafana OFF여도 Loki API는 별도 존재",
+      "state": "code"
+    },
+    {
+      "id": "archiveQuery",
+      "x": 1240,
+      "y": 2460,
+      "w": 450,
+      "h": 190,
+      "title": "S3 · Athena SQL 템플릿",
+      "lines": [
+        "env/service/date/hour 먼저 제한",
+        "본문 timestamp로 최종 범위 필터",
+        "수집 지연 구간은 시간 파티션 확대"
+      ],
+      "kind": "data",
+      "stage": "DDL·SQL 준비됨 · Athena 적용 미확인",
+      "state": "code"
+    }
+  ],
+  "edges": [
+    {
+      "id": "stdout",
+      "source": "jvm",
+      "target": "docker",
+      "points": [
+        [
+          295,
+          470
+        ],
+        [
+          295,
+          510
+        ],
+        [
+          1465,
+          510
+        ],
+        [
+          1465,
+          470
+        ]
+      ],
+      "label": "stdout/stderr → Docker 파일",
+      "at": [
+        880,
+        500
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "nginxStdout",
+      "source": "nginxLogs",
+      "target": "docker",
+      "points": [
+        [
+          1105,
+          340
+        ],
+        [
+          1240,
+          340
+        ]
+      ],
+      "label": "stdout",
+      "at": [
+        1172,
+        330
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dockerDd",
+      "source": "docker",
+      "target": "ddAgent",
+      "points": [
+        [
+          1340,
+          470
+        ],
+        [
+          1340,
+          560
+        ],
+        [
+          50,
+          560
+        ],
+        [
+          50,
+          790
+        ],
+        [
+          70,
+          790
+        ]
+      ],
+      "label": "Docker 로그",
+      "at": [
+        360,
+        550
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dockerFluent",
+      "source": "docker",
+      "target": "fluent",
+      "points": [
+        [
+          1560,
+          470
+        ],
+        [
+          1560,
+          655
+        ],
+        [
+          880,
+          655
+        ],
+        [
+          880,
+          680
+        ]
+      ],
+      "label": "Docker 로그",
+      "at": [
+        1190,
+        665
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "tracer",
+      "source": "jvm",
+      "target": "ddAgent",
+      "points": [
+        [
+          70,
+          400
+        ],
+        [
+          20,
+          400
+        ],
+        [
+          20,
+          665
+        ],
+        [
+          295,
+          665
+        ],
+        [
+          295,
+          680
+        ]
+      ],
+      "label": "APM·runtime 지표",
+      "at": [
+        155,
+        671
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "agentSaas",
+      "source": "ddAgent",
+      "target": "datadog",
+      "points": [
+        [
+          295,
+          950
+        ],
+        [
+          295,
+          1075
+        ],
+        [
+          50,
+          1075
+        ],
+        [
+          50,
+          1280
+        ],
+        [
+          70,
+          1280
+        ]
+      ],
+      "label": "HTTPS",
+      "at": [
+        295,
+        1065
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "otherAgentSaas",
+      "source": "hostAgents",
+      "target": "datadog",
+      "points": [
+        [
+          1465,
+          950
+        ],
+        [
+          1465,
+          1040
+        ],
+        [
+          30,
+          1040
+        ],
+        [
+          30,
+          1310
+        ],
+        [
+          70,
+          1310
+        ]
+      ],
+      "label": "다른 3호스트 로그·지표",
+      "at": [
+        1090,
+        1030
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "lokiOutput",
+      "source": "fluent",
+      "target": "loki",
+      "points": [
+        [
+          880,
+          950
+        ],
+        [
+          880,
+          1210
+        ]
+      ],
+      "label": ":3100",
+      "at": [
+        880,
+        1175
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "s3Output",
+      "source": "fluent",
+      "target": "s3",
+      "points": [
+        [
+          1105,
+          870
+        ],
+        [
+          1170,
+          870
+        ],
+        [
+          1170,
+          1175
+        ],
+        [
+          1465,
+          1175
+        ],
+        [
+          1465,
+          1210
+        ]
+      ],
+      "label": "복제 → S3 HTTPS",
+      "at": [
+        1430,
+        1165
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "grafanaQuery",
+      "source": "grafana",
+      "target": "loki",
+      "points": [
+        [
+          295,
+          1730
+        ],
+        [
+          295,
+          1540
+        ],
+        [
+          880,
+          1540
+        ],
+        [
+          880,
+          1460
+        ]
+      ],
+      "label": "활성화할 때 Loki 조회",
+      "at": [
+        610,
+        1530
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "httpEvent",
+      "source": "httpIds",
+      "target": "eventIds",
+      "points": [
+        [
+          520,
+          2260
+        ],
+        [
+          655,
+          2260
+        ]
+      ],
+      "label": "원인 저장",
+      "at": [
+        588,
+        2250
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "eventDelivery",
+      "source": "eventIds",
+      "target": "deliveryIds",
+      "points": [
+        [
+          1105,
+          2260
+        ],
+        [
+          1240,
+          2260
+        ]
+      ],
+      "label": "사건 소비",
+      "at": [
+        1172,
+        2250
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
   "title": "Cattus · 운영 호스트·컨테이너·포트",
   "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
@@ -297,7 +297,7 @@
         "Loki: 127.0.0.1:3100 · 로컬 7일",
         "S3: system_log/v2/ · 만료 90일",
         "Grafana OFF · 조회는 로그 안내 참고",
-        "user-activity S3 업로더는 V2에 없음"
+        "user-activity 파일 전송: 운영 미확인"
       ],
       "kind": "data",
       "stage": "상세 도면: 로그·추적 / 수신 상태 미확인",
