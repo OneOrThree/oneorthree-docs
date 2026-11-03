@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="31.4.5">
+  <diagram id="06-logging" name="Cattus · 로그 수집·보관·요청 추적">
+    <mxGraphModel dx="1760" dy="2820" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="2820">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="heading" value="Cattus · 로그 수집·보관·요청 추적" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
+        </mxCell>
+        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
+        </mxCell>
+        <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="140" width="1680" height="400" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="01 · 앱 호스트의 입력 · 로그와 trace는 다른 데이터" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub0" value="JVM·nginx stdout을 Docker가 파일로 기록한다. APM trace와 지표는 Docker 로그를 거치지 않고 Agent로 전달된다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="580" width="1680" height="480" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="02 · 독립 수집기 · Datadog → Fluent Bit 직렬 연결이 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="592" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub1" value="APM 8126/TCP · DogStatsD 8125/UDP · OpenMetrics 9091/TCP. 호스트 지표는 Agent가 /proc·cgroup에서 읽는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="623" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="1100" width="1680" height="490" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="03 · 목적지와 보관 한도" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="1112" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub2" value="Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="1143" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band3" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="1630" width="1680" height="400" />
+        </mxCell>
+        <mxCell id="bandTitle3" value="04 · 조회 도구·수집 한계·빠진 범위" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="1642" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub3" value="점선 상자는 비활성 또는 미구현 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="1673" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band4" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="2070" width="1680" height="660" />
+        </mxCell>
+        <mxCell id="bandTitle4" value="05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="2082" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub4" value="request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="2113" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="stdout" value="stdout/stderr → Docker 파일" source="jvm" target="docker" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=1.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="295" y="510" />
+              <mxPoint x="1465" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nginxStdout" value="stdout" source="nginxLogs" target="docker" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.43478260869565216;entryX=0.0;entryY=0.43478260869565216;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dockerDd" value="Docker 로그" source="docker" target="ddAgent" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.2222222222222222;exitY=1.0;entryX=0.0;entryY=0.4074074074074074;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1340" y="560" />
+              <mxPoint x="50" y="560" />
+              <mxPoint x="50" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dockerFluent" value="Docker 로그" source="docker" target="fluent" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.7111111111111111;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1560" y="655" />
+              <mxPoint x="880" y="655" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tracer" value="APM·runtime 지표" source="jvm" target="ddAgent" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.6956521739130435;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="20" y="400" />
+              <mxPoint x="20" y="665" />
+              <mxPoint x="295" y="665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="agentSaas" value="HTTPS" source="ddAgent" target="datadog" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.0;entryY=0.28;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="295" y="1075" />
+              <mxPoint x="50" y="1075" />
+              <mxPoint x="50" y="1280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="otherAgentSaas" value="다른 3호스트 로그·지표" source="hostAgents" target="datadog" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.0;entryY=0.4;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1465" y="1040" />
+              <mxPoint x="30" y="1040" />
+              <mxPoint x="30" y="1310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lokiOutput" value=":3100" source="fluent" target="loki" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s3Output" value="복제 → S3 HTTPS" source="fluent" target="s3" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.7037037037037037;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1170" y="870" />
+              <mxPoint x="1170" y="1175" />
+              <mxPoint x="1465" y="1175" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="grafanaQuery" value="활성화할 때 Loki 조회" source="grafana" target="loki" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0.0;entryX=0.5;entryY=1.0;dashed=1;dashPattern=8 5;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="295" y="1540" />
+              <mxPoint x="880" y="1540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="httpEvent" value="원인 저장" source="httpIds" target="eventIds" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.47368421052631576;entryX=0.0;entryY=0.47368421052631576;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eventDelivery" value="사건 소비" source="eventIds" target="deliveryIds" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.47368421052631576;entryX=0.0;entryY=0.47368421052631576;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jvm" value="&lt;b&gt;Business·Data·Realtime·Noti&lt;/b&gt;&lt;br&gt;ObservationJsonProvider → stdout&lt;br&gt;schema_version=1 · log_id · timestamp&lt;br&gt;service / env / version / log_kind&lt;br&gt;request_id · dd.trace_id · 사건 ID&lt;br&gt;허용 필드·민감값 마스킹·크기 제한&lt;br&gt;&lt;b&gt;prod JSON · Business는 access 로그 포함&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="240" width="450" height="230" />
+        </mxCell>
+        <mxCell id="nginxLogs" value="&lt;b&gt;nginx · access / error&lt;/b&gt;&lt;br&gt;access: JSON → /dev/stdout&lt;br&gt;edge_request_id / upstream_request_id&lt;br&gt;method · uri · status · request_time&lt;br&gt;query·요청 헤더·client IP 제외&lt;br&gt;error: /dev/stderr · warn 이상&lt;br&gt;&lt;b&gt;Fluent Bit에서 정규화·경로 정제&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="240" width="450" height="230" />
+        </mxCell>
+        <mxCell id="docker" value="&lt;b&gt;Docker json-file&lt;/b&gt;&lt;br&gt;/var/lib/docker/containers/&lt;br&gt;&amp;lt;id&amp;gt;/&amp;lt;id&amp;gt;-json.log&lt;br&gt;앱·nginx: max-size 50m × 4&lt;br&gt;두 수집기에 read-only mount&lt;br&gt;회전 파일 .1 등은 Fluent Bit tail 제외&lt;br&gt;&lt;b&gt;유한한 호스트 버퍼 · 장기 보관소 아님&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="240" width="450" height="230" />
+        </mxCell>
+        <mxCell id="ddAgent" value="&lt;b&gt;앱 Datadog Agent · 512MiB&lt;/b&gt;&lt;br&gt;Docker 파일에서 로그 수집&lt;br&gt;JVM tracer → :8126 APM&lt;br&gt;JVM runtime → :8125 UDP&lt;br&gt;Agent → 앱 :9091/actuator/prometheus&lt;br&gt;허용한 Micrometer 지표만 수집&lt;br&gt;JVM 부팅 잡음 필터는 DD 경로에만&lt;br&gt;&lt;b&gt;app-network · DD_SITE 기본 us5&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="680" width="450" height="270" />
+        </mxCell>
+        <mxCell id="fluent" value="&lt;b&gt;Fluent Bit 4.2.8 · 256MiB&lt;/b&gt;&lt;br&gt;host network · Docker 파일 read-only&lt;br&gt;catus-app-v2 프로젝트만 허용&lt;br&gt;app → data-api 이름 매핑&lt;br&gt;네 서버·nginx 외 컨테이너 drop&lt;br&gt;JSON parse / raw·nginx 정제·마스킹&lt;br&gt;fluent_bit_state: tail.db + 버퍼&lt;br&gt;Loki 원본 + S3 복제본을 따로 전송&lt;br&gt;&lt;b&gt;tail → Lua → parser → Lua → outputs&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="680" width="450" height="270" />
+        </mxCell>
+        <mxCell id="hostAgents" value="&lt;b&gt;Kafka·Redis·백오피스 Agent&lt;/b&gt;&lt;br&gt;각 EC2에 별도 Datadog Agent&lt;br&gt;각 호스트 Docker 로그·호스트 지표&lt;br&gt;APM OFF · Agent 한도 256MiB&lt;br&gt;Redis :6379/:6380 health 계정 체크&lt;br&gt;이 세 호스트는 Fluent Bit 경로 없음&lt;br&gt;Kafka JMX 별도 체크는 미설정&lt;br&gt;&lt;b&gt;11/02 Agent health PASS 기록&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="680" width="450" height="270" />
+        </mxCell>
+        <mxCell id="datadog" value="&lt;b&gt;Datadog SaaS&lt;/b&gt;&lt;br&gt;Agent → HTTPS 전송&lt;br&gt;로그·trace·호스트·컨테이너 지표&lt;br&gt;로그에서 dd.trace_id로 APM 연결&lt;br&gt;보관 기간: 조직 설정에서 확인&lt;br&gt;dev V2에는 Agent 없음&lt;br&gt;&lt;b&gt;Agent healthy ≠ SaaS 최신 수신&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="1210" width="450" height="250" />
+        </mxCell>
+        <mxCell id="loki" value="&lt;b&gt;Loki 3.3.2 · 로컬 7일&lt;/b&gt;&lt;br&gt;Fluent Bit → 127.0.0.1:3100&lt;br&gt;별도 observability network&lt;br&gt;loki_data → /loki · 단일 인스턴스&lt;br&gt;retention 168h + compactor ON&lt;br&gt;라벨은 env / service / log_kind&lt;br&gt;ID는 JSON 필드로 조회&lt;br&gt;&lt;b&gt;app-network에 미연결 · 인증 없는 API&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="1210" width="450" height="250" />
+        </mxCell>
+        <mxCell id="s3" value="&lt;b&gt;S3 · system_log/v2/&lt;/b&gt;&lt;br&gt;gzip JSONL · env/service/date/hour&lt;br&gt;10MiB 또는 5분 단위 업로드&lt;br&gt;앱 EC2 IAM: prod 접두 쓰기만&lt;br&gt;로그 만료 규칙: 90일&lt;br&gt;Loki 청크 저장소가 아닌 별도 아카이브&lt;br&gt;객체 파티션 시간 = 첫 레코드 시각&lt;br&gt;&lt;b&gt;ap-northeast-2 · retry_limit 60&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="1210" width="450" height="250" />
+        </mxCell>
+        <mxCell id="grafana" value="&lt;b&gt;Grafana · OFF&lt;/b&gt;&lt;br&gt;구성은 있으나 배포 스위치 false&lt;br&gt;활성화 시 Loki datasource 사용&lt;br&gt;Cloudflare Access JWT · JWKS/aud&lt;br&gt;현재 Grafana 접속 주소 없음&lt;br&gt;&lt;b&gt;대신 Datadog / 승인된 Loki 접근 사용&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=8 5;">
+          <mxGeometry as="geometry" x="70" y="1730" width="450" height="230" />
+        </mxCell>
+        <mxCell id="buffer" value="&lt;b&gt;유실·지연을 판별할 지점&lt;/b&gt;&lt;br&gt;Loki 엔진 버퍼 128MiB&lt;br&gt;S3 엔진 64MiB + store_dir 64MiB&lt;br&gt;상한·회전·재시도 소진 시 유실 가능&lt;br&gt;canary 60초 간격 · 목적지별 도착 확인&lt;br&gt;canary 도착 ≠ 모든 앱 로그 수집 성공&lt;br&gt;&lt;b&gt;기존 canary 관찰 · 새 트래픽 생성 불필요&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="1730" width="450" height="230" />
+        </mxCell>
+        <mxCell id="ua" value="&lt;b&gt;Data user-activity · 별도 파일&lt;/b&gt;&lt;br&gt;additivity=false · stdout에 안 섞임&lt;br&gt;/app/logs/user-activity.log&lt;br&gt;호스트 /var/log/catus-V2/data-api&lt;br&gt;로컬 30일 · 1GiB cap&lt;br&gt;V2 S3 업로더 없음&lt;br&gt;&lt;b&gt;현재 Fluent Bit·Datadog stdout 수집 밖&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=8 5;">
+          <mxGeometry as="geometry" x="1240" y="1730" width="450" height="230" />
+        </mxCell>
+        <mxCell id="httpIds" value="&lt;b&gt;HTTP → Business → Data&lt;/b&gt;&lt;br&gt;Business가 request_id 생성&lt;br&gt;응답 X-Request-Id / 내부 호출 전파&lt;br&gt;nginx upstream_request_id와 연결&lt;br&gt;dd.trace_id는 실제 tracer context&lt;br&gt;&lt;b&gt;request_id를 APM trace ID로 쓰지 않음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="2170" width="450" height="190" />
+        </mxCell>
+        <mxCell id="eventIds" value="&lt;b&gt;outbox → Kafka/HTTP&lt;/b&gt;&lt;br&gt;event_id를 전달·재시도 동안 유지&lt;br&gt;origin_request_id / origin_trace_id&lt;br&gt;새 consumer trace와 원요청을 연결&lt;br&gt;outbox.delivery → consumer.accept&lt;br&gt;&lt;b&gt;저장한 carrier context를 비동기로 전파&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="2170" width="450" height="190" />
+        </mxCell>
+        <mxCell id="deliveryIds" value="&lt;b&gt;Notification → FCM&lt;/b&gt;&lt;br&gt;operation.link → transport.result&lt;br&gt;→ dispatch.settle&lt;br&gt;operation_id / delivery_id / attempt&lt;br&gt;FCM 성공 ≠ 기기 도착&lt;br&gt;&lt;b&gt;dispatch.settle은 delivery_id+attempt&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="2170" width="450" height="190" />
+        </mxCell>
+        <mxCell id="fanoutIds" value="&lt;b&gt;Realtime · Redis fanout&lt;/b&gt;&lt;br&gt;fanout.publish → fanout.receive&lt;br&gt;message_id / origin trace context&lt;br&gt;인스턴스 간 사건을 연결&lt;br&gt;&lt;b&gt;Pub/Sub 전달은 영속 재생 로그 아님&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="2460" width="450" height="190" />
+        </mxCell>
+        <mxCell id="queryIds" value="&lt;b&gt;Loki · 최근 로그 조회&lt;/b&gt;&lt;br&gt;env/service/log_kind로 범위 제한&lt;br&gt;| json → request_id / event_id 필터&lt;br&gt;같은 log_id 사본은 자동 제거 안 됨&lt;br&gt;&lt;b&gt;Grafana OFF여도 Loki API는 별도 존재&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="2460" width="450" height="190" />
+        </mxCell>
+        <mxCell id="archiveQuery" value="&lt;b&gt;S3 · Athena SQL 템플릿&lt;/b&gt;&lt;br&gt;env/service/date/hour 먼저 제한&lt;br&gt;본문 timestamp로 최종 범위 필터&lt;br&gt;수집 지연 구간은 시간 파티션 확대&lt;br&gt;&lt;b&gt;DDL·SQL 준비됨 · Athena 적용 미확인&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="2460" width="450" height="190" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

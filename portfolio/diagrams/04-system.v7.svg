@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 시스템 아키텍처</title>
+<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 시스템 아키텍처</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">운영 · AWS V2</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">catus-api-v2.oneorthree.world · backoffice-v2.oneorthree.world</text>
+<rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">개발 · GCP V2</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">oneorthree-v2.dev.mooo.com · main 변경 → CI → Auto CD</text>
+<rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">승격·발행·배포</text>
+<text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">구 서버와 V1 workflow는 2026-11-02 정리. V2 경로를 사용한다.</text>
+<g data-cell-id="runtime"><path d="M 520 315 L 655 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="546.0" y="289" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="305" font-size="14" text-anchor="middle" fill="#405768">사설 연결</text>
+</g>
+<g data-cell-id="devInternal"><path d="M 520 655 L 655 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="552.5" y="629" width="69.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="645" font-size="14" text-anchor="middle" fill="#405768">사설 IP</text>
+</g>
+<g data-cell-id="promotePublish"><path d="M 520 995 L 655 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="564.5" y="969" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="985" font-size="14" text-anchor="middle" fill="#405768">승격</text>
+</g>
+<g data-cell-id="publishDeploy"><path d="M 1105 995 L 1240 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="969" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="985" font-size="14" text-anchor="middle" fill="#405768">태그 지정</text>
+</g>
+<g data-cell-id="prodApp">
+<rect x="70" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="260" font-size="21" fill="#172b3a" font-weight="700">서버 호스트 · m6g.large</text>
+<text x="90" y="289" font-size="16" fill="#4d5a66" font-weight="400">nginx · 서버 4종</text>
+<text x="90" y="313" font-size="16" fill="#4d5a66" font-weight="400">HTTP → Business · WSS → Realtime</text>
+<text x="90" y="337" font-size="16" fill="#4d5a66" font-weight="400">내부 Data · Notification</text>
+<text x="90" y="405" font-size="14" fill="#3866a0" font-weight="700">catus-prod-V2</text>
+</g>
+<g data-cell-id="prodRuntime">
+<rect x="655" y="230" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">Kafka·Redis 별도 호스트</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">Kafka m6g.medium · 3.8.1</text>
+<text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">Redis m6g.medium · 7.4.11</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">Shared·Business · noeviction·AOF</text>
+<text x="675" y="405" font-size="14" fill="#a9682b" font-weight="700">서버·Kafka·Redis 각각 CD</text>
+</g>
+<g data-cell-id="prodStorage">
+<rect x="1240" y="230" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">RDS·백오피스</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">기존 RDS catus-prod-db 계속 사용</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">catus-prod-db-v2는 아직 미사용</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">백오피스 t4g.small 별도 EC2</text>
+<text x="1260" y="405" font-size="14" fill="#a9682b" font-weight="700">운영 EC2 총 4대</text>
+</g>
+<g data-cell-id="devApp">
+<rect x="70" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="600" font-size="21" fill="#172b3a" font-weight="700">app · e2-medium</text>
+<text x="90" y="629" font-size="16" fill="#4d5a66" font-weight="400">nginx · 서버 4종</text>
+<text x="90" y="653" font-size="16" fill="#4d5a66" font-weight="400">컨테이너별 한도 적용</text>
+<text x="90" y="677" font-size="16" fill="#4d5a66" font-weight="400">dev 백오피스 없음</text>
+<text x="90" y="745" font-size="14" fill="#3866a0" font-weight="700">catus-dev-v2-app</text>
+</g>
+<g data-cell-id="devData">
+<rect x="655" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">data · e2-small</text>
+<text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL 16.14</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">Kafka 3.8.1 · KRaft · RF=1</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">각 runtime 산출물·성공 기록</text>
+<text x="675" y="745" font-size="14" fill="#a9682b" font-weight="700">catus-dev-v2-data</text>
+</g>
+<g data-cell-id="devRedis">
+<rect x="1240" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="600" font-size="21" fill="#172b3a" font-weight="700">redis · e2-micro</text>
+<text x="1260" y="629" font-size="16" fill="#4d5a66" font-weight="400">Shared·Business Redis</text>
+<text x="1260" y="653" font-size="16" fill="#4d5a66" font-weight="400">prod와 다른 메모리 한도</text>
+<text x="1260" y="677" font-size="16" fill="#4d5a66" font-weight="400">dev VM 3대에 Datadog 없음</text>
+<text x="1260" y="745" font-size="14" fill="#a9682b" font-weight="700">catus-dev-v2-redis</text>
+</g>
+<g data-cell-id="promote">
+<rect x="70" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">main → release PR</text>
+<text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">Create a merge commit</text>
+<text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">main 부모 이력 보존</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">코드 검토는 main PR에서 완료</text>
+<text x="90" y="1085" font-size="14" fill="#607583" font-weight="700">fast-forward 절차 대체</text>
+</g>
+<g data-cell-id="publish">
+<rect x="655" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">release · CI 발행</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">네 서버 digest 조합·태그</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">서버·Kafka·Redis 개별 버전</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">V2 patch 자동 증가</text>
+<text x="675" y="1085" font-size="14" fill="#607583" font-weight="700">발행만으로 운영은 안 바뀜</text>
+</g>
+<g data-cell-id="deploy">
+<rect x="1240" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="940" font-size="21" fill="#172b3a" font-weight="700">수동 CD·환경 승인</text>
+<text x="1260" y="969" font-size="16" fill="#4d5a66" font-weight="400">release에서 version 지정</text>
+<text x="1260" y="993" font-size="16" fill="#4d5a66" font-weight="400">catus-production-V2 승인 1회</text>
+<text x="1260" y="1017" font-size="16" fill="#4d5a66" font-weight="400">백오피스는 main 승인 배포</text>
+<text x="1260" y="1085" font-size="14" fill="#607583" font-weight="700">서버 먼저 · 앱은 그다음</text>
+</g>
+</g></svg>

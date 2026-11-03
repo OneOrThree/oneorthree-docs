@@ -8,7 +8,7 @@ reviewed = importlib.import_module('make-reviewed-architecture-diagrams')
 base = reviewed.base
 ROOT = base.ROOT
 COMMIT = 'af80af04241cefaa33b9f2a1e383548ecc9b10fa'
-VERSIONS = {'01-ia': 6, '02-journey': 6, '03-service': 7, '04-system': 7, '05-cloud': 3}
+VERSIONS = {'01-ia': 6, '02-journey': 6, '03-service': 7, '04-system': 8, '05-cloud': 3, '06-logging': 1}
 base.TARGET_VERSIONS.update(VERSIONS)
 reviewed.COMMIT = COMMIT
 
@@ -105,24 +105,11 @@ def service():
 
 
 def system():
-    d=diagram('04-system','Cattus · 시스템 아키텍처')
-    band(d,0,'운영 · AWS V2','catus-api-v2.oneorthree.world · backoffice-v2.oneorthree.world')
-    node(d,'prodApp',0,0,'서버 호스트 · m6g.large',['nginx · 서버 4종','HTTP → Business · WSS → Realtime','내부 Data · Notification'],'catus-prod-V2')
-    node(d,'prodRuntime',0,1,'Kafka·Redis 별도 호스트',['Kafka m6g.medium · 3.8.1','Redis m6g.medium · 7.4.11','Shared·Business · noeviction·AOF'],'서버·Kafka·Redis 각각 CD','data')
-    node(d,'prodStorage',0,2,'RDS·백오피스',['기존 RDS catus-prod-db 계속 사용','catus-prod-db-v2는 아직 미사용','백오피스 t4g.small 별도 EC2'],'운영 EC2 총 4대','data')
-    across(d,'runtime','prodApp','prodRuntime',0,0,'사설 연결')
-    band(d,1,'개발 · GCP V2','oneorthree-v2.dev.mooo.com · main 변경 → CI → Auto CD')
-    node(d,'devApp',1,0,'app · e2-medium',['nginx · 서버 4종','컨테이너별 한도 적용','dev 백오피스 없음'],'catus-dev-v2-app')
-    node(d,'devData',1,1,'data · e2-small',['PostgreSQL 16.14','Kafka 3.8.1 · KRaft · RF=1','각 runtime 산출물·성공 기록'],'catus-dev-v2-data','data')
-    node(d,'devRedis',1,2,'redis · e2-micro',['Shared·Business Redis','prod와 다른 메모리 한도','dev VM 3대에 Datadog 없음'],'catus-dev-v2-redis','data')
-    across(d,'devInternal','devApp','devData',1,0,'사설 IP')
-    band(d,2,'승격·발행·배포','구 서버와 V1 workflow는 2026-11-02 정리. V2 경로를 사용한다.')
-    node(d,'promote',2,0,'main → release PR',['Create a merge commit','main 부모 이력 보존','코드 검토는 main PR에서 완료'],'fast-forward 절차 대체','external')
-    node(d,'publish',2,1,'release · CI 발행',['네 서버 digest 조합·태그','서버·Kafka·Redis 개별 버전','V2 patch 자동 증가'],'발행만으로 운영은 안 바뀜','external')
-    node(d,'deploy',2,2,'수동 CD·환경 승인',['release에서 version 지정','catus-production-V2 승인 1회','백오피스는 main 승인 배포'],'서버 먼저 · 앱은 그다음','external')
-    across(d,'promotePublish','promote','publish',2,0,'승격')
-    across(d,'publishDeploy','publish','deploy',2,1,'태그 지정')
-    return d
+    return importlib.import_module('make-runtime-diagrams').system()
+
+
+def logging():
+    return importlib.import_module('make-runtime-diagrams').logging()
 
 
 def cloud():
@@ -147,16 +134,18 @@ def cloud():
 
 def main():
     manifest=json.loads((ROOT/'diagrams/manifest.json').read_text())
-    for d in (ia(),journey(),service(),system(),cloud()):
+    for d in (ia(),journey(),service(),system(),cloud(),logging()):
         version=VERSIONS[d.name]
         entry=next(e for e in manifest if e['id']==d.name)
         if entry['versions'][0]['id'] != f'v{version}':
             raise SystemExit(f'{d.name}: manifest 현재 버전 v{version} 등록 필요')
         if d.name=='05-cloud':
+            source = ROOT/'diagrams'/f'{d.name}.source.json'
+            source_version = json.loads(source.read_text())['version'] if source.exists() else None
             for suffix in ('svg','drawio.xml','source.json'):
                 current=ROOT/'diagrams'/f'{d.name}.{suffix}'
-                archived=ROOT/'diagrams'/f'{d.name}.v{version-1}.{suffix}'
-                if current.exists() and not archived.exists(): copy2(current,archived)
+                archived=ROOT/'diagrams'/f'{d.name}.v{source_version}.{suffix}'
+                if source_version is not None and source_version < version and current.exists() and not archived.exists(): copy2(current,archived)
             d.write(archive=False)
             (ROOT/'diagrams'/f'{d.name}.source.json').write_text(json.dumps({'version':version,'sourceCommit':COMMIT,'title':d.title,'nodes':d.nodes,'edges':d.edges},ensure_ascii=False,indent=2)+'\n')
         else:

@@ -1,0 +1,142 @@
+---
+title: "로그·추적 — 수집 경로와 장애 조회"
+summary: "JSON stdout에서 Datadog·Loki·S3까지의 수집 경로, request/trace/event ID, 보관·유실 조건과 아직 수집하지 않는 파일을 설명합니다."
+status: "2026-11-03 배포 설정 대조"
+date: "2026-11-03"
+order: 4.5
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## 도면과 현재 상태
+
+[로그·추적 도면](/diagrams/06-logging)은 **로그 원천 → Docker 파일 → 두 수집기 → 목적지 → 요청·사건 연결** 순서로 읽습니다. [시스템 도면](/diagrams/04-system)에는 수집기가 어느 호스트에서 실행되는지 표시했습니다.
+
+기준은 phone `af80af042`와 운영 Infra revision 변수에 고정된 cattus-infra `8522746ea`입니다. 아래는 배포 설정과 운영 기록을 대조한 결과입니다. 이번 갱신에서는 AWS 호스트에 작업하거나 새 테스트·canary를 실행하지 않았습니다.
+
+| 구성 | 코드·기록에서 확인한 상태 | 이 문서에서 확인하지 않은 것 |
+| --- | --- | --- |
+| Datadog | 운영 4호스트 Agent, 11월 2일 health PASS 기록 | 현재 SaaS의 서비스별 최신 로그·APM 수신 |
+| Fluent Bit / Loki / S3 | `OBSERVABILITY`의 `fluent_bit`, `loki`, `s3`가 True | 마지막 배포의 관측 단계 결과, 현재 각 목적지의 수신 |
+| Grafana | `grafana=False`, host·Access team·aud 값 비어 있음 | 현재 제공하는 Grafana 접속 주소 없음 |
+| Athena | DDL·조회 SQL·renderer 소스 있음 | 운영 테이블 생성·권한·실제 조회 결과 |
+| Data 사용자 행동 파일 | `/app/logs/user-activity.log`, 로컬 보관 | **V2 파일 업로더 없음**, 이 stdout 파이프라인으로 S3에 가지 않음 |
+| dev V2 | 세 VM에 Datadog Agent 없음 | 구 dev overlay가 V2에서 켜졌다고 간주하지 않음 |
+
+앱 배포가 성공해도 관측 수집 성공으로 표시하지 않습니다. 관측 컨테이너는 앱 배포 기록 뒤 별도 단계에서 기동하고, 실패는 경고로 남겨 앱 배포 결과를 바꾸지 않습니다. 롤백 배포에서는 관측 변경을 건너뜁니다.
+
+## 원천 로그와 출력 파일
+
+| 원천 | 출력 | 수집 범위 |
+| --- | --- | --- |
+| Business·Data·Realtime·Notification | prod `ObservationJsonProvider`의 JSON stdout | 앱 호스트 Datadog와 Fluent Bit이 각각 수집 |
+| Business HTTP 완료 로그 | `log_kind=access` JSON stdout | 요청 상태·시간과 `request_id`로 조회. Data에는 같은 HTTP access logger가 없음 |
+| 앱 nginx access | JSON `/dev/stdout` | `edge_request_id`, upstream 요청 ID, method·uri·status·처리 시간 |
+| 앱 nginx error | `/dev/stderr`, warn 이상 | Fluent Bit에서 infrastructure/raw로 정제 |
+| Kafka·Redis·백오피스 컨테이너 | 각 호스트 Docker 로그 | 해당 호스트 Datadog Agent. 앱 Fluent Bit의 수집 대상은 아님 |
+| Data `app.log` | `/app/logs/app.log` → `/var/log/catus-V2/data-api/app.log` | 로컬 텍스트 사본, 7일·1GiB cap. 두 수집기는 이 파일을 tail하지 않음 |
+| Data `user-activity.log` | 같은 mount의 별도 JSON 파일 | `additivity=false`로 stdout에서 분리, 로컬 30일·1GiB cap. V2 S3 업로더 부재 |
+
+Docker의 앱·nginx 로그 설정은 `json-file`, `max-size=50m`, `max-file=4`입니다. 파일 경로는 `/var/lib/docker/containers/<id>/<id>-json.log`입니다. 크기 회전이라 일정 시간의 보관을 보장하지 않습니다. Kafka·Redis·백오피스 컨테이너는 10m × 3입니다.
+
+nginx JSON access 형식에는 query·요청 헤더·client IP를 넣지 않습니다. `$uri` 경로 자체에 들어간 식별자는 남을 수 있으며 Fluent Bit 경로에서는 경로 토큰 정제·마스킹을 추가합니다. Datadog는 Fluent Bit을 거치지 않으므로 이 후처리가 두 경로에 동일하게 적용된다고 가정하면 안 됩니다.
+
+## Datadog 경로 — 로그·APM·지표 구분
+
+앱 Agent가 Docker 파일을 직접 읽어 Datadog로 전송합니다. JVM tracer의 APM은 `datadog-agent:8126/TCP`, runtime 지표는 DogStatsD `8125/UDP`로 별도 전달됩니다. Agent가 앱의 `9091/actuator/prometheus`를 읽는 OpenMetrics도 별도 경로입니다. 호스트·컨테이너 지표는 `/proc`, cgroup, Docker socket에서 얻습니다.
+
+OpenMetrics는 Data Dockerfile 및 다른 세 서비스 Compose의 `com.datadoghq.ad.checks` 목록만 수집합니다. 모든 Micrometer 지표를 wildcard로 읽는 구성이 아닙니다. Realtime은 히스토그램 버킷 수집을 끕니다. trace sample rate의 설정값은 0.2이고, 로그 한 줄이 있다고 해당 trace가 반드시 보존됐다는 뜻은 아닙니다.
+
+앱 로그의 `Picked up JAVA_TOOL_OPTIONS` 및 `DATADOG TRACER CONFIGURATION` 제외 규칙은 Datadog에만 적용합니다. Agent는 Fluent Bit·Loki·Grafana와 일부 일회성 DB 컨테이너 로그도 제외합니다. Fluent Bit 경로는 별도의 허용 목록으로 판단합니다.
+
+나머지 Kafka·Redis·백오피스 Agent는 각 호스트의 별도 `catus-datadog-v2` 프로젝트입니다. 로그·호스트 지표를 수집하고 APM은 끕니다. Redis 내부 지표는 `health` 계정으로 6379·6380을 검사합니다. Kafka JMX 별도 수집 설정은 현재 Agent 구성에 없습니다. SaaS 보관 기간은 저장소에 고정돼 있지 않아 조직 설정을 확인해야 합니다.
+
+## Fluent Bit 경로 — 입력 선택과 독립 출력
+
+Fluent Bit 4.2.8은 앱 EC2의 host network에서 실행합니다. Docker 로그 디렉터리를 read-only로 읽고 `fluent_bit_state` 볼륨에 tail offset DB와 버퍼를 저장합니다.
+
+1. Docker `*-json.log`를 tail하고 Docker가 분할한 줄을 합칩니다. offset이 있으면 이어 읽고 새 파일이면 처음부터 읽습니다. 회전 파일 `.1` 등은 입력 패턴 밖입니다.
+2. Compose project가 `catus-app-v2`인지 확인합니다. 서비스는 `app`을 `data-api`로 바꾸고 네 서버·nginx만 허용합니다. 다른 프로젝트·무라벨 일회성 컨테이너는 버립니다.
+3. 앱 JSON을 파싱합니다. 정상 앱 JSON은 앱 provider의 마스킹을 신뢰하고, 실패한 raw 줄과 nginx 줄은 Lua로 정제·마스킹합니다.
+4. 원 레코드는 Loki로 보냅니다. `rewrite_tag`의 keep 옵션으로 만든 별도 사본은 S3로 보냅니다. 두 출력은 청크·재시도·버퍼 한도가 분리돼 있습니다.
+
+**Loki의 라벨은 `env`, `service`, `log_kind` 세 가지입니다.** `request_id`, `user_id`, `trace_id`, `event_id`, `message_id`는 JSON 필드로 남깁니다. 요청마다 다른 ID를 라벨로 승격하지 않습니다.
+
+## 목적지·보관·유실 조건
+
+| 대상 | 구성·보관 | 실패·조회 시 유의점 |
+| --- | --- | --- |
+| Loki 3.3.2 | `127.0.0.1:3100`, 별도 observability network, `loki_data:/loki`, retention 168h + compactor ON | 인증 없는 API라 공개 진입점 없음. 단일 로컬 저장소이며 S3를 chunk backend로 쓰지 않음 |
+| Loki 출력 버퍼 | `fluent_bit_state`의 엔진 청크 128MiB | 연결 실패·5xx·429 재시도. 일반 4xx는 버림. 오래된 시각도 수용창 밖이면 거절 가능 |
+| S3 | `system_log/v2/env=prod/service=…/date=…/hour=…/<HOSTNAME>-<UUID>.json.gz`, JSONL | 10MiB 또는 5분 업로드. 앱 역할의 쓰기 권한은 prod 접두에 제한, 로그 만료 90일 |
+| S3 출력 버퍼 | 엔진 64MiB + `/var/lib/fluent-bit/s3` store 64MiB, retry limit 60 | 유한한 버퍼·재시도. 상한·재시도 소진으로 유실 가능, 무손실 전달 보장 아님 |
+
+S3의 날짜·시간 파티션은 **객체 첫 레코드의 event time(UTC)**입니다. 객체 안의 모든 로그 발생 시각이 같은 시간대라는 뜻이 아닙니다. 수집 지연·재시작 뒤에는 원하는 로그가 앞뒤 시간 파티션에 들어갈 수 있습니다.
+
+Fluent Bit 내장 canary는 60초마다 합성 로그 한 건을 만듭니다. 기존 canary의 `log_id`를 Loki와 S3에서 각각 찾으면 두 출력의 도착을 나누어 확인할 수 있습니다. canary가 도착해도 서비스 allowlist에서 누락된 앱 로그까지 정상이라는 뜻은 아닙니다. 장애 확인을 위해 별도 부하나 새 canary를 생성할 필요가 없습니다.
+
+Grafana는 OFF입니다. 활성화 설정에는 Cloudflare Access의 JWT 서명(JWKS)·aud 검증, Viewer 자동 배정이 있고 익명·Basic 인증·로그인 폼은 비활성입니다. 현재 운영 조회 UI가 있다고 문서에 링크하지 않습니다.
+
+## 요청·trace·비동기 사건을 연결하는 필드
+
+| 필드 | 의미·조회 방법 |
+| --- | --- |
+| `log_id` | 로그 한 건의 UUID. 같은 ID가 여러 번 보이면 수집 재전송 사본일 수 있음 |
+| `request_id` | Business가 생성하고 응답 `X-Request-Id`와 내부 HTTP에 전파하는 상관키. 외부 값을 그대로 신뢰하지 않음 |
+| `edge_request_id` | nginx 자신의 요청 ID. upstream 요청 ID가 없을 때도 edge에서 사용 |
+| `dd.trace_id`, `dd.span_id` | 실제 tracer 값. 요청 UUID로 대체하지 않음. Loki `\| json`에서는 `dd_trace_id`, `dd_span_id`로 조회 |
+| canonical `trace_id`, `span_id` | 지원하는 표기를 정규화한 값. 32자리 hex trace는 유지하고, 상위 비트를 잃었을 수 있는 10진 trace를 임의 복원하지 않음 |
+| `origin_request_id`, `origin_trace_id` | outbox·Kafka/HTTP·Redis fanout 너머 원요청과 연결하는 키. 현재 consumer trace와 다를 수 있음 |
+| `event_id`, `message_id` | 사건·채팅 메시지의 식별자. 같은 사건의 단계·재시도는 각각 다른 `log_id` |
+| `operation_id`, `delivery_id`, `attempt` | Notification의 발송 작업·전달 건·시도 번호. `dispatch.settle`은 `delivery_id`와 `attempt`로 연결 |
+
+Business의 비동기 화면 조합과 HTTP worker는 요청 문맥을 명시적으로 전파합니다. Data는 원요청 context를 outbox에 저장하고 Kafka header 또는 HTTP로 넘깁니다. Realtime은 Redis fanout wire의 telemetry로 다른 인스턴스와 원인을 연결합니다.
+
+알림의 단계는 `outbox.delivery` → `consumer.accept` → `operation.link` → `transport.result` → `dispatch.settle`입니다. FCM 호출 성공은 기기의 알림 수신·표시 성공과 다릅니다. 재시도는 같은 `delivery_id`여도 `attempt`와 `operation_id`가 달라질 수 있습니다.
+
+앱 JSON provider는 허용된 MDC 필드만 출력하고 message·exception에 민감값 마스킹 및 바이트 한도를 적용합니다. 잘린 로그는 `truncated`·`original_size_bytes`로 표시합니다. Lua의 raw 마스킹은 Java와 패턴 구현이 달라 모든 입력에서 같은 결과를 보장하지 않습니다.
+
+## 장애 한 건을 찾는 순서
+
+1. 발생 시각·환경·서비스·응답의 `X-Request-Id`를 확보합니다. 응답을 얻지 못했으면 nginx의 status·경로·시간 및 `edge_request_id`부터 봅니다.
+2. Business access와 application 로그에서 `request_id`를 찾고 Data·Realtime·Notification의 `request_id` 및 `origin_request_id`로 넓힙니다.
+3. 비동기라면 `event_id` 또는 `message_id`로 전송·소비·fanout을 연결합니다. 알림 발송 실패는 operation과 `(delivery_id, attempt)`를 함께 확인합니다.
+4. 로그에 실제 `dd.trace_id`가 있으면 Datadog APM을 확인합니다. trace가 없다는 이유만으로 요청이 없었다고 결론 내리지 않습니다.
+5. Loki 7일 범위 밖이거나 조회 결과가 잘리면 S3를 확인합니다. Athena 템플릿은 적용 상태·권한을 먼저 확인한 환경에서 사용합니다.
+
+Loki가 실행 중인 환경에서 사용할 LogQL 예시입니다. Grafana 활성화를 전제하지 않으며 API 접근은 기존 관리 접근 경로를 사용합니다.
+
+```logql
+{env="prod", service="business-api"} | json | request_id="req-example"
+```
+
+```logql
+{env="prod", service=~"data-api|notification|realtime"}
+  | json | event_id="evt-example"
+```
+
+```logql
+{env="prod", service="notification"}
+  | json | delivery_id="delivery-example" | attempt="2"
+```
+
+저장소의 `server/observability/athena/render.py`는 AWS를 호출하지 않고 SQL 텍스트만 생성합니다. 아래 예시는 실제 질의 실행이 아닙니다.
+
+```bash
+python3 server/observability/athena/render.py by-request.sql \
+  --env prod \
+  --from 2026-11-03T01:00:00Z --to 2026-11-03T01:15:00Z \
+  --request-id req-example --margin-hours 1
+```
+
+수집기 장애 구간이라면 `--margin-hours`를 지연 시간 이상으로 넓힙니다. 0행을 곧바로 “해당 로그 없음”으로 읽지 않습니다. Athena 템플릿은 같은 `log_id`의 재수집 사본을 정리하지만 ID가 없는 raw 줄은 보존합니다. Loki는 이 중복 제거를 자동 수행하지 않습니다.
+
+## 근거와 더 자세한 조사 안내
+
+- [운영 Compose](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/compose-V2.yml) · [활성화·Agent env](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/env-V2.py) · [관측 별도 배포 단계](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/deploy-V2.py)
+- [Fluent Bit 입력·필터·Loki 출력](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability/fluent-bit/fluent-bit.conf) · [허용 목록·Lua 정제](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability/fluent-bit/logs.lua)
+- [S3 출력](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability/fluent-bit/modules/s3-on/s3.conf) · [Loki 보관](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability/loki/loki-config.yml) · [S3 만료](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/storage-V2.tf)
+- [Data stdout·파일 분리](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/data-api/src/main/resources/logback-spring.xml) · [앱 JSON 필드·마스킹](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/data-api/src/main/java/com/oneorthree/phone/common/logging/ObservationJsonProvider.java)
+- [ID 연결 구현 상세](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/architecture/server-log-observability/implementation-details.md) · [조회 SQL와 결과 해석](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/architecture/server-log-observability/query-guide.md)
+
+과거 rollout 문서는 당시 배포·검증 상태의 기록입니다. 현재 V2 호스트·스위치·배포 순서는 위 고정한 runtime 코드와 운영 기록을 우선 대조합니다.

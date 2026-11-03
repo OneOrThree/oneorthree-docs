@@ -256,15 +256,27 @@
     "id": "04-system",
     "title": "시스템 아키텍처",
     "titleEn": "System Architecture",
-    "summary": "2026.11.03 · AWS 운영 V2 EC2 4대·GCP dev V2 VM 3대와 승격·발행·수동 CD 경계를 보여 줍니다.",
+    "summary": "2026.11.03 · 호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
     "detailHref": "/spec/system-architecture",
     "versions": [
       {
-        "id": "v7",
-        "label": "v7 · 현재",
+        "id": "v8",
+        "label": "v8 · 현재",
         "date": "2026-11-03",
         "artifactId": "04-system",
-        "status": "main·운영 문서 대조",
+        "status": "컨테이너·포트·로그 경로",
+        "summary": "호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "phone의 운영 Infra revision 변수에 고정된 설정을 대조했습니다. 설정상 활성화와 실제 수신 상태를 구분하며, 이번 갱신은 AWS 실행 상태를 새로 측정하지 않습니다.",
+        "detailHref": "/spec/system-architecture",
+        "sourceHref": "https://github.com/OneOrThree/cattus-infra/tree/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2"
+      },
+      {
+        "id": "v7",
+        "label": "v7 · 이전",
+        "date": "2026-11-03",
+        "artifactId": "04-system.v7",
+        "status": "과거 요약 도면",
         "summary": "AWS 운영 V2 EC2 4대·GCP dev V2 VM 3대와 승격·발행·수동 CD 경계를 보여 줍니다.",
         "evidenceTitle": "phone main af80af042 기준",
         "evidenceSummary": "코드와 11월 2일 운영 기록을 대조했습니다. 현재 운영 기능을 새로 실측한 결과는 아닙니다. 이전 그림은 버전 선택에서 보존합니다.",
@@ -386,6 +398,28 @@
         "evidenceSummary": "구성 내용은 유지했지만 다른 도면과 시각 문법이 달라 v2로 대체했습니다.",
         "detailHref": "/spec/system-architecture",
         "sourceHref": "https://github.com/OneOrThree/documentation/commit/33560dbc88440cd5eaa3497029382449dbe7f344"
+      }
+    ]
+  },
+  {
+    "id": "06-logging",
+    "title": "로그·추적",
+    "titleEn": "Logging & Observability",
+    "summary": "JSON stdout → Docker → Datadog / Fluent Bit → Loki·S3. 요청·비동기 사건 추적과 미수집 범위까지 보여 줍니다.",
+    "detailHref": "/spec/logging-and-observability",
+    "format": "html",
+    "versions": [
+      {
+        "id": "v1",
+        "label": "v1 · 현재",
+        "date": "2026-11-03",
+        "artifactId": "06-logging",
+        "status": "수집·보관·조회·누락 범위",
+        "summary": "실제 수집 입력, Agent·Fluent Bit 분기, 저장소·버퍼·보관 기간, request/trace/event ID 연결을 설명합니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "Fluent Bit·Loki·S3는 설정상 ON, Grafana는 OFF입니다. Data 사용자 행동 파일의 V2 업로더 부재를 표시합니다. 최신 운영 수신·Athena 적용 상태는 확인하지 않았습니다.",
+        "detailHref": "/spec/logging-and-observability",
+        "sourceHref": "https://github.com/OneOrThree/phone/tree/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability"
       }
     ]
   }

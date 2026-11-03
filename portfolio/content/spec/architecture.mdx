@@ -19,7 +19,7 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 | Realtime | 채팅 메시지 DB, 웹소켓 세션, 섬 이동 방 | Data 권한 조회, Shared Redis fanout·소유권 |
 | Notification | 사건 수신·중복 방지·발송 이력·설정 | Kafka/내부 HTTP 수신, FCM 요청 |
 
-[서비스 그림](/diagrams/03-service)과 [시스템 그림](/diagrams/04-system)은 같은 기준 커밋을 사용합니다. 과거 버전은 그림의 버전 선택에서 볼 수 있습니다.
+[서비스 그림](/diagrams/03-service)은 앱 코드 기준, [시스템 그림](/diagrams/04-system)과 [로그·추적 그림](/diagrams/06-logging)은 앱 코드에 고정한 Infra revision을 더해 대조합니다. 과거 버전은 그림의 버전 선택에서 볼 수 있습니다.
 
 ## 정본과 재생 가능한 상태
 
@@ -38,6 +38,10 @@ Data의 상태 변경과 outbox를 같은 트랜잭션으로 기록하는 경로
 운영 V2에서는 네 서버가 한 EC2에 있으며 Kafka·Redis·백오피스는 별도 EC2에 있습니다. 코드에서 경계를 나눴다는 사실과 서비스마다 호스트가 하나씩 있다는 주장은 다릅니다.
 
 Realtime membership authorization, 차단 필터, Kafka 사건 소비는 독립된 설정입니다. 저장소 기본값이 OFF인 기능을 운영에서도 꺼져 있다고 단정하지 않습니다. 이동의 multi-instance 기능 기본값은 ON입니다. 실제 설정과 확인 범위는 [실시간 계약](/spec/messaging-and-realtime)에 모았습니다.
+
+## 로그와 장애 추적
+
+네 서버의 JSON stdout을 Datadog와 Fluent Bit이 각각 읽습니다. APM·지표는 별도 Agent 경로, Fluent Bit 로그는 Loki·S3로 나갑니다. [로그·추적 안내](/spec/logging-and-observability)에 ID 연결·보관·조회 순서와 Grafana OFF·사용자 행동 파일 업로더 부재를 명시했습니다.
 
 ## 근거
 
