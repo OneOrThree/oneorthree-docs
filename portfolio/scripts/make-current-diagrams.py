@@ -8,7 +8,7 @@ reviewed = importlib.import_module('make-reviewed-architecture-diagrams')
 base = reviewed.base
 ROOT = base.ROOT
 COMMIT = 'af80af04241cefaa33b9f2a1e383548ecc9b10fa'
-VERSIONS = {'01-ia': 6, '02-journey': 6, '03-service': 7, '04-system': 9, '05-cloud': 3, '06-logging': 2}
+VERSIONS = {'01-ia': 6, '02-journey': 6, '03-service': 7, '04-system': 10, '05-cloud': 3, '06-logging': 3}
 base.TARGET_VERSIONS.update(VERSIONS)
 reviewed.COMMIT = COMMIT
 

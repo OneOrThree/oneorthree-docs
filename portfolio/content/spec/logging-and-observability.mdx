@@ -1,7 +1,7 @@
 ---
 title: "로그·추적 — 수집 경로와 장애 조회"
 summary: "JSON stdout에서 Datadog·Loki·S3까지의 수집 경로, request/trace/event ID, 보관·유실 조건과 별도 파일 수집의 확인 범위를 설명합니다."
-status: "2026-11-03 배포 설정 대조"
+status: "2026-11-03 S3·호스트 확인"
 date: "2026-11-03"
 order: 4.5
 recordType: "current"
@@ -10,22 +10,44 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 ## 도면과 현재 상태
 
-**V2 시스템 로그의 S3 업로드 경로는 이미 구현되어 있고 운영 배포 설정에서도 켜져 있습니다.** 대상은 네 서버의 stdout과 앱 nginx 로그입니다. 아래의 별도 파일 업로더 설명을 “V2 S3 업로드 전체가 없다”는 뜻으로 읽으면 안 됩니다.
+**V2의 네 서버·앱 nginx 시스템 로그는 실제 S3 적재를 확인했습니다.** 2026년 11월 3일 15:06–15:10(KST)에 서비스별 최신 객체의 gzip JSONL을 읽고, Notification은 호스트의 마지막 로그 ID와 S3 레코드까지 대조했습니다. 별도 `user-activity.log` 파일은 현재 호스트에서 업로더를 찾지 못했고 V2 버킷에도 해당 객체가 없습니다.
 
 [로그·추적 도면](/diagrams/06-logging)은 **로그 원천 → Docker 파일 → 두 수집기 → 목적지 → 요청·사건 연결** 순서로 읽습니다. [시스템 도면](/diagrams/04-system)에는 수집기가 어느 호스트에서 실행되는지 표시했습니다.
 
-기준은 phone `af80af042`와 운영 Infra revision 변수에 고정된 cattus-infra `8522746ea`입니다. 아래는 배포 설정과 운영 기록을 대조한 결과입니다. 이번 갱신에서는 AWS 호스트에 작업하거나 새 테스트·canary를 실행하지 않았습니다.
+기준은 phone `af80af042`와 운영 Infra revision 변수에 고정된 cattus-infra `8522746ea`입니다. 구성 설명은 배포 코드와 운영 기록을 대조했고, S3 수신·앱 호스트의 파일 업로더 상태는 아래 시각에 읽기 전용으로 확인했습니다. 서비스 재시작·설정 변경·테스트 트래픽·새 canary 생성은 하지 않았습니다.
 
 | 구성 | 코드·기록에서 확인한 상태 | 이 문서에서 확인하지 않은 것 |
 | --- | --- | --- |
 | Datadog | 운영 4호스트 Agent, 11월 2일 health PASS 기록 | 현재 SaaS의 서비스별 최신 로그·APM 수신 |
-| Fluent Bit / Loki / S3 | `OBSERVABILITY`의 `fluent_bit`, `loki`, `s3`가 True | 마지막 배포의 관측 단계 결과, 현재 각 목적지의 수신 |
+| Fluent Bit / S3 | 운영 Fluent Bit running, 서비스별 gzip JSONL 수신 확인, `system_log/` 90일 만료 규칙 Enabled | 전체 기간의 전수 대조·무손실 여부 |
+| Loki | 운영 컨테이너 running | Loki의 서비스별 최신 수신은 이번 확인 범위 밖 |
 | Grafana | `grafana=False`, host·Access team·aud 값 비어 있음 | 현재 제공하는 Grafana 접속 주소 없음 |
 | Athena | DDL·조회 SQL·renderer 소스 있음 | 운영 테이블 생성·권한·실제 조회 결과 |
-| Data 사용자 행동 파일 | `/app/logs/user-activity.log`, 로컬 보관 | V2 배포 코드에 파일 업로더 기동 설정 없음. 운영 호스트의 별도 설치·전송 여부는 미확인 |
+| Data 사용자 행동 파일 | `/app/logs/user-activity.log`, 로컬 보관 | 호스트의 관련 systemd·cron·기존 설치 경로에 업로더 없음, V2 버킷의 사용자 행동 접두 객체 없음 |
 | dev V2 | 세 VM에 Datadog Agent 없음 | 구 dev overlay가 V2에서 켜졌다고 간주하지 않음 |
 
 앱 배포가 성공해도 관측 수집 성공으로 표시하지 않습니다. 관측 컨테이너는 앱 배포 기록 뒤 별도 단계에서 기동하고, 실패는 경고로 남겨 앱 배포 결과를 바꾸지 않습니다. 롤백 배포에서는 관측 변경을 건너뜁니다.
+
+## 11월 3일 실제 S3 적재 확인
+
+확인 시각은 **2026-11-03 15:06–15:10 KST**입니다. 대상은 운영 앱 호스트와 V2 로그 버킷입니다. 아래 “최근 객체”는 조회 당시의 `LastModified`이며 계속 갱신되는 실시간 상태판이 아닙니다.
+
+| 원천 | 최근 객체 적재 시각(KST) | 최근 객체를 열어 확인한 내용 |
+| --- | --- | --- |
+| Business | 11/03 15:05:32 | `service=business-api`, access 15건 |
+| Data | 11/03 15:03:02 | `service=data-api`, application 40건 |
+| Realtime | 11/03 15:03:02 | `service=realtime`, application 38건 |
+| Notification | 11/03 06:53:02 | application 1건. 원본 마지막 로그 06:47:16.179와 S3의 `log_id` 일치 |
+| nginx | 11/03 15:05:32 | `service=nginx`, access 15건 |
+| 기존 canary | 11/03 15:06:22 | 6건, 마지막 발생 시각 15:05:59.374 |
+
+Notification 컨테이너는 healthy였고, 원본 Docker 로그도 06:47 이후 갱신되지 않았습니다. 마지막 원본 로그 ID의 SHA-256과 마지막 S3 레코드의 해시가 같았습니다. 따라서 조회 당시 Notification 객체가 오래된 이유는 새 원본 로그가 없었기 때문입니다. 이를 수집 정지로 판정하지 않았습니다.
+
+실행 중 Fluent Bit의 `FLB_S3_BUCKET`은 `catus-prod-logs-808715036056-v2`, 설정 mount는 `catus-v2.0.6-V2` 관측 번들이었습니다. 버킷 루트에는 `system_log/`만 있고 `user_log/`·`user-activity/` 접두는 없었습니다. lifecycle의 `system_log/` 90일 만료 규칙도 Enabled였습니다.
+
+사용자 행동 로컬 파일은 14:58:44(KST)에 갱신됐고 크기는 14,269바이트였습니다. 호스트의 관련 systemd service·timer, cron에서 업로드 작업을 찾지 못했으며 `/opt/catus-tools/log-archive.py`, `/etc/catus-log-archive.env`, 기존 service·timer·offset state 파일도 없었습니다. **이번에 확인한 V2 구성에서는 사용자 행동 파일이 S3로 수집되지 않고 로컬에 남습니다.**
+
+이 검증은 기존 객체의 서비스·종류·시각과 Notification 마지막 레코드를 대조한 것입니다. 전체 로그 전수 전달이나 과거 유실 0건을 증명하지는 않습니다. 로그 원문·사용자 식별자는 문서에 게시하지 않았습니다.
 
 ## 원천 로그와 출력 파일
 
@@ -37,15 +59,14 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 | 앱 nginx error | `/dev/stderr`, warn 이상 | Fluent Bit에서 infrastructure/raw로 정제 |
 | Kafka·Redis·백오피스 컨테이너 | 각 호스트 Docker 로그 | 해당 호스트 Datadog Agent. 앱 Fluent Bit의 수집 대상은 아님 |
 | Data `app.log` | `/app/logs/app.log` → `/var/log/catus-V2/data-api/app.log` | 로컬 텍스트 사본, 7일·1GiB cap. 두 수집기는 이 파일을 tail하지 않음 |
-| Data `user-activity.log` | 같은 mount의 별도 JSON 파일 | `additivity=false`로 stdout에서 분리, 로컬 30일·1GiB cap. 위 stdout 수집 밖의 파일. 별도 업로더의 운영 상태는 미확인 |
+| Data `user-activity.log` | 같은 mount의 별도 JSON 파일 | `additivity=false`로 stdout에서 분리, 로컬 30일·1GiB cap. 11/03 호스트 확인: 파일 업로더 미설치, V2 S3 사용자 행동 객체 없음 |
 
 Docker의 앱·nginx 로그 설정은 `json-file`, `max-size=50m`, `max-file=4`입니다. 파일 경로는 `/var/lib/docker/containers/<id>/<id>-json.log`입니다. 크기 회전이라 일정 시간의 보관을 보장하지 않습니다. Kafka·Redis·백오피스 컨테이너는 10m × 3입니다.
 
 nginx JSON access 형식에는 query·요청 헤더·client IP를 넣지 않습니다. `$uri` 경로 자체에 들어간 식별자는 남을 수 있으며 Fluent Bit 경로에서는 경로 토큰 정제·마스킹을 추가합니다. Datadog는 Fluent Bit을 거치지 않으므로 이 후처리가 두 경로에 동일하게 적용된다고 가정하면 안 됩니다.
 
-사용자 행동 파일을 S3로 보내는 [파일 업로더 구현](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus/log-archive.py)과 [systemd timer](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus/catus-log-archive.timer)는 구 Catus 구성에 존재합니다. 기본 입력은 `/var/log/catus/data-api`, 사용자 행동 목적지는 `user_log/data-api/`입니다. V2의 `/var/log/catus-V2/data-api` 파일을 이 업로더나 별도 작업이 전송하는지는 호스트의 실제 설정과 S3 객체를 확인해야 합니다. **V2 배포 코드에서 기동 설정을 찾지 못한 것만으로 운영 업로드가 없다고 단정하지 않습니다.**
+사용자 행동 파일을 보내는 [파일 업로더 구현](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus/log-archive.py)과 [systemd timer](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus/catus-log-archive.timer)는 구 Catus 코드에 존재합니다. 기본 입력은 `/var/log/catus/data-api`, 목적지는 `user_log/data-api/`입니다. 이 코드의 존재와 V2 호스트의 설치 상태는 다릅니다. 11월 3일 호스트 확인에서는 해당 업로더가 없었으며, 이번 문서 갱신에서 설치하거나 실행하지 않았습니다.
 
-11월 3일 재확인에서 GitHub의 `catus-v2.0.6-V2` 앱 배포 성공 기록은 확인했습니다. 다만 이 결과만으로 관측 단계·각 로그의 도착을 증명하지는 못합니다. AWS SSO 세션 만료로 최신 객체와 호스트의 별도 업로더 설치 상태는 직접 조회하지 못했습니다.
 
 ## Datadog 경로 — 로그·APM·지표 구분
 

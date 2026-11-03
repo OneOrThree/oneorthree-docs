@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="3050" viewBox="0 0 1760 3050" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 운영 호스트·컨테이너·포트</title>
+<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="3050" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 운영 호스트·컨테이너·포트</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</text>
+<rect x="40" y="140" width="1680" height="290" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 공개 진입</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">Cloudflare 프록시 → Origin TLS. app·backoffice의 80/443은 Cloudflare IPv4만 허용한다.</text>
+<rect x="40" y="480" width="1680" height="620" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">02 · catus-prod-V2 · m6g.large · Docker app-network</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">nginx와 아래 서버 4종이 한 EC2를 공유한다. 서버 포트는 브리지 내부, 관리 프록시만 사설 IP에 bind한다.</text>
+<rect x="40" y="1140" width="1680" height="510" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1174" font-size="19" fill="#334d61" font-weight="700">03 · 호스트 간 저장소 연결 · 동일 서비스를 호출 주체로 다시 표시</text>
+<text x="64" y="1201" font-size="16" fill="#4d5a66" font-weight="400">EC2 간에는 VPC 사설 IP 사용. 아래 app-network들은 호스트마다 별개이며 하나의 분산 Docker 네트워크가 아니다.</text>
+<rect x="40" y="1690" width="1680" height="410" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1724" font-size="19" fill="#334d61" font-weight="700">04 · 로그·APM·지표 · 앱과 수집기가 같은 호스트 자원을 사용</text>
+<text x="64" y="1751" font-size="16" fill="#4d5a66" font-weight="400">설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다.</text>
+<rect x="40" y="2140" width="1680" height="390" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="2174" font-size="19" fill="#334d61" font-weight="700">05 · 백오피스의 별도 호스트와 관리 경로</text>
+<text x="64" y="2201" font-size="16" fill="#4d5a66" font-weight="400">백오피스가 DB로 직접 들어가지 않고 앱 호스트의 관리 프록시를 거친다. Cloudflare 뒤 Origin TLS는 앱과 별도다.</text>
+<rect x="40" y="2570" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="2604" font-size="19" fill="#334d61" font-weight="700">06 · 개발 환경은 GCP V2 · 운영과 다른 배치</text>
+<text x="64" y="2631" font-size="16" fill="#4d5a66" font-weight="400">oneorthree-v2.dev.mooo.com · main 자동 CD. dev 세 VM에는 Datadog Agent가 없고 dev 백오피스도 없다.</text>
+<g data-cell-id="internet"><path d="M 520 310 L 655 310" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="568.0" y="284" width="40.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="300" font-size="14" text-anchor="middle" fill="#405768">443</text>
+</g>
+<g data-cell-id="origin"><path d="M 1105 310 L 1240 310" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1152.0" y="284" width="40.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="300" font-size="14" text-anchor="middle" fill="#405768">443</text>
+</g>
+<g data-cell-id="publicHttp"><path d="M 1370 415 L 1370 455 L 50 455 L 50 620 L 70 620" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="691.75" y="429" width="136.5" height="23" rx="4" fill="#ffffff"/>
+<text x="760" y="445" font-size="14" text-anchor="middle" fill="#405768">허용한 공개 HTTP</text>
+</g>
+<g data-cell-id="publicWs"><path d="M 1570 415 L 1570 580" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1550.0" y="538" width="40.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1570" y="554" font-size="14" text-anchor="middle" fill="#405768">WSS</text>
+</g>
+<g data-cell-id="bizData"><path d="M 520 645 L 655 645" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="564.0" y="619" width="48.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="635" font-size="14" text-anchor="middle" fill="#405768">HTTP</text>
+</g>
+<g data-cell-id="bizChat"><path d="M 420 770 L 420 795 L 1450 795 L 1450 770" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1025.75" y="769" width="288.5" height="23" rx="4" fill="#ffffff"/>
+<text x="1170" y="785" font-size="14" text-anchor="middle" fill="#405768">Business → Realtime 내부 채팅 REST</text>
+</g>
+<g data-cell-id="dataEvents"><path d="M 1105 645 L 1240 645" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1129.5" y="619" width="85.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="635" font-size="14" text-anchor="middle" fill="#405768">사건 HTTP</text>
+</g>
+<g data-cell-id="realtimeAuth"><path d="M 1240 705 L 1105 705" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="679" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="695" font-size="14" text-anchor="middle" fill="#405768">권한 조회</text>
+</g>
+<g data-cell-id="bizNoti"><path d="M 520 735 L 600 735 L 600 945 L 655 945" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="535.75" y="792" width="128.5" height="23" rx="4" fill="#ffffff"/>
+<text x="600" y="808" font-size="14" text-anchor="middle" fill="#405768">기기·설정 HTTP</text>
+</g>
+<g data-cell-id="adminData"><path d="M 490 880 L 490 835 L 880 835 L 880 770" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="804.25" y="809" width="211.5" height="23" rx="4" fill="#ffffff"/>
+<text x="910" y="825" font-size="14" text-anchor="middle" fill="#405768">관리 HTTP :18080 → :8080</text>
+</g>
+<g data-cell-id="adminNoti"><path d="M 520 1010 L 655 1010" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="556.0" y="984" width="64.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="1000" font-size="14" text-anchor="middle" fill="#405768">:18082</text>
+</g>
+<g data-cell-id="jdbc"><path d="M 295 1365 L 295 1440" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="247.0" y="1394" width="96.0" height="23" rx="4" fill="#ffffff"/>
+<text x="295" y="1410" font-size="14" text-anchor="middle" fill="#405768">JDBC :5432</text>
+</g>
+<g data-cell-id="broker"><path d="M 880 1365 L 880 1440" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="852.0" y="1394" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="1410" font-size="14" text-anchor="middle" fill="#405768">:9092</text>
+</g>
+<g data-cell-id="redisTcp"><path d="M 1465 1365 L 1465 1440" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1405.0" y="1394" width="120.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1465" y="1410" font-size="14" text-anchor="middle" fill="#405768">:6379 / :6380</text>
+</g>
+<g data-cell-id="collectLogs"><path d="M 520 1890 L 655 1890" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="547.0" y="1864" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="1880" font-size="14" text-anchor="middle" fill="#405768">각각 수집</text>
+</g>
+<g data-cell-id="storeLogs"><path d="M 1105 1890 L 1240 1890" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="1864" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="1880" font-size="14" text-anchor="middle" fill="#405768">분기 전송</text>
+</g>
+<g data-cell-id="consoleWeb"><path d="M 520 2330 L 655 2330" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="568.0" y="2304" width="40.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="2320" font-size="14" text-anchor="middle" fill="#405768">443</text>
+</g>
+<g data-cell-id="consoleInternal"><path d="M 1105 2330 L 1240 2330" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1129.5" y="2304" width="85.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="2320" font-size="14" text-anchor="middle" fill="#405768">사설 HTTP</text>
+</g>
+<g data-cell-id="devDb"><path d="M 520 2760 L 655 2760" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="549.5" y="2734" width="77.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="2750" font-size="14" text-anchor="middle" fill="#405768">사설 TCP</text>
+</g>
+<g data-cell-id="devRedisTcp"><path d="M 295 2860 L 295 2920 L 1465 2920 L 1465 2860" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="795.0" y="2894" width="170.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="2910" font-size="14" text-anchor="middle" fill="#405768">앱 → Redis 사설 TCP</text>
+</g>
+<g data-cell-id="client">
+<rect x="70" y="225" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="255" font-size="21" fill="#172b3a" font-weight="700">모바일 앱</text>
+<text x="90" y="284" font-size="16" fill="#4d5a66" font-weight="400">HTTPS REST · WSS</text>
+<text x="90" y="308" font-size="16" fill="#4d5a66" font-weight="400">catus-api-v2.oneorthree.world</text>
+<text x="90" y="332" font-size="16" fill="#4d5a66" font-weight="400">단체 채팅: REST + 10초 폴링</text>
+<text x="90" y="400" font-size="14" fill="#607583" font-weight="700">React Native · Expo</text>
+</g>
+<g data-cell-id="cf">
+<rect x="655" y="225" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="255" font-size="21" fill="#172b3a" font-weight="700">Cloudflare</text>
+<text x="675" y="284" font-size="16" fill="#4d5a66" font-weight="400">DNS · 프록시</text>
+<text x="675" y="308" font-size="16" fill="#4d5a66" font-weight="400">Origin 인증서로 nginx에 HTTPS</text>
+<text x="675" y="332" font-size="16" fill="#4d5a66" font-weight="400">ALB 없이 EC2 nginx로 진입</text>
+<text x="675" y="400" font-size="14" fill="#607583" font-weight="700">앱 / 백오피스 호스트 별도</text>
+</g>
+<g data-cell-id="nginx">
+<rect x="1240" y="225" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="255" font-size="21" fill="#172b3a" font-weight="700">nginx · 앱 호스트</text>
+<text x="1260" y="284" font-size="16" fill="#4d5a66" font-weight="400">호스트 :80 → HTTPS / :443 TLS</text>
+<text x="1260" y="308" font-size="16" fill="#4d5a66" font-weight="400">공개 경로 allowlist → Business</text>
+<text x="1260" y="332" font-size="16" fill="#4d5a66" font-weight="400">/ws/realtime → Realtime</text>
+<text x="1260" y="356" font-size="16" fill="#4d5a66" font-weight="400">/internal · /actuator → 404</text>
+<text x="1260" y="400" font-size="14" fill="#3866a0" font-weight="700">nginx:1.28-alpine · 로그 stdout/stderr</text>
+</g>
+<g data-cell-id="business">
+<rect x="70" y="580" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="610" font-size="21" fill="#172b3a" font-weight="700">Business · :8080</text>
+<text x="90" y="639" font-size="16" fill="#4d5a66" font-weight="400">공개 인증·응답·/screens 조합</text>
+<text x="90" y="663" font-size="16" fill="#4d5a66" font-weight="400">Data·Realtime·Notification 내부 HTTP</text>
+<text x="90" y="687" font-size="16" fill="#4d5a66" font-weight="400">DB 없음 · Redis :6380 사용</text>
+<text x="90" y="711" font-size="16" fill="#4d5a66" font-weight="400">mem 2GiB · cpu 2 · read_only</text>
+<text x="90" y="755" font-size="14" fill="#3866a0" font-weight="700">business-api · /actuator :9091</text>
+</g>
+<g data-cell-id="data">
+<rect x="655" y="580" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="610" font-size="21" fill="#172b3a" font-weight="700">Data · app:8080</text>
+<text x="675" y="639" font-size="16" fill="#4d5a66" font-weight="400">내부 권한·도메인 명령·정산</text>
+<text x="675" y="663" font-size="16" fill="#4d5a66" font-weight="400">제품 상태 + outbox 같은 TX</text>
+<text x="675" y="687" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL · Shared Redis</text>
+<text x="675" y="711" font-size="16" fill="#4d5a66" font-weight="400">mem 1536MiB</text>
+<text x="675" y="755" font-size="14" fill="#3866a0" font-weight="700">app = data-api · /actuator :9091</text>
+</g>
+<g data-cell-id="realtime">
+<rect x="1240" y="580" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="1260" y="610" font-size="21" fill="#172b3a" font-weight="700">Realtime · :8081</text>
+<text x="1260" y="639" font-size="16" fill="#4d5a66" font-weight="400">WSS /ws/realtime · 내부 REST</text>
+<text x="1260" y="663" font-size="16" fill="#4d5a66" font-weight="400">채팅 DB · 이동·presence·fanout</text>
+<text x="1260" y="687" font-size="16" fill="#4d5a66" font-weight="400">Data에 현재 권한 조회</text>
+<text x="1260" y="711" font-size="16" fill="#4d5a66" font-weight="400">mem 768MiB · Shared Redis :6379</text>
+<text x="1260" y="755" font-size="14" fill="#7860aa" font-weight="700">realtime · /actuator :9091</text>
+</g>
+<g data-cell-id="gateway">
+<rect x="70" y="880" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="910" font-size="21" fill="#172b3a" font-weight="700">관리 전용 nginx</text>
+<text x="90" y="939" font-size="16" fill="#4d5a66" font-weight="400">사설 :18080 → app:8080</text>
+<text x="90" y="963" font-size="16" fill="#4d5a66" font-weight="400">사설 :18082 → notification:8082</text>
+<text x="90" y="987" font-size="16" fill="#4d5a66" font-weight="400">정해진 /internal/admin 경로만</text>
+<text x="90" y="1011" font-size="16" fill="#4d5a66" font-weight="400">SG: 백오피스 호스트만 허용</text>
+<text x="90" y="1055" font-size="14" fill="#3866a0" font-weight="700">backoffice-gateway · 별도 프로젝트</text>
+</g>
+<g data-cell-id="notification">
+<rect x="655" y="880" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="910" font-size="21" fill="#172b3a" font-weight="700">Notification · :8082</text>
+<text x="675" y="939" font-size="16" fill="#4d5a66" font-weight="400">내부 HTTP: 기기·설정·관리</text>
+<text x="675" y="963" font-size="16" fill="#4d5a66" font-weight="400">Kafka 사건 소비 → FCM HTTPS</text>
+<text x="675" y="987" font-size="16" fill="#4d5a66" font-weight="400">알림 DB · 중복·발송·재시도</text>
+<text x="675" y="1011" font-size="16" fill="#4d5a66" font-weight="400">mem 768MiB</text>
+<text x="675" y="1055" font-size="14" fill="#7860aa" font-weight="700">notification · /actuator :9091</text>
+</g>
+<g data-cell-id="localObs">
+<rect x="1240" y="880" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="910" font-size="21" fill="#172b3a" font-weight="700">앱 호스트 관측 컨테이너</text>
+<text x="1260" y="939" font-size="16" fill="#4d5a66" font-weight="400">Datadog Agent 512MiB · app-network</text>
+<text x="1260" y="963" font-size="16" fill="#4d5a66" font-weight="400">Fluent Bit 256MiB · host network</text>
+<text x="1260" y="987" font-size="16" fill="#4d5a66" font-weight="400">Loki 512MiB · observability network</text>
+<text x="1260" y="1011" font-size="16" fill="#4d5a66" font-weight="400">Grafana: 구성 있음 · OFF</text>
+<text x="1260" y="1055" font-size="14" fill="#607583" font-weight="700">수집·저장 흐름은 04절 / 로그 도면</text>
+</g>
+<g data-cell-id="sqlClients">
+<rect x="70" y="1230" width="450" height="135" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="1260" font-size="21" fill="#172b3a" font-weight="700">Data · Realtime · Notification</text>
+<text x="90" y="1289" font-size="16" fill="#4d5a66" font-weight="400">각 서비스 JDBC → 자신의 DB</text>
+<text x="90" y="1313" font-size="16" fill="#4d5a66" font-weight="400">Business는 DB에 직접 연결하지 않음</text>
+<text x="90" y="1350" font-size="14" fill="#3866a0" font-weight="700">PostgreSQL TCP :5432</text>
+</g>
+<g data-cell-id="eventClients">
+<rect x="655" y="1230" width="450" height="135" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="1260" font-size="21" fill="#172b3a" font-weight="700">Data relay · Notification 소비자</text>
+<text x="675" y="1289" font-size="16" fill="#4d5a66" font-weight="400">알림: notification-events · DLT</text>
+<text x="675" y="1313" font-size="16" fill="#4d5a66" font-weight="400">Realtime Kafka 소비는 선택 경로</text>
+<text x="675" y="1350" font-size="14" fill="#7860aa" font-weight="700">Kafka TCP :9092</text>
+</g>
+<g data-cell-id="redisClients">
+<rect x="1240" y="1230" width="450" height="135" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="1260" font-size="21" fill="#172b3a" font-weight="700">Data·Realtime / Business</text>
+<text x="1260" y="1289" font-size="16" fill="#4d5a66" font-weight="400">Shared: presence·fanout·이동 상태</text>
+<text x="1260" y="1313" font-size="16" fill="#4d5a66" font-weight="400">Business: 폐기 세션 등 전용 키</text>
+<text x="1260" y="1350" font-size="14" fill="#3866a0" font-weight="700">Shared :6379 / Business :6380</text>
+</g>
+<g data-cell-id="rds">
+<rect x="70" y="1440" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="90" y="1470" font-size="21" fill="#172b3a" font-weight="700">기존 RDS · catus-prod-db</text>
+<text x="90" y="1499" font-size="16" fill="#4d5a66" font-weight="400">db.t4g.small · PostgreSQL :5432</text>
+<text x="90" y="1523" font-size="16" fill="#4d5a66" font-weight="400">gromo / gromo_chat / gromo_notification</text>
+<text x="90" y="1547" font-size="16" fill="#4d5a66" font-weight="400">별도 catus-prod-db-v2는 미사용</text>
+<text x="90" y="1615" font-size="14" fill="#a9682b" font-weight="700">물리 인스턴스 공유 · 논리 DB 분리</text>
+</g>
+<g data-cell-id="kafka">
+<rect x="655" y="1440" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="1470" font-size="21" fill="#172b3a" font-weight="700">catus-kafka-prod-V2</text>
+<text x="675" y="1499" font-size="16" fill="#4d5a66" font-weight="400">m6g.medium · Kafka 3.8.1</text>
+<text x="675" y="1523" font-size="16" fill="#4d5a66" font-weight="400">1 broker + controller · RF 1</text>
+<text x="675" y="1547" font-size="16" fill="#4d5a66" font-weight="400">사설 :9092 · controller :9093 내부</text>
+<text x="675" y="1571" font-size="16" fill="#4d5a66" font-weight="400">/var/lib/catus-V2/kafka 영속 저장</text>
+<text x="675" y="1615" font-size="14" fill="#7860aa" font-weight="700">SG: app 호스트 → :9092</text>
+</g>
+<g data-cell-id="redis">
+<rect x="1240" y="1440" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="1470" font-size="21" fill="#172b3a" font-weight="700">catus-redis-prod-V2</text>
+<text x="1260" y="1499" font-size="16" fill="#4d5a66" font-weight="400">m6g.medium · Redis 7.4.11 두 개</text>
+<text x="1260" y="1523" font-size="16" fill="#4d5a66" font-weight="400">:6379→6379 / :6380→6379</text>
+<text x="1260" y="1547" font-size="16" fill="#4d5a66" font-weight="400">maxmemory 384 / 128MiB · noeviction</text>
+<text x="1260" y="1571" font-size="16" fill="#4d5a66" font-weight="400">AOF · ACL · shared/business 경로 분리</text>
+<text x="1260" y="1615" font-size="14" fill="#a9682b" font-weight="700">SG: app 호스트 → :6379 / :6380</text>
+</g>
+<g data-cell-id="sources">
+<rect x="70" y="1790" width="450" height="230" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="1820" font-size="21" fill="#172b3a" font-weight="700">실제 수집 입력</text>
+<text x="90" y="1849" font-size="16" fill="#4d5a66" font-weight="400">네 JVM: JSON stdout + DD tracer</text>
+<text x="90" y="1873" font-size="16" fill="#4d5a66" font-weight="400">nginx: JSON access / stderr error</text>
+<text x="90" y="1897" font-size="16" fill="#4d5a66" font-weight="400">Docker json-file: 50MiB × 4</text>
+<text x="90" y="1921" font-size="16" fill="#4d5a66" font-weight="400">기타 3호스트: 각자 Datadog Agent</text>
+<text x="90" y="2005" font-size="14" fill="#3866a0" font-weight="700">Data user-activity 파일은 별도 경로</text>
+</g>
+<g data-cell-id="collectors">
+<rect x="655" y="1790" width="450" height="230" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="1820" font-size="21" fill="#172b3a" font-weight="700">두 수집 경로</text>
+<text x="675" y="1849" font-size="16" fill="#4d5a66" font-weight="400">Datadog: Docker 로그·APM·지표</text>
+<text x="675" y="1873" font-size="16" fill="#4d5a66" font-weight="400">APM :8126 / DogStatsD UDP :8125</text>
+<text x="675" y="1897" font-size="16" fill="#4d5a66" font-weight="400">OpenMetrics: 각 앱 :9091 allowlist</text>
+<text x="675" y="1921" font-size="16" fill="#4d5a66" font-weight="400">Fluent Bit: 허용한 앱·nginx만 tail</text>
+<text x="675" y="1945" font-size="16" fill="#4d5a66" font-weight="400">fluent_bit_state: offset·디스크 버퍼</text>
+<text x="675" y="2005" font-size="14" fill="#607583" font-weight="700">앱 stdout 파일을 두 수집기가 각각 읽음</text>
+</g>
+<g data-cell-id="sinks">
+<rect x="1240" y="1790" width="450" height="230" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="1820" font-size="21" fill="#172b3a" font-weight="700">검색·보관</text>
+<text x="1260" y="1849" font-size="16" fill="#4d5a66" font-weight="400">Datadog SaaS: 로그·APM·지표</text>
+<text x="1260" y="1873" font-size="16" fill="#4d5a66" font-weight="400">Loki: 127.0.0.1:3100 · 로컬 7일</text>
+<text x="1260" y="1897" font-size="16" fill="#4d5a66" font-weight="400">S3: system_log/v2/ · 만료 90일</text>
+<text x="1260" y="1921" font-size="16" fill="#4d5a66" font-weight="400">Grafana OFF · 조회는 로그 안내 참고</text>
+<text x="1260" y="1945" font-size="16" fill="#4d5a66" font-weight="400">user-activity 파일 전송: 운영 미확인</text>
+<text x="1260" y="2005" font-size="14" fill="#a9682b" font-weight="700">상세 도면: 로그·추적 / 수신 상태 미확인</text>
+</g>
+<g data-cell-id="operator">
+<rect x="70" y="2240" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="2270" font-size="21" fill="#172b3a" font-weight="700">운영자 브라우저</text>
+<text x="90" y="2299" font-size="16" fill="#4d5a66" font-weight="400">backoffice-v2.oneorthree.world</text>
+<text x="90" y="2323" font-size="16" fill="#4d5a66" font-weight="400">HTTPS → Cloudflare → nginx :443</text>
+<text x="90" y="2347" font-size="16" fill="#4d5a66" font-weight="400">구 backoffice 주소는 302 이동</text>
+<text x="90" y="2415" font-size="14" fill="#607583" font-weight="700">운영자 인증</text>
+</g>
+<g data-cell-id="backoffice">
+<rect x="655" y="2240" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="2270" font-size="21" fill="#172b3a" font-weight="700">catus-backoffice-prod-V2</text>
+<text x="675" y="2299" font-size="16" fill="#4d5a66" font-weight="400">t4g.small · nginx → app:4310</text>
+<text x="675" y="2323" font-size="16" fill="#4d5a66" font-weight="400">/var/lib/catus-V2/backoffice → /state</text>
+<text x="675" y="2347" font-size="16" fill="#4d5a66" font-weight="400">별도 Datadog Agent · APM OFF</text>
+<text x="675" y="2371" font-size="16" fill="#4d5a66" font-weight="400">일일 상태 백업 → S3</text>
+<text x="675" y="2415" font-size="14" fill="#3866a0" font-weight="700">백오피스 UI와 로컬 상태</text>
+</g>
+<g data-cell-id="adminTargets">
+<rect x="1240" y="2240" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="2270" font-size="21" fill="#172b3a" font-weight="700">앱 호스트 관리 프록시</text>
+<text x="1260" y="2299" font-size="16" fill="#4d5a66" font-weight="400">사설 :18080 → Data :8080</text>
+<text x="1260" y="2323" font-size="16" fill="#4d5a66" font-weight="400">사설 :18082 → Notification :8082</text>
+<text x="1260" y="2347" font-size="16" fill="#4d5a66" font-weight="400">관리 API allowlist + 서비스 인증</text>
+<text x="1260" y="2371" font-size="16" fill="#4d5a66" font-weight="400">공개 nginx의 /internal은 404</text>
+<text x="1260" y="2415" font-size="14" fill="#3866a0" font-weight="700">02절 backoffice-gateway 재표시</text>
+</g>
+<g data-cell-id="devApp">
+<rect x="70" y="2670" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="2700" font-size="21" fill="#172b3a" font-weight="700">catus-dev-v2-app · e2-medium</text>
+<text x="90" y="2729" font-size="16" fill="#4d5a66" font-weight="400">nginx + 서버 4종</text>
+<text x="90" y="2753" font-size="16" fill="#4d5a66" font-weight="400">운영과 같은 서비스 경계</text>
+<text x="90" y="2777" font-size="16" fill="#4d5a66" font-weight="400">data VM · redis VM에 사설 연결</text>
+<text x="90" y="2845" font-size="14" fill="#3866a0" font-weight="700">개발 앱 호스트</text>
+</g>
+<g data-cell-id="devData">
+<rect x="655" y="2670" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="2700" font-size="21" fill="#172b3a" font-weight="700">catus-dev-v2-data · e2-small</text>
+<text x="675" y="2729" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL 16.14 :5432</text>
+<text x="675" y="2753" font-size="16" fill="#4d5a66" font-weight="400">Kafka 3.8.1 :9092 · RF 1</text>
+<text x="675" y="2777" font-size="16" fill="#4d5a66" font-weight="400">운영 RDS·Kafka와 다른 배치</text>
+<text x="675" y="2845" font-size="14" fill="#a9682b" font-weight="700">개발 DB + broker</text>
+</g>
+<g data-cell-id="devRedis">
+<rect x="1240" y="2670" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="2700" font-size="21" fill="#172b3a" font-weight="700">catus-dev-v2-redis · e2-micro</text>
+<text x="1260" y="2729" font-size="16" fill="#4d5a66" font-weight="400">Shared·Business Redis 7.4.11</text>
+<text x="1260" y="2753" font-size="16" fill="#4d5a66" font-weight="400">:6379 / :6380 · ACL · AOF</text>
+<text x="1260" y="2777" font-size="16" fill="#4d5a66" font-weight="400">운영보다 작은 메모리 한도</text>
+<text x="1260" y="2845" font-size="14" fill="#a9682b" font-weight="700">개발 Redis</text>
+</g>
+</g></svg>

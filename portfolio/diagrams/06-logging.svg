@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1760" height="2820" viewBox="0 0 1760 2820" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 로그 수집·보관·요청 추적</title>
-<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</desc>
+<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
 <g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="2820" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 로그 수집·보관·요청 추적</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
 <rect x="40" y="140" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 앱 호스트의 입력 · 로그와 trace는 다른 데이터</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">JVM·nginx stdout을 Docker가 파일로 기록한다. APM trace와 지표는 Docker 로그를 거치지 않고 Agent로 전달된다.</text>
@@ -13,10 +13,10 @@
 <text x="64" y="641" font-size="16" fill="#4d5a66" font-weight="400">APM 8126/TCP · DogStatsD 8125/UDP · OpenMetrics 9091/TCP. 호스트 지표는 Agent가 /proc·cgroup에서 읽는다.</text>
 <rect x="40" y="1100" width="1680" height="490" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="1134" font-size="19" fill="#334d61" font-weight="700">03 · 목적지와 보관 한도</text>
-<text x="64" y="1161" font-size="16" fill="#4d5a66" font-weight="400">Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인</text>
+<text x="64" y="1161" font-size="16" fill="#4d5a66" font-weight="400">11/03: S3 서비스별 최신 객체 확인 · Loki running · Loki 최신 수신은 별도 확인</text>
 <rect x="40" y="1630" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="1664" font-size="19" fill="#334d61" font-weight="700">04 · 조회 도구·수집 한계·빠진 범위</text>
-<text x="64" y="1691" font-size="16" fill="#4d5a66" font-weight="400">점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.</text>
+<text x="64" y="1691" font-size="16" fill="#4d5a66" font-weight="400">점선 상자는 OFF 또는 업로더 미설치 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.</text>
 <rect x="40" y="2070" width="1680" height="660" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="2104" font-size="19" fill="#334d61" font-weight="700">05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름</text>
 <text x="64" y="2131" font-size="16" fill="#4d5a66" font-weight="400">request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다.</text>
@@ -162,7 +162,7 @@
 <text x="1260" y="1341" font-size="16" fill="#4d5a66" font-weight="400">로그 만료 규칙: 90일</text>
 <text x="1260" y="1365" font-size="16" fill="#4d5a66" font-weight="400">Loki 청크 저장소가 아닌 별도 아카이브</text>
 <text x="1260" y="1389" font-size="16" fill="#4d5a66" font-weight="400">객체 파티션 시간 = 첫 레코드 시각</text>
-<text x="1260" y="1445" font-size="14" fill="#a9682b" font-weight="700">ap-northeast-2 · retry_limit 60</text>
+<text x="1260" y="1445" font-size="14" fill="#a9682b" font-weight="700">11/03 서비스별 S3 객체 확인 · retry 60</text>
 </g>
 <g data-cell-id="grafana">
 <rect x="70" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="8 5"/>
@@ -184,14 +184,14 @@
 <text x="675" y="1945" font-size="14" fill="#607583" font-weight="700">기존 canary 관찰 · 새 트래픽 생성 불필요</text>
 </g>
 <g data-cell-id="ua">
-<rect x="1240" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
+<rect x="1240" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="8 5"/>
 <text x="1260" y="1760" font-size="21" fill="#172b3a" font-weight="700">Data user-activity · 별도 파일</text>
 <text x="1260" y="1789" font-size="16" fill="#4d5a66" font-weight="400">additivity=false · stdout에 안 섞임</text>
 <text x="1260" y="1813" font-size="16" fill="#4d5a66" font-weight="400">/app/logs/user-activity.log</text>
 <text x="1260" y="1837" font-size="16" fill="#4d5a66" font-weight="400">호스트 /var/log/catus-V2/data-api</text>
 <text x="1260" y="1861" font-size="16" fill="#4d5a66" font-weight="400">로컬 30일 · 1GiB cap</text>
-<text x="1260" y="1885" font-size="16" fill="#4d5a66" font-weight="400">V2 파일 업로더: 운영 설치 미확인</text>
-<text x="1260" y="1945" font-size="14" fill="#a67b26" font-weight="700">위 stdout 수집과 별개 · 배포 코드에 기동 없음</text>
+<text x="1260" y="1885" font-size="16" fill="#4d5a66" font-weight="400">11/03 호스트: 파일 업로더 미설치</text>
+<text x="1260" y="1945" font-size="14" fill="#a67b26" font-weight="700">V2 버킷에 사용자 행동 객체 없음</text>
 </g>
 <g data-cell-id="httpIds">
 <rect x="70" y="2170" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>

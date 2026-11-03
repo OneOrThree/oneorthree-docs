@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
   "title": "Cattus · 로그 수집·보관·요청 추적",
   "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
@@ -169,7 +169,7 @@
         "객체 파티션 시간 = 첫 레코드 시각"
       ],
       "kind": "data",
-      "stage": "ap-northeast-2 · retry_limit 60",
+      "stage": "11/03 서비스별 S3 객체 확인 · retry 60",
       "state": "code"
     },
     {
@@ -219,11 +219,11 @@
         "/app/logs/user-activity.log",
         "호스트 /var/log/catus-V2/data-api",
         "로컬 30일 · 1GiB cap",
-        "V2 파일 업로더: 운영 설치 미확인"
+        "11/03 호스트: 파일 업로더 미설치"
       ],
       "kind": "future",
-      "stage": "위 stdout 수집과 별개 · 배포 코드에 기동 없음",
-      "state": "unknown"
+      "stage": "V2 버킷에 사용자 행동 객체 없음",
+      "state": "off"
     },
     {
       "id": "httpIds",

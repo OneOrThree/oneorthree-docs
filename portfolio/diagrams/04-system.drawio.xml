@@ -8,7 +8,7 @@
         <mxCell id="heading" value="Cattus · 운영 호스트·컨테이너·포트" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
         </mxCell>
-        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
         </mxCell>
         <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -44,7 +44,7 @@
         <mxCell id="bandTitle3" value="04 · 로그·APM·지표 · 앱과 수집기가 같은 호스트 자원을 사용" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="64" y="1702" width="1632" height="30" />
         </mxCell>
-        <mxCell id="bandSub3" value="설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+        <mxCell id="bandSub3" value="11/03 확인: 네 서버·nginx S3 적재 / Fluent Bit·Loki running / Grafana OFF. Datadog SaaS 수신은 별도다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="1733" width="1632" height="26" />
         </mxCell>
         <mxCell id="band4" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -199,7 +199,7 @@
         <mxCell id="realtime" value="&lt;b&gt;Realtime · :8081&lt;/b&gt;&lt;br&gt;WSS /ws/realtime · 내부 REST&lt;br&gt;채팅 DB · 이동·presence·fanout&lt;br&gt;Data에 현재 권한 조회&lt;br&gt;mem 768MiB · Shared Redis :6379&lt;br&gt;&lt;b&gt;realtime · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="580" width="450" height="190" />
         </mxCell>
-        <mxCell id="gateway" value="&lt;b&gt;관리 전용 nginx&lt;/b&gt;&lt;br&gt;사설 :18080 → app:8080&lt;br&gt;사설 :18082 → notification:8082&lt;br&gt;정해진 /internal/admin 경로만&lt;br&gt;SG: 백오피스 호스트만 허용&lt;br&gt;&lt;b&gt;backoffice-gateway · 별도 프로젝트&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="gateway" value="&lt;b&gt;관리 전용 nginx&lt;/b&gt;&lt;br&gt;사설 :18080 → app:8080&lt;br&gt;사설 :18082 → notification:8082&lt;br&gt;정해진 /internal/admin 경로만&lt;br&gt;SG: 백오피스 호스트만 허용&lt;br&gt;&lt;b&gt;backoffice-gateway · app-network&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="880" width="450" height="190" />
         </mxCell>
         <mxCell id="notification" value="&lt;b&gt;Notification · :8082&lt;/b&gt;&lt;br&gt;내부 HTTP: 기기·설정·관리&lt;br&gt;Kafka 사건 소비 → FCM HTTPS&lt;br&gt;알림 DB · 중복·발송·재시도&lt;br&gt;mem 768MiB&lt;br&gt;&lt;b&gt;notification · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
@@ -232,7 +232,7 @@
         <mxCell id="collectors" value="&lt;b&gt;두 수집 경로&lt;/b&gt;&lt;br&gt;Datadog: Docker 로그·APM·지표&lt;br&gt;APM :8126 / DogStatsD UDP :8125&lt;br&gt;OpenMetrics: 각 앱 :9091 allowlist&lt;br&gt;Fluent Bit: 허용한 앱·nginx만 tail&lt;br&gt;fluent_bit_state: offset·디스크 버퍼&lt;br&gt;&lt;b&gt;앱 stdout 파일을 두 수집기가 각각 읽음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="1790" width="450" height="230" />
         </mxCell>
-        <mxCell id="sinks" value="&lt;b&gt;검색·보관&lt;/b&gt;&lt;br&gt;Datadog SaaS: 로그·APM·지표&lt;br&gt;Loki: 127.0.0.1:3100 · 로컬 7일&lt;br&gt;S3: system_log/v2/ · 만료 90일&lt;br&gt;Grafana OFF · 조회는 로그 안내 참고&lt;br&gt;user-activity 파일 전송: 운영 미확인&lt;br&gt;&lt;b&gt;상세 도면: 로그·추적 / 수신 상태 미확인&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="sinks" value="&lt;b&gt;검색·보관&lt;/b&gt;&lt;br&gt;Datadog SaaS: 로그·APM·지표&lt;br&gt;Loki: 127.0.0.1:3100 · 로컬 7일&lt;br&gt;S3: system_log/v2/ · 만료 90일&lt;br&gt;Grafana OFF · 조회는 로그 안내 참고&lt;br&gt;user-activity: 파일 업로더 미설치 확인&lt;br&gt;&lt;b&gt;11/03 S3 객체 확인 · 상세 도면: 로그·추적&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="1790" width="450" height="230" />
         </mxCell>
         <mxCell id="operator" value="&lt;b&gt;운영자 브라우저&lt;/b&gt;&lt;br&gt;backoffice-v2.oneorthree.world&lt;br&gt;HTTPS → Cloudflare → nginx :443&lt;br&gt;구 backoffice 주소는 302 이동&lt;br&gt;&lt;b&gt;운영자 인증&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">

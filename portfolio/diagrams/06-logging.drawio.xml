@@ -8,7 +8,7 @@
         <mxCell id="heading" value="Cattus · 로그 수집·보관·요청 추적" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
         </mxCell>
-        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
         </mxCell>
         <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -35,7 +35,7 @@
         <mxCell id="bandTitle2" value="03 · 목적지와 보관 한도" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="64" y="1112" width="1632" height="30" />
         </mxCell>
-        <mxCell id="bandSub2" value="Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+        <mxCell id="bandSub2" value="11/03: S3 서비스별 최신 객체 확인 · Loki running · Loki 최신 수신은 별도 확인" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="1143" width="1632" height="26" />
         </mxCell>
         <mxCell id="band3" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -44,7 +44,7 @@
         <mxCell id="bandTitle3" value="04 · 조회 도구·수집 한계·빠진 범위" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="64" y="1642" width="1632" height="30" />
         </mxCell>
-        <mxCell id="bandSub3" value="점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+        <mxCell id="bandSub3" value="점선 상자는 OFF 또는 업로더 미설치 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="1673" width="1632" height="26" />
         </mxCell>
         <mxCell id="band4" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -169,7 +169,7 @@
         <mxCell id="loki" value="&lt;b&gt;Loki 3.3.2 · 로컬 7일&lt;/b&gt;&lt;br&gt;Fluent Bit → 127.0.0.1:3100&lt;br&gt;별도 observability network&lt;br&gt;loki_data → /loki · 단일 인스턴스&lt;br&gt;retention 168h + compactor ON&lt;br&gt;라벨은 env / service / log_kind&lt;br&gt;ID는 JSON 필드로 조회&lt;br&gt;&lt;b&gt;app-network에 미연결 · 인증 없는 API&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="1210" width="450" height="250" />
         </mxCell>
-        <mxCell id="s3" value="&lt;b&gt;S3 · system_log/v2/&lt;/b&gt;&lt;br&gt;gzip JSONL · env/service/date/hour&lt;br&gt;10MiB 또는 5분 단위 업로드&lt;br&gt;앱 EC2 IAM: prod 접두 쓰기만&lt;br&gt;로그 만료 규칙: 90일&lt;br&gt;Loki 청크 저장소가 아닌 별도 아카이브&lt;br&gt;객체 파티션 시간 = 첫 레코드 시각&lt;br&gt;&lt;b&gt;ap-northeast-2 · retry_limit 60&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="s3" value="&lt;b&gt;S3 · system_log/v2/&lt;/b&gt;&lt;br&gt;gzip JSONL · env/service/date/hour&lt;br&gt;10MiB 또는 5분 단위 업로드&lt;br&gt;앱 EC2 IAM: prod 접두 쓰기만&lt;br&gt;로그 만료 규칙: 90일&lt;br&gt;Loki 청크 저장소가 아닌 별도 아카이브&lt;br&gt;객체 파티션 시간 = 첫 레코드 시각&lt;br&gt;&lt;b&gt;11/03 서비스별 S3 객체 확인 · retry 60&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="1210" width="450" height="250" />
         </mxCell>
         <mxCell id="grafana" value="&lt;b&gt;Grafana · OFF&lt;/b&gt;&lt;br&gt;구성은 있으나 배포 스위치 false&lt;br&gt;활성화 시 Loki datasource 사용&lt;br&gt;Cloudflare Access JWT · JWKS/aud&lt;br&gt;현재 Grafana 접속 주소 없음&lt;br&gt;&lt;b&gt;대신 Datadog / 승인된 Loki 접근 사용&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=8 5;">
@@ -178,7 +178,7 @@
         <mxCell id="buffer" value="&lt;b&gt;유실·지연을 판별할 지점&lt;/b&gt;&lt;br&gt;Loki 엔진 버퍼 128MiB&lt;br&gt;S3 엔진 64MiB + store_dir 64MiB&lt;br&gt;상한·회전·재시도 소진 시 유실 가능&lt;br&gt;canary 60초 간격 · 목적지별 도착 확인&lt;br&gt;canary 도착 ≠ 모든 앱 로그 수집 성공&lt;br&gt;&lt;b&gt;기존 canary 관찰 · 새 트래픽 생성 불필요&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="1730" width="450" height="230" />
         </mxCell>
-        <mxCell id="ua" value="&lt;b&gt;Data user-activity · 별도 파일&lt;/b&gt;&lt;br&gt;additivity=false · stdout에 안 섞임&lt;br&gt;/app/logs/user-activity.log&lt;br&gt;호스트 /var/log/catus-V2/data-api&lt;br&gt;로컬 30일 · 1GiB cap&lt;br&gt;V2 파일 업로더: 운영 설치 미확인&lt;br&gt;&lt;b&gt;위 stdout 수집과 별개 · 배포 코드에 기동 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=2 5;">
+        <mxCell id="ua" value="&lt;b&gt;Data user-activity · 별도 파일&lt;/b&gt;&lt;br&gt;additivity=false · stdout에 안 섞임&lt;br&gt;/app/logs/user-activity.log&lt;br&gt;호스트 /var/log/catus-V2/data-api&lt;br&gt;로컬 30일 · 1GiB cap&lt;br&gt;11/03 호스트: 파일 업로더 미설치&lt;br&gt;&lt;b&gt;V2 버킷에 사용자 행동 객체 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e7;strokeColor=#a67b26;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;dashed=1;dashPattern=8 5;">
           <mxGeometry as="geometry" x="1240" y="1730" width="450" height="230" />
         </mxCell>
         <mxCell id="httpIds" value="&lt;b&gt;HTTP → Business → Data&lt;/b&gt;&lt;br&gt;Business가 request_id 생성&lt;br&gt;응답 X-Request-Id / 내부 호출 전파&lt;br&gt;nginx upstream_request_id와 연결&lt;br&gt;dd.trace_id는 실제 tracer context&lt;br&gt;&lt;b&gt;request_id를 APM trace ID로 쓰지 않음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">

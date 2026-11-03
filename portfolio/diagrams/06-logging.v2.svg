@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="2820" viewBox="0 0 1760 2820" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 로그 수집·보관·요청 추적</title>
+<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="2820" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 로그 수집·보관·요청 추적</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</text>
+<rect x="40" y="140" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 앱 호스트의 입력 · 로그와 trace는 다른 데이터</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">JVM·nginx stdout을 Docker가 파일로 기록한다. APM trace와 지표는 Docker 로그를 거치지 않고 Agent로 전달된다.</text>
+<rect x="40" y="580" width="1680" height="480" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="614" font-size="19" fill="#334d61" font-weight="700">02 · 독립 수집기 · Datadog → Fluent Bit 직렬 연결이 아님</text>
+<text x="64" y="641" font-size="16" fill="#4d5a66" font-weight="400">APM 8126/TCP · DogStatsD 8125/UDP · OpenMetrics 9091/TCP. 호스트 지표는 Agent가 /proc·cgroup에서 읽는다.</text>
+<rect x="40" y="1100" width="1680" height="490" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1134" font-size="19" fill="#334d61" font-weight="700">03 · 목적지와 보관 한도</text>
+<text x="64" y="1161" font-size="16" fill="#4d5a66" font-weight="400">Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인</text>
+<rect x="40" y="1630" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1664" font-size="19" fill="#334d61" font-weight="700">04 · 조회 도구·수집 한계·빠진 범위</text>
+<text x="64" y="1691" font-size="16" fill="#4d5a66" font-weight="400">점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.</text>
+<rect x="40" y="2070" width="1680" height="660" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="2104" font-size="19" fill="#334d61" font-weight="700">05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름</text>
+<text x="64" y="2131" font-size="16" fill="#4d5a66" font-weight="400">request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다.</text>
+<g data-cell-id="stdout"><path d="M 295 470 L 295 510 L 1465 510 L 1465 470" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="762.25" y="484" width="235.5" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="500" font-size="14" text-anchor="middle" fill="#405768">stdout/stderr → Docker 파일</text>
+</g>
+<g data-cell-id="nginxStdout"><path d="M 1105 340 L 1240 340" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1140.0" y="314" width="64.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="330" font-size="14" text-anchor="middle" fill="#405768">stdout</text>
+</g>
+<g data-cell-id="dockerDd"><path d="M 1340 470 L 1340 560 L 50 560 L 50 790 L 70 790" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="309.5" y="534" width="101.0" height="23" rx="4" fill="#ffffff"/>
+<text x="360" y="550" font-size="14" text-anchor="middle" fill="#405768">Docker 로그</text>
+</g>
+<g data-cell-id="dockerFluent"><path d="M 1560 470 L 1560 655 L 880 655 L 880 680" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1139.5" y="649" width="101.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1190" y="665" font-size="14" text-anchor="middle" fill="#405768">Docker 로그</text>
+</g>
+<g data-cell-id="tracer"><path d="M 70 400 L 20 400 L 20 665 L 295 665 L 295 680" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="81.25" y="655" width="147.5" height="23" rx="4" fill="#ffffff"/>
+<text x="155" y="671" font-size="14" text-anchor="middle" fill="#405768">APM·runtime 지표</text>
+</g>
+<g data-cell-id="agentSaas"><path d="M 295 950 L 295 1075 L 50 1075 L 50 1280 L 70 1280" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="267.0" y="1049" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="295" y="1065" font-size="14" text-anchor="middle" fill="#405768">HTTPS</text>
+</g>
+<g data-cell-id="otherAgentSaas"><path d="M 1465 950 L 1465 1040 L 30 1040 L 30 1310 L 70 1310" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="997.5" y="1014" width="185.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1090" y="1030" font-size="14" text-anchor="middle" fill="#405768">다른 3호스트 로그·지표</text>
+</g>
+<g data-cell-id="lokiOutput"><path d="M 880 950 L 880 1210" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="852.0" y="1159" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="1175" font-size="14" text-anchor="middle" fill="#405768">:3100</text>
+</g>
+<g data-cell-id="s3Output"><path d="M 1105 870 L 1170 870 L 1170 1175 L 1465 1175 L 1465 1210" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1360.25" y="1149" width="139.5" height="23" rx="4" fill="#ffffff"/>
+<text x="1430" y="1165" font-size="14" text-anchor="middle" fill="#405768">복제 → S3 HTTPS</text>
+</g>
+<g data-cell-id="grafanaQuery"><path d="M 295 1730 L 295 1540 L 880 1540 L 880 1460" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="523.25" y="1514" width="173.5" height="23" rx="4" fill="#ffffff"/>
+<text x="610" y="1530" font-size="14" text-anchor="middle" fill="#405768">활성화할 때 Loki 조회</text>
+</g>
+<g data-cell-id="httpEvent"><path d="M 520 2260 L 655 2260" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="547.0" y="2234" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="2250" font-size="14" text-anchor="middle" fill="#405768">원인 저장</text>
+</g>
+<g data-cell-id="eventDelivery"><path d="M 1105 2260 L 1240 2260" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="2234" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="2250" font-size="14" text-anchor="middle" fill="#405768">사건 소비</text>
+</g>
+<g data-cell-id="jvm">
+<rect x="70" y="240" width="450" height="230" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="270" font-size="21" fill="#172b3a" font-weight="700">Business·Data·Realtime·Noti</text>
+<text x="90" y="299" font-size="16" fill="#4d5a66" font-weight="400">ObservationJsonProvider → stdout</text>
+<text x="90" y="323" font-size="16" fill="#4d5a66" font-weight="400">schema_version=1 · log_id · timestamp</text>
+<text x="90" y="347" font-size="16" fill="#4d5a66" font-weight="400">service / env / version / log_kind</text>
+<text x="90" y="371" font-size="16" fill="#4d5a66" font-weight="400">request_id · dd.trace_id · 사건 ID</text>
+<text x="90" y="395" font-size="16" fill="#4d5a66" font-weight="400">허용 필드·민감값 마스킹·크기 제한</text>
+<text x="90" y="455" font-size="14" fill="#3866a0" font-weight="700">prod JSON · Business는 access 로그 포함</text>
+</g>
+<g data-cell-id="nginxLogs">
+<rect x="655" y="240" width="450" height="230" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="270" font-size="21" fill="#172b3a" font-weight="700">nginx · access / error</text>
+<text x="675" y="299" font-size="16" fill="#4d5a66" font-weight="400">access: JSON → /dev/stdout</text>
+<text x="675" y="323" font-size="16" fill="#4d5a66" font-weight="400">edge_request_id / upstream_request_id</text>
+<text x="675" y="347" font-size="16" fill="#4d5a66" font-weight="400">method · uri · status · request_time</text>
+<text x="675" y="371" font-size="16" fill="#4d5a66" font-weight="400">query·요청 헤더·client IP 제외</text>
+<text x="675" y="395" font-size="16" fill="#4d5a66" font-weight="400">error: /dev/stderr · warn 이상</text>
+<text x="675" y="455" font-size="14" fill="#3866a0" font-weight="700">Fluent Bit에서 정규화·경로 정제</text>
+</g>
+<g data-cell-id="docker">
+<rect x="1240" y="240" width="450" height="230" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="270" font-size="21" fill="#172b3a" font-weight="700">Docker json-file</text>
+<text x="1260" y="299" font-size="16" fill="#4d5a66" font-weight="400">/var/lib/docker/containers/</text>
+<text x="1260" y="323" font-size="16" fill="#4d5a66" font-weight="400">&lt;id&gt;/&lt;id&gt;-json.log</text>
+<text x="1260" y="347" font-size="16" fill="#4d5a66" font-weight="400">앱·nginx: max-size 50m × 4</text>
+<text x="1260" y="371" font-size="16" fill="#4d5a66" font-weight="400">두 수집기에 read-only mount</text>
+<text x="1260" y="395" font-size="16" fill="#4d5a66" font-weight="400">회전 파일 .1 등은 Fluent Bit tail 제외</text>
+<text x="1260" y="455" font-size="14" fill="#a9682b" font-weight="700">유한한 호스트 버퍼 · 장기 보관소 아님</text>
+</g>
+<g data-cell-id="ddAgent">
+<rect x="70" y="680" width="450" height="270" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="710" font-size="21" fill="#172b3a" font-weight="700">앱 Datadog Agent · 512MiB</text>
+<text x="90" y="739" font-size="16" fill="#4d5a66" font-weight="400">Docker 파일에서 로그 수집</text>
+<text x="90" y="763" font-size="16" fill="#4d5a66" font-weight="400">JVM tracer → :8126 APM</text>
+<text x="90" y="787" font-size="16" fill="#4d5a66" font-weight="400">JVM runtime → :8125 UDP</text>
+<text x="90" y="811" font-size="16" fill="#4d5a66" font-weight="400">Agent → 앱 :9091/actuator/prometheus</text>
+<text x="90" y="835" font-size="16" fill="#4d5a66" font-weight="400">허용한 Micrometer 지표만 수집</text>
+<text x="90" y="859" font-size="16" fill="#4d5a66" font-weight="400">JVM 부팅 잡음 필터는 DD 경로에만</text>
+<text x="90" y="935" font-size="14" fill="#607583" font-weight="700">app-network · DD_SITE 기본 us5</text>
+</g>
+<g data-cell-id="fluent">
+<rect x="655" y="680" width="450" height="270" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="710" font-size="21" fill="#172b3a" font-weight="700">Fluent Bit 4.2.8 · 256MiB</text>
+<text x="675" y="739" font-size="16" fill="#4d5a66" font-weight="400">host network · Docker 파일 read-only</text>
+<text x="675" y="763" font-size="16" fill="#4d5a66" font-weight="400">catus-app-v2 프로젝트만 허용</text>
+<text x="675" y="787" font-size="16" fill="#4d5a66" font-weight="400">app → data-api 이름 매핑</text>
+<text x="675" y="811" font-size="16" fill="#4d5a66" font-weight="400">네 서버·nginx 외 컨테이너 drop</text>
+<text x="675" y="835" font-size="16" fill="#4d5a66" font-weight="400">JSON parse / raw·nginx 정제·마스킹</text>
+<text x="675" y="859" font-size="16" fill="#4d5a66" font-weight="400">fluent_bit_state: tail.db + 버퍼</text>
+<text x="675" y="883" font-size="16" fill="#4d5a66" font-weight="400">Loki 원본 + S3 복제본을 따로 전송</text>
+<text x="675" y="935" font-size="14" fill="#607583" font-weight="700">tail → Lua → parser → Lua → outputs</text>
+</g>
+<g data-cell-id="hostAgents">
+<rect x="1240" y="680" width="450" height="270" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="710" font-size="21" fill="#172b3a" font-weight="700">Kafka·Redis·백오피스 Agent</text>
+<text x="1260" y="739" font-size="16" fill="#4d5a66" font-weight="400">각 EC2에 별도 Datadog Agent</text>
+<text x="1260" y="763" font-size="16" fill="#4d5a66" font-weight="400">각 호스트 Docker 로그·호스트 지표</text>
+<text x="1260" y="787" font-size="16" fill="#4d5a66" font-weight="400">APM OFF · Agent 한도 256MiB</text>
+<text x="1260" y="811" font-size="16" fill="#4d5a66" font-weight="400">Redis :6379/:6380 health 계정 체크</text>
+<text x="1260" y="835" font-size="16" fill="#4d5a66" font-weight="400">이 세 호스트는 Fluent Bit 경로 없음</text>
+<text x="1260" y="859" font-size="16" fill="#4d5a66" font-weight="400">Kafka JMX 별도 체크는 미설정</text>
+<text x="1260" y="935" font-size="14" fill="#607583" font-weight="700">11/02 Agent health PASS 기록</text>
+</g>
+<g data-cell-id="datadog">
+<rect x="70" y="1210" width="450" height="250" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="1240" font-size="21" fill="#172b3a" font-weight="700">Datadog SaaS</text>
+<text x="90" y="1269" font-size="16" fill="#4d5a66" font-weight="400">Agent → HTTPS 전송</text>
+<text x="90" y="1293" font-size="16" fill="#4d5a66" font-weight="400">로그·trace·호스트·컨테이너 지표</text>
+<text x="90" y="1317" font-size="16" fill="#4d5a66" font-weight="400">로그에서 dd.trace_id로 APM 연결</text>
+<text x="90" y="1341" font-size="16" fill="#4d5a66" font-weight="400">보관 기간: 조직 설정에서 확인</text>
+<text x="90" y="1365" font-size="16" fill="#4d5a66" font-weight="400">dev V2에는 Agent 없음</text>
+<text x="90" y="1445" font-size="14" fill="#607583" font-weight="700">Agent healthy ≠ SaaS 최신 수신</text>
+</g>
+<g data-cell-id="loki">
+<rect x="655" y="1210" width="450" height="250" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="1240" font-size="21" fill="#172b3a" font-weight="700">Loki 3.3.2 · 로컬 7일</text>
+<text x="675" y="1269" font-size="16" fill="#4d5a66" font-weight="400">Fluent Bit → 127.0.0.1:3100</text>
+<text x="675" y="1293" font-size="16" fill="#4d5a66" font-weight="400">별도 observability network</text>
+<text x="675" y="1317" font-size="16" fill="#4d5a66" font-weight="400">loki_data → /loki · 단일 인스턴스</text>
+<text x="675" y="1341" font-size="16" fill="#4d5a66" font-weight="400">retention 168h + compactor ON</text>
+<text x="675" y="1365" font-size="16" fill="#4d5a66" font-weight="400">라벨은 env / service / log_kind</text>
+<text x="675" y="1389" font-size="16" fill="#4d5a66" font-weight="400">ID는 JSON 필드로 조회</text>
+<text x="675" y="1445" font-size="14" fill="#a9682b" font-weight="700">app-network에 미연결 · 인증 없는 API</text>
+</g>
+<g data-cell-id="s3">
+<rect x="1240" y="1210" width="450" height="250" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="1240" font-size="21" fill="#172b3a" font-weight="700">S3 · system_log/v2/</text>
+<text x="1260" y="1269" font-size="16" fill="#4d5a66" font-weight="400">gzip JSONL · env/service/date/hour</text>
+<text x="1260" y="1293" font-size="16" fill="#4d5a66" font-weight="400">10MiB 또는 5분 단위 업로드</text>
+<text x="1260" y="1317" font-size="16" fill="#4d5a66" font-weight="400">앱 EC2 IAM: prod 접두 쓰기만</text>
+<text x="1260" y="1341" font-size="16" fill="#4d5a66" font-weight="400">로그 만료 규칙: 90일</text>
+<text x="1260" y="1365" font-size="16" fill="#4d5a66" font-weight="400">Loki 청크 저장소가 아닌 별도 아카이브</text>
+<text x="1260" y="1389" font-size="16" fill="#4d5a66" font-weight="400">객체 파티션 시간 = 첫 레코드 시각</text>
+<text x="1260" y="1445" font-size="14" fill="#a9682b" font-weight="700">ap-northeast-2 · retry_limit 60</text>
+</g>
+<g data-cell-id="grafana">
+<rect x="70" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="90" y="1760" font-size="21" fill="#172b3a" font-weight="700">Grafana · OFF</text>
+<text x="90" y="1789" font-size="16" fill="#4d5a66" font-weight="400">구성은 있으나 배포 스위치 false</text>
+<text x="90" y="1813" font-size="16" fill="#4d5a66" font-weight="400">활성화 시 Loki datasource 사용</text>
+<text x="90" y="1837" font-size="16" fill="#4d5a66" font-weight="400">Cloudflare Access JWT · JWKS/aud</text>
+<text x="90" y="1861" font-size="16" fill="#4d5a66" font-weight="400">현재 Grafana 접속 주소 없음</text>
+<text x="90" y="1945" font-size="14" fill="#a67b26" font-weight="700">대신 Datadog / 승인된 Loki 접근 사용</text>
+</g>
+<g data-cell-id="buffer">
+<rect x="655" y="1730" width="450" height="230" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="1760" font-size="21" fill="#172b3a" font-weight="700">유실·지연을 판별할 지점</text>
+<text x="675" y="1789" font-size="16" fill="#4d5a66" font-weight="400">Loki 엔진 버퍼 128MiB</text>
+<text x="675" y="1813" font-size="16" fill="#4d5a66" font-weight="400">S3 엔진 64MiB + store_dir 64MiB</text>
+<text x="675" y="1837" font-size="16" fill="#4d5a66" font-weight="400">상한·회전·재시도 소진 시 유실 가능</text>
+<text x="675" y="1861" font-size="16" fill="#4d5a66" font-weight="400">canary 60초 간격 · 목적지별 도착 확인</text>
+<text x="675" y="1885" font-size="16" fill="#4d5a66" font-weight="400">canary 도착 ≠ 모든 앱 로그 수집 성공</text>
+<text x="675" y="1945" font-size="14" fill="#607583" font-weight="700">기존 canary 관찰 · 새 트래픽 생성 불필요</text>
+</g>
+<g data-cell-id="ua">
+<rect x="1240" y="1730" width="450" height="230" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
+<text x="1260" y="1760" font-size="21" fill="#172b3a" font-weight="700">Data user-activity · 별도 파일</text>
+<text x="1260" y="1789" font-size="16" fill="#4d5a66" font-weight="400">additivity=false · stdout에 안 섞임</text>
+<text x="1260" y="1813" font-size="16" fill="#4d5a66" font-weight="400">/app/logs/user-activity.log</text>
+<text x="1260" y="1837" font-size="16" fill="#4d5a66" font-weight="400">호스트 /var/log/catus-V2/data-api</text>
+<text x="1260" y="1861" font-size="16" fill="#4d5a66" font-weight="400">로컬 30일 · 1GiB cap</text>
+<text x="1260" y="1885" font-size="16" fill="#4d5a66" font-weight="400">V2 파일 업로더: 운영 설치 미확인</text>
+<text x="1260" y="1945" font-size="14" fill="#a67b26" font-weight="700">위 stdout 수집과 별개 · 배포 코드에 기동 없음</text>
+</g>
+<g data-cell-id="httpIds">
+<rect x="70" y="2170" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="2200" font-size="21" fill="#172b3a" font-weight="700">HTTP → Business → Data</text>
+<text x="90" y="2229" font-size="16" fill="#4d5a66" font-weight="400">Business가 request_id 생성</text>
+<text x="90" y="2253" font-size="16" fill="#4d5a66" font-weight="400">응답 X-Request-Id / 내부 호출 전파</text>
+<text x="90" y="2277" font-size="16" fill="#4d5a66" font-weight="400">nginx upstream_request_id와 연결</text>
+<text x="90" y="2301" font-size="16" fill="#4d5a66" font-weight="400">dd.trace_id는 실제 tracer context</text>
+<text x="90" y="2345" font-size="14" fill="#3866a0" font-weight="700">request_id를 APM trace ID로 쓰지 않음</text>
+</g>
+<g data-cell-id="eventIds">
+<rect x="655" y="2170" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="2200" font-size="21" fill="#172b3a" font-weight="700">outbox → Kafka/HTTP</text>
+<text x="675" y="2229" font-size="16" fill="#4d5a66" font-weight="400">event_id를 전달·재시도 동안 유지</text>
+<text x="675" y="2253" font-size="16" fill="#4d5a66" font-weight="400">origin_request_id / origin_trace_id</text>
+<text x="675" y="2277" font-size="16" fill="#4d5a66" font-weight="400">새 consumer trace와 원요청을 연결</text>
+<text x="675" y="2301" font-size="16" fill="#4d5a66" font-weight="400">outbox.delivery → consumer.accept</text>
+<text x="675" y="2345" font-size="14" fill="#7860aa" font-weight="700">저장한 carrier context를 비동기로 전파</text>
+</g>
+<g data-cell-id="deliveryIds">
+<rect x="1240" y="2170" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="1260" y="2200" font-size="21" fill="#172b3a" font-weight="700">Notification → FCM</text>
+<text x="1260" y="2229" font-size="16" fill="#4d5a66" font-weight="400">operation.link → transport.result</text>
+<text x="1260" y="2253" font-size="16" fill="#4d5a66" font-weight="400">→ dispatch.settle</text>
+<text x="1260" y="2277" font-size="16" fill="#4d5a66" font-weight="400">operation_id / delivery_id / attempt</text>
+<text x="1260" y="2301" font-size="16" fill="#4d5a66" font-weight="400">FCM 성공 ≠ 기기 도착</text>
+<text x="1260" y="2345" font-size="14" fill="#7860aa" font-weight="700">dispatch.settle은 delivery_id+attempt</text>
+</g>
+<g data-cell-id="fanoutIds">
+<rect x="70" y="2460" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="90" y="2490" font-size="21" fill="#172b3a" font-weight="700">Realtime · Redis fanout</text>
+<text x="90" y="2519" font-size="16" fill="#4d5a66" font-weight="400">fanout.publish → fanout.receive</text>
+<text x="90" y="2543" font-size="16" fill="#4d5a66" font-weight="400">message_id / origin trace context</text>
+<text x="90" y="2567" font-size="16" fill="#4d5a66" font-weight="400">인스턴스 간 사건을 연결</text>
+<text x="90" y="2635" font-size="14" fill="#7860aa" font-weight="700">Pub/Sub 전달은 영속 재생 로그 아님</text>
+</g>
+<g data-cell-id="queryIds">
+<rect x="655" y="2460" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="2490" font-size="21" fill="#172b3a" font-weight="700">Loki · 최근 로그 조회</text>
+<text x="675" y="2519" font-size="16" fill="#4d5a66" font-weight="400">env/service/log_kind로 범위 제한</text>
+<text x="675" y="2543" font-size="16" fill="#4d5a66" font-weight="400">| json → request_id / event_id 필터</text>
+<text x="675" y="2567" font-size="16" fill="#4d5a66" font-weight="400">같은 log_id 사본은 자동 제거 안 됨</text>
+<text x="675" y="2635" font-size="14" fill="#a9682b" font-weight="700">Grafana OFF여도 Loki API는 별도 존재</text>
+</g>
+<g data-cell-id="archiveQuery">
+<rect x="1240" y="2460" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="2490" font-size="21" fill="#172b3a" font-weight="700">S3 · Athena SQL 템플릿</text>
+<text x="1260" y="2519" font-size="16" fill="#4d5a66" font-weight="400">env/service/date/hour 먼저 제한</text>
+<text x="1260" y="2543" font-size="16" fill="#4d5a66" font-weight="400">본문 timestamp로 최종 범위 필터</text>
+<text x="1260" y="2567" font-size="16" fill="#4d5a66" font-weight="400">수집 지연 구간은 시간 파티션 확대</text>
+<text x="1260" y="2635" font-size="14" fill="#a9682b" font-weight="700">DDL·SQL 준비됨 · Athena 적용 미확인</text>
+</g>
+</g></svg>
