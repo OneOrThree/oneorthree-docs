@@ -15,7 +15,15 @@ related:
     href: "/spec/architecture"
   - label: "Kafka와 Redis를 넣은 뒤 더 많은 경계를 설명해야 했다"
     href: "/retrospective/02-kafka-redis-boundaries"
+recordType: "decision"
 ---
+
+## 2026-11-03 적용 범위
+
+outbox와 소비자 중복 처리 원칙은 유지합니다. REALTIME은 HTTP 기본·Kafka 선택이고, 세션 폐기는 Realtime에도 전달합니다. 기본 OFF 설정을 운영 비활성 증거로 사용하지 않습니다. [현재 안내](/spec/service-architecture)
+
+이하 본문은 당시 결정과 근거를 보존한 기록입니다.
+
 
 ## 맥락
 

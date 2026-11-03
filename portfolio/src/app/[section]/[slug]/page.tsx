@@ -115,6 +115,36 @@ export default async function DocPage({
           </div>
         )}
 
+        <div className="mt-4 rounded-card border border-border bg-surface-1 p-4 text-sm leading-6 text-muted-foreground">
+          {doc.recordType === "current" ? (
+            <p>
+              {doc.date} 기준 안내입니다.
+              {doc.sourceCommit && <> 근거: <a className="text-primary underline" href={`https://github.com/OneOrThree/phone/tree/${doc.sourceCommit}`}>phone main {doc.sourceCommit.slice(0, 9)}</a>.</>}
+              {" "}코드 확인과 운영 배포·실기기 확인은 문서에서 구분합니다.
+            </p>
+          ) : (
+            <p>
+              {doc.recordType === "decision" ? "당시의 설계 결정 기록입니다. 후속 결정이 있으면 아래 적용 범위를 먼저 확인하세요." : "당시의 기록입니다. 본문의 날짜·수치·완료 상태는 해당 시점에 한정됩니다."}
+              {" "}<Link className="text-primary underline" href="/spec/current-state">현재 Cattus 안내</Link>
+              {" · "}<Link className="text-primary underline" href="/operations/06-v2-deployment">현재 V2 운영·배포</Link>
+            </p>
+          )}
+          {sectionSlug === "performance" && <p className="mt-2">AWS 부하 테스트의 실행·재개와 부하용 데이터 생성은 금지되어 있습니다. 이 절은 보관한 결과를 읽는 용도이며 V2의 현재 수용량을 보증하지 않습니다.</p>}
+        </div>
+
+        {headings.some((heading) => heading.depth === 2) && (
+          <nav aria-label="내용 바로가기" className="mt-6 rounded-card border border-border p-4">
+            <details open>
+              <summary className="cursor-pointer font-semibold">내용 바로가기</summary>
+              <ul className="mt-3 grid gap-x-5 gap-y-2 text-sm sm:grid-cols-2">
+                {headings.filter((heading) => heading.depth === 2).map((heading) => (
+                  <li key={heading.id}><a href={`#${heading.id}`} className="text-primary underline underline-offset-4">{heading.text}</a></li>
+                ))}
+              </ul>
+            </details>
+          </nav>
+        )}
+
         <div className="doc-prose mt-8">
           <Mdx source={doc.body} />
         </div>

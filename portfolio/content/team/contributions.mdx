@@ -2,7 +2,8 @@
 title: "기여 분담 상세 — PR 담당자·규모 가중 집계"
 summary: "phone 저장소의 머지 PR을 전수 조회해 assignee가 확인된 PR만 사람별로 집계했습니다. 건수와 함께 변경 줄 수로 규모를 가중한 표를 싣습니다. 커밋·PR 작성자는 누구에게도 기여를 귀속하는 근거로 사용하지 않습니다."
 status: "PR 스냅샷은 sync-contributions.py 실행 시각 기준 · Jira 2026-09-21 별도 스냅샷"
-date: "2026-09-24"
+date: "2026-11-03"
+recordType: "current"
 author: "조재영"
 order: 2
 keywords:
@@ -35,13 +36,13 @@ GitHub `OneOrThree/phone`의 **머지된 PR <Contrib path="overall.merged" />건
 
 퍼센트의 분모는 **각 영역에서 assignee가 확인된 PR 수**다. 여러 영역을 함께 바꾼 PR은 여러 표에 들어가므로 영역 합계는 <Contrib path="overall.areas.overall.total" />건보다 크다. 지정한 영역 밖의 파일만 바꾼 PR은 전체 집계에만 들어간다.
 
-## 누적 — 담당자가 확인된 <Contrib path="overall.areas.overall.total" /> PR
+## 누적 담당 PR
 
 <ContributionTable period="overall" metric="count" />
 
 반올림 때문에 행별 비율 합이 99.9% 또는 100.1%가 될 수 있다. 미배정 수는 영역마다 중복될 수 있으며, 해당 영역의 사람별 분모에는 넣지 않았다.
 
-## 9월 10일 이후 — 최근 머지 PR <Contrib path="recent.merged" />건 (담당 <Contrib path="recent.areas.overall.total" />·미배정 <Contrib path="recent.areas.overall.unassigned" />)
+## 9월 10일 이후 담당 PR
 
 같이숲 재설계가 시작된 뒤의 **시간 구간**이다. 이 기간에도 1.x 유지보수와 공통 인프라 작업이 있으므로 <Contrib path="recent.merged" />건 전부를 2.0 기능으로 부르지 않는다.
 
@@ -84,7 +85,7 @@ GitHub `OneOrThree/phone`의 **머지된 PR <Contrib path="overall.merged" />건
 
 ## Jira 완료 티켓 — 마지막 조회는 9월 21일
 
-Jira의 현재 전체 목록은 이번 갱신에서 인증 조회할 수 없었다. 따라서 아래 수치를 9월 24일 PR 데이터에 더하거나 현재 비율로 표시하지 않는다. **2026-09-21에 조회한 별도 스냅샷**이다.
+Jira 완료 티켓은 기존 조회 스냅샷을 보존한다. 아래 수치를 현재 PR 데이터에 더하거나 현재 비율로 표시하지 않는다. **2026-09-21에 조회한 별도 스냅샷**이다.
 
 | 팀원 | 완료 티켓 담당 | 당시 비율 |
 | --- | ---: | ---: |

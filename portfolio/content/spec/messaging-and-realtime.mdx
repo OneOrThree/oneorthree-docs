@@ -1,0 +1,64 @@
+---
+title: "편지·채팅·실시간 권한"
+summary: "우체통 편지와 우리 섬 채팅방의 저장·재시도·인가, STOMP와 Redis 이동 전파의 현재 경계를 정리합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 5
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## 경로별 비교
+
+| 흐름 | 공개 입구 | 저장·전달 | 재시도 기준 |
+| --- | --- | --- | --- |
+| 친구 편지 | `/letters` | Data `letters` | 발송 API에 Idempotency-Key 계약 없음 |
+| 시스템 편지 | `/letters`의 kind 구분 | Data `letters`, 시설 예외 | 친구 발송 규칙과 분리 |
+| 우리 섬 채팅방 | `/islands/{id}/messages` | Realtime DB와 Redis fanout | `clientMessageId`로 중복 저장 방지 |
+| 집중·휴식·응원 | `/ws/realtime` | Data 사건·presence와 Realtime | 현재 상태 재조회와 채널별 권한 |
+| 이동·바다 | `/ws/realtime` | Realtime 방, Redis 소유권·전파 | epoch·FullState·재입장 |
+
+## 친구 편지의 권한
+
+게스트는 친구 요청과 편지 발송 전에 소셜 로그인이 필요합니다. 친구 관계·차단·수신자·시설 조건은 해당 명령과 조회의 계약으로 검사합니다. 모든 편지 요청에 같은 시설 게이트를 적용하지 않습니다.
+
+받은 편지 목록과 상세의 우체통 시설 조건은 호출자 측 섬 기준입니다. 발송은 받는 사람 섬의 우체통 완공을 검사하지 않습니다. 시스템 편지는 일반 친구 편지의 시설 제한과 분리됩니다.
+
+차단한 상대의 보낸 편지·친구 요청·핀 목록은 조회에서 제외될 수 있고, 받은 편지 상세는 본문을 가리되 읽음 시각을 갱신하지 않는 경로가 있습니다. 차단이 모든 기존 행을 삭제한다는 뜻은 아닙니다. 상세 행렬은 [친구 편지 LLD](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/friend-letter/low-level-design.md)를 봅니다.
+
+## 앱의 단체 채팅
+
+앱 `useIslandChat`은 REST로 전송하고 과거 메시지를 조회합니다. 화면 활성·앱 전경 조건에서 10초 폴링을 수행합니다. 현재 앱은 legacy groups STOMP 채팅을 이 기능의 수신 경로로 구독하지 않습니다.
+
+Business는 Data에서 주민 자격을 확인한 뒤 Realtime에 저장을 요청합니다. 최초 저장 때 팬아웃하고, 이후 `message.created` outbox 기록은 별도 Data 트랜잭션으로 시도합니다. 응답을 잃은 재전송은 같은 `clientMessageId`를 사용해야 하며, 친구 편지에 이 멱등 규칙을 그대로 적용하지 않습니다.
+
+## STOMP에서 열린 기능
+
+집중·휴식·응원·섬 사건·이동·바다 채널을 제공합니다. playback, 신규 messages 채널, 사용자 queue 사건 구독은 닫혀 있는 경로가 있습니다. `CONNECT` 성공을 모든 destination의 사용 허가로 해석하지 않습니다.
+
+JWT와 폐기 sid를 송신 시에도 확인합니다. legacy 채팅은 집중 상태를 프레임마다 확인하고, 주민·차단 인가에는 `OutboundAuthzCache`가 기본 30초의 허용 캐시를 둡니다. focus/rest 전달은 같은 주민·집중·차단 행렬을 공유하지 않고 JWT·sid 확인 경계를 사용합니다.
+
+## 설정 기본값과 캐시
+
+| 설정 | 저장소 기본값 | 의미 |
+| --- | --- | --- |
+| `REALTIME_AUTHORIZATION_CLIENT_ENABLED` | false | 켜면 Data의 현재 membership authorization 계약 사용 |
+| `REALTIME_AUTHORIZATION_CACHE_TTL_SECONDS` | 30초 | user·sid·generation·island 기준 허용 캐시. hit는 RPC 없음 |
+| legacy membership cache | 120초 | 새 authorization client가 꺼진 경로의 Redis 캐시 |
+| `REALTIME_BLOCKS_FILTER_ENABLED` | false | 켜면 양방향 차단 관계를 수신 필터에 반영 |
+| `REALTIME_EVENTS_KAFKA_ENABLED` | false | REALTIME 사건의 Kafka 소비 경로 |
+| `REALTIME_MOVEMENT_MULTI_INSTANCE_ENABLED` | true | Redis 소유권·명령 라우팅·프레임 전파 |
+
+이 값은 운영 활성화 증거가 아닙니다. 허용 캐시의 사건 무효화는 인스턴스 로컬이므로 여러 인스턴스에서 TTL만큼 권한 반영이 늦어질 수 있는 경계를 함께 봐야 합니다. `auth.session.revoked` 수신은 연결 폐기와 sid 차단을 담당합니다.
+
+## 이동 복구
+
+`movement:owner`의 lease·epoch로 섬 소유자를 정합니다. 원격 명령은 `chat:movement:cmd:v1` 계열, 프레임은 `chat:movement:frames:v1` 경로를 사용합니다. 소유자도 프레임 수신 경로에 참여합니다.
+
+소유권 상실 시 이전 소유자는 방을 퇴거시키고 발행을 멈춥니다. 재입장 시 FullState로 맞춥니다. 정상 종료의 좌표 인계 TTL은 30초이며 장애 전체를 복구하는 영속 이동 이력은 아닙니다. multi-instance를 끈 채 여러 JVM을 띄우면 같은 섬의 방이 갈라질 수 있습니다.
+
+## 근거
+
+- [Business API](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/business-api/README.md)
+- [Realtime 코드 안내](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/realtime/README.md) · [기본 설정](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/realtime/src/main/resources/application.yml)
+- [이동 데이터 흐름](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/island-movement/data-flow.md)

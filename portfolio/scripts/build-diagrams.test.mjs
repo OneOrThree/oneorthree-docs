@@ -166,10 +166,10 @@ for (const [name, versions, message] of [
   });
 }
 
-test('reviewed diagrams preserve ownership, stores, activation boundaries and unconfirmed WSS', () => {
+test('archived v6 diagrams preserve their original ownership and rollout boundaries', () => {
   const dir = path.join(import.meta.dirname, '..', 'diagrams');
-  const service = JSON.parse(readFileSync(path.join(dir, '03-service.source.json')));
-  const system = JSON.parse(readFileSync(path.join(dir, '04-system.source.json')));
+  const service = JSON.parse(readFileSync(path.join(dir, '03-service.v6.source.json')));
+  const system = JSON.parse(readFileSync(path.join(dir, '04-system.v6.source.json')));
   const node = (graph, id) => graph.nodes.find(n => n.id === id);
   assert.ok(service.edges.some(e => e.source === 'data' && e.target === 'chatRedis' && e.label.includes('쓰기')));
   assert.ok(service.edges.some(e => e.source === 'realtime' && e.target === 'chatRedis' && e.label.includes('읽기')));
@@ -186,7 +186,7 @@ test('reviewed diagrams preserve ownership, stores, activation boundaries and un
 
 test('current diagrams share the system architecture visual contract', () => {
   const diagramDir = path.join(import.meta.dirname, '..', 'diagrams');
-  for (const id of ['03-service', '04-system', '05-cloud']) {
+  for (const id of ['01-ia', '02-journey', '03-service', '04-system', '05-cloud']) {
     const svgSource = readFileSync(path.join(diagramDir, `${id}.svg`), 'utf8').toLowerCase();
     for (const token of ['#ffffff', '#172b3a', '#4d5a66', '#f8fafc', '#dce4eb']) {
       assert.ok(svgSource.includes(token), `${id}.svg is missing ${token}`);
@@ -196,6 +196,5 @@ test('current diagrams share the system architecture visual contract', () => {
       `${id}.svg uses a different font stack`,
     );
   }
-  // 01-ia·02-journey는 v4부터 설계 쪽 R61 원본(scripts/sync-r61-html.py)을 그대로 쓰므로
-  // 04-system 토큰을 요구하지 않는다. v3까지의 생성본은 diagrams/<id>.v3.html에 보존돼 있다.
+  // 이전 R61 HTML은 당시 형식을 보존하고, 현재 다섯 도면에는 공통 토큰을 적용한다.
 });

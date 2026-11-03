@@ -22,6 +22,11 @@ related:
     href: "/research/cicd-infra"
 ---
 
+## 현재 적용 범위
+
+과거 하네스와 실험 기록입니다. AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지되어 있으며, 아래 명령과 제안은 현재 실행 안내가 아닙니다. [자료의 범위](/performance/07-evidence-and-retest)에서 보관된 결과만 확인합니다.
+
+
 진입점 3개(대시보드 버튼·Actions UI·로컬 make)가 딸깍 한 번으로 golden `TEMPLATE` 복제부터 부하 VM 기동·k6 실행·판정(INVALID 우선 → threshold → baseline 회귀)까지 굴리고, 리포트는 orphan 브랜치로 커밋해 대시보드가 서버 없이 읽습니다(PR #185). 자체 컨트롤플레인 서버는 0이고, API 93종 중 86종이 자동 생성된 recipe로 실행됩니다. 여기까지 오는 동안 발목을 잡은 실패는 전부 예외도 로그도 없이 한참 뒤에 간접적으로 드러나는 종류였습니다. 22GB golden 시드는 3,000만 건 INSERT 도중 에러도 스택트레이스도 없이 사라졌고(IAP ssh 터널이 끊기면서 원격 psql이 SIGHUP), 25분짜리 유료 run을 다 태우고 나서야 Prometheus가 run 내내 죽어 있었다는 것을 알았으며(9090 connection refused), SUT VM은 `ZONE_RESOURCE_POOL_EXHAUSTED`로 3연속 존 소진에 걸렸습니다. 그래서 작업의 절반은 기능을 붙이는 일이었고, 나머지 절반은 **조용한 실패를 시끄럽게 바꾸는 게이트를 심는 일**이었습니다.
 
 ## 조용한 실패 목록

@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="2090" viewBox="0 0 1760 2090" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Gromo · 서비스 아키텍처</title>
+<desc id="diagramDesc">2026.09.19 · phone main c247e71 · 역할·정본·전달·운영 상태 · main 구현과 운영 활성화는 별도</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="2090" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Gromo · 서비스 아키텍처</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.09.19 · phone main c247e71 · 역할·정본·전달·운영 상태 · main 구현과 운영 활성화는 별도</text>
+<rect x="40" y="120" width="1680" height="70" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="154" font-size="19" fill="#334d61" font-weight="700">상태</text>
+<rect x="40" y="210" width="1680" height="520" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="244" font-size="19" fill="#334d61" font-weight="700">공개 REST · /screens BFF</text>
+<text x="64" y="271" font-size="16" fill="#4d5a66" font-weight="400">공개 계약은 Business, 코어 정본은 Data가 소유한다.</text>
+<rect x="40" y="760" width="1680" height="470" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="794" font-size="19" fill="#334d61" font-weight="700">실시간 · 편지 · 사건 수신</text>
+<text x="64" y="821" font-size="16" fill="#4d5a66" font-weight="400">Realtime은 사건을 두 입구로 받는다.</text>
+<rect x="40" y="1260" width="1680" height="460" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1294" font-size="19" fill="#334d61" font-weight="700">outbox 전달 · 알림 · relay 기본 OFF</text>
+<text x="64" y="1321" font-size="16" fill="#4d5a66" font-weight="400">상태·receipt·outbox는 같은 TX.</text>
+<rect x="40" y="1750" width="1680" height="215" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="1784" font-size="19" fill="#334d61" font-weight="700">랭킹 · Target-2 · 조건 충족 후 도입</text>
+<rect x="40" y="1995" width="1680" height="55" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="2029" font-size="19" fill="#334d61" font-weight="700">흐름별로 같은 서비스를 다시 표시했다. 상점 상품·지갑과 통계 조각은 아직 missingFragments다.</text>
+<path d="M 180 155 L 245 155" fill="none" stroke="#607583" stroke-width="2"/>
+<text x="258" y="160" font-size="14" fill="#4d5a66" font-weight="400">main 구현 · 운영 별도</text>
+<path d="M 680 155 L 745 155" fill="none" stroke="#607583" stroke-width="2" stroke-dasharray="8 5"/>
+<text x="758" y="160" font-size="14" fill="#4d5a66" font-weight="400">구현 · 기본 OFF · 수동 적용</text>
+<path d="M 1180 155 L 1245 155" fill="none" stroke="#607583" stroke-width="2" stroke-dasharray="2 5"/>
+<text x="1258" y="160" font-size="14" fill="#4d5a66" font-weight="400">설계 · 배포 미확정</text>
+<g data-cell-id="appRest"><path d="M 320 355 L 440 355" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="356.0" y="329" width="48.0" height="23" rx="4" fill="#ffffff"/>
+<text x="380" y="345" font-size="14" text-anchor="middle" fill="#405768">REST</text>
+</g>
+<g data-cell-id="internalHttp"><path d="M 800 355 L 920 355" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="816.0" y="329" width="88.0" height="23" rx="4" fill="#ffffff"/>
+<text x="860" y="345" font-size="14" text-anchor="middle" fill="#405768">/internal</text>
+</g>
+<g data-cell-id="coreWrite"><path d="M 1280 355 L 1400 355" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1305.5" y="329" width="69.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1340" y="345" font-size="14" text-anchor="middle" fill="#405768">단일 TX</text>
+</g>
+<g data-cell-id="previewCache"><path d="M 480 570 L 480 655 L 320 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="361.5" y="629" width="77.0" height="23" rx="4" fill="#ffffff"/>
+<text x="400" y="645" font-size="14" text-anchor="middle" fill="#405768">TTL 캐시</text>
+</g>
+<g data-cell-id="notiSettings"><path d="M 800 530 L 860 530 L 860 655 L 920 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="815.75" y="584" width="88.5" height="23" rx="4" fill="#ffffff"/>
+<text x="860" y="600" font-size="14" text-anchor="middle" fill="#405768">기기·설정</text>
+</g>
+<g data-cell-id="mailboxHttp"><path d="M 700 570 L 700 850" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="650.25" y="729" width="99.5" height="23" rx="4" fill="#ffffff"/>
+<text x="700" y="745" font-size="14" text-anchor="middle" fill="#405768">우체통 HTTP</text>
+</g>
+<g data-cell-id="appSocket"><path d="M 320 905 L 440 905" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="352.0" y="879" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="380" y="895" font-size="14" text-anchor="middle" fill="#405768">STOMP</text>
+</g>
+<g data-cell-id="chatFanout"><path d="M 800 905 L 920 905" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="798.25" y="879" width="123.5" height="23" rx="4" fill="#ffffff"/>
+<text x="860" y="895" font-size="14" text-anchor="middle" fill="#405768">읽기 · fanout</text>
+</g>
+<g data-cell-id="focusPresence"><path d="M 1280 530 L 1340 530 L 1340 960 L 1280 960" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1281.5" y="784" width="117.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1340" y="800" font-size="14" text-anchor="middle" fill="#405768">presence 쓰기</text>
+</g>
+<g data-cell-id="chatPersistence"><path d="M 480 1050 L 480 1140 L 320 1140" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="329.25" y="1114" width="141.5" height="23" rx="4" fill="#ffffff"/>
+<text x="400" y="1130" font-size="14" text-anchor="middle" fill="#405768">저장 · 수신 기록</text>
+</g>
+<g data-cell-id="relayOwnership"><path d="M 320 1405 L 440 1405" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="348.0" y="1379" width="64.0" height="23" rx="4" fill="#ffffff"/>
+<text x="380" y="1395" font-size="14" text-anchor="middle" fill="#405768">outbox</text>
+</g>
+<g data-cell-id="relayKafka"><path d="M 800 1405 L 920 1405" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="832.0" y="1379" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="860" y="1395" font-size="14" text-anchor="middle" fill="#405768">KAFKA</text>
+</g>
+<g data-cell-id="kafkaConsume"><path d="M 1280 1405 L 1400 1405" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="1317.5" y="1379" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1340" y="1395" font-size="14" text-anchor="middle" fill="#405768">소비</text>
+</g>
+<g data-cell-id="relayNoti"><path d="M 800 1520 L 1400 1520" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="1044.75" y="1504" width="110.5" height="23" rx="4" fill="#ffffff"/>
+<text x="1100" y="1520" font-size="14" text-anchor="middle" fill="#405768">NOTI · HTTP</text>
+</g>
+<g data-cell-id="relayRealtime"><path d="M 700 1350 L 700 1050" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="610.25" y="1229" width="179.5" height="23" rx="4" fill="#ffffff"/>
+<text x="700" y="1245" font-size="14" text-anchor="middle" fill="#405768">REALTIME · HTTP 기본</text>
+</g>
+<g data-cell-id="kafkaRealtime"><path d="M 1000 1350 L 1000 1035 L 800 1035" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="932.0" y="1229" width="136.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1000" y="1245" font-size="14" text-anchor="middle" fill="#405768">realtime-events</text>
+</g>
+<g data-cell-id="relayLink"><path d="M 620 1530 L 620 1580" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="634.75" y="1544" width="110.5" height="23" rx="4" fill="#ffffff"/>
+<text x="690" y="1560" font-size="14" text-anchor="middle" fill="#405768">LINK · HTTP</text>
+</g>
+<g data-cell-id="notificationWrite"><path d="M 1550 1540 L 1550 1580" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="8 5"/>
+<rect x="1577.5" y="1547" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1600" y="1563" font-size="14" text-anchor="middle" fill="#405768">저장</text>
+</g>
+<g data-cell-id="scoreConsume"><path d="M 390 1875 L 600 1875" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="2 5"/>
+<rect x="472.5" y="1849" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="495" y="1865" font-size="14" text-anchor="middle" fill="#405768">소비</text>
+</g>
+<g data-cell-id="rankProject"><path d="M 930 1875 L 1130 1875" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="2 5"/>
+<rect x="1007.5" y="1849" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1030" y="1865" font-size="14" text-anchor="middle" fill="#405768">반영</text>
+</g>
+<g data-cell-id="app">
+<rect x="60" y="300" width="260" height="120" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="80" y="330" font-size="21" fill="#172b3a" font-weight="700">모바일 앱</text>
+<text x="80" y="359" font-size="16" fill="#4d5a66" font-weight="400">REST 명령 · 화면 조회</text>
+<text x="80" y="383" font-size="16" fill="#4d5a66" font-weight="400">React Native · Expo</text>
+<text x="80" y="405" font-size="14" fill="#3866a0" font-weight="700">클라이언트</text>
+</g>
+<g data-cell-id="business">
+<rect x="440" y="300" width="360" height="270" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="460" y="330" font-size="21" fill="#172b3a" font-weight="700">Business API</text>
+<text x="460" y="359" font-size="16" fill="#4d5a66" font-weight="400">공개 인증 · 응답 봉투 · 서비스 토큰</text>
+<text x="460" y="383" font-size="16" fill="#4d5a66" font-weight="400">/screens 14종 · 조각 병렬 조합</text>
+<text x="460" y="407" font-size="16" fill="#4d5a66" font-weight="400">launch · raft · account · explore</text>
+<text x="460" y="431" font-size="16" fill="#4d5a66" font-weight="400">visit · home · focus · town-hall</text>
+<text x="460" y="455" font-size="16" fill="#4d5a66" font-weight="400">board · library · shop · playback</text>
+<text x="460" y="479" font-size="16" fill="#4d5a66" font-weight="400">mailbox · friends</text>
+<text x="460" y="503" font-size="16" fill="#4d5a66" font-weight="400">빈 조각은 missingFragments</text>
+<text x="460" y="555" font-size="14" fill="#3866a0" font-weight="700">main 구현 · 영속 DB 없음</text>
+</g>
+<g data-cell-id="data">
+<rect x="920" y="300" width="360" height="270" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="940" y="330" font-size="21" fill="#172b3a" font-weight="700">Data API</text>
+<text x="940" y="359" font-size="16" fill="#4d5a66" font-weight="400">/internal/* · 레거시 /api/v1</text>
+<text x="940" y="383" font-size="16" fill="#4d5a66" font-weight="400">권한 · 정산 · 원장 · receipt</text>
+<text x="940" y="407" font-size="16" fill="#4d5a66" font-weight="400">9/19 추가: 가입·초대 · 외양</text>
+<text x="940" y="431" font-size="16" fill="#4d5a66" font-weight="400">공지 · 퀘스트 · 방송기 · 섬 관리</text>
+<text x="940" y="455" font-size="16" fill="#4d5a66" font-weight="400">계정 조회·수정 · 탈퇴 파기</text>
+<text x="940" y="479" font-size="16" fill="#4d5a66" font-weight="400">상점은 테이블 선구축만</text>
+<text x="940" y="555" font-size="14" fill="#3866a0" font-weight="700">main 구현 · 코어 정본 소유</text>
+</g>
+<g data-cell-id="coreDb">
+<rect x="1400" y="300" width="300" height="150" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1420" y="330" font-size="21" fill="#172b3a" font-weight="700">코어 DB</text>
+<text x="1420" y="359" font-size="16" fill="#4d5a66" font-weight="400">gromo · PostgreSQL</text>
+<text x="1420" y="383" font-size="16" fill="#4d5a66" font-weight="400">상태 · 원장 · receipt · outbox</text>
+<text x="1420" y="407" font-size="16" fill="#4d5a66" font-weight="400">링크 원장도 코어 DB(A23)</text>
+<text x="1420" y="435" font-size="14" fill="#a9682b" font-weight="700">Data 전용</text>
+</g>
+<g data-cell-id="previewRedis">
+<rect x="60" y="600" width="260" height="120" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="80" y="630" font-size="21" fill="#172b3a" font-weight="700">미리보기 Redis</text>
+<text x="80" y="659" font-size="16" fill="#4d5a66" font-weight="400">Business 전용 · 128mb</text>
+<text x="80" y="683" font-size="16" fill="#4d5a66" font-weight="400">allkeys-lru · 비영속</text>
+<text x="80" y="705" font-size="14" fill="#a9682b" font-weight="700">main · 재생성 가능</text>
+</g>
+<g data-cell-id="notiApi">
+<rect x="920" y="600" width="360" height="120" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="940" y="630" font-size="21" fill="#172b3a" font-weight="700">Notification · 설정</text>
+<text x="940" y="659" font-size="16" fill="#4d5a66" font-weight="400">기기 토큰 · 알림 설정 · 결과 ack</text>
+<text x="940" y="683" font-size="16" fill="#4d5a66" font-weight="400">Business만 HTTP로 호출</text>
+<text x="940" y="705" font-size="14" fill="#7860aa" font-weight="700">main 구현 · 위성 수동 기동</text>
+</g>
+<g data-cell-id="socketApp">
+<rect x="60" y="850" width="260" height="120" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="80" y="880" font-size="21" fill="#172b3a" font-weight="700">모바일 앱</text>
+<text x="80" y="909" font-size="16" fill="#4d5a66" font-weight="400">STOMP 구독 · 편지</text>
+<text x="80" y="933" font-size="16" fill="#4d5a66" font-weight="400">CONNECT Bearer 인증</text>
+<text x="80" y="955" font-size="14" fill="#3866a0" font-weight="700">클라이언트</text>
+</g>
+<g data-cell-id="realtime">
+<rect x="440" y="850" width="360" height="200" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="460" y="880" font-size="21" fill="#172b3a" font-weight="700">Realtime</text>
+<text x="460" y="909" font-size="16" fill="#4d5a66" font-weight="400">/ws/chat · /ws/realtime STOMP</text>
+<text x="460" y="933" font-size="16" fill="#4d5a66" font-weight="400">편지 저장 · 조회 · fanout</text>
+<text x="460" y="957" font-size="16" fill="#4d5a66" font-weight="400">사건 입구 POST /internal/events</text>
+<text x="460" y="981" font-size="16" fill="#4d5a66" font-weight="400">Kafka realtime-events 입구(선택)</text>
+<text x="460" y="1005" font-size="16" fill="#4d5a66" font-weight="400">앱 사건 14종은 수신만 · 구독 닫힘</text>
+<text x="460" y="1035" font-size="14" fill="#7860aa" font-weight="700">main 구현 · dev overlay</text>
+</g>
+<g data-cell-id="chatRedis">
+<rect x="920" y="850" width="360" height="170" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="940" y="880" font-size="21" fill="#172b3a" font-weight="700">채팅·집중 Redis</text>
+<text x="940" y="909" font-size="16" fill="#4d5a66" font-weight="400">chat:fanout Pub/Sub · 재생 불가</text>
+<text x="940" y="933" font-size="16" fill="#4d5a66" font-weight="400">presence:focus:* 순번 조건부</text>
+<text x="940" y="957" font-size="16" fill="#4d5a66" font-weight="400">탈퇴 tombstone · 끝난 세션 표식</text>
+<text x="940" y="981" font-size="16" fill="#4d5a66" font-weight="400">Data 쓰기 · Realtime 읽기</text>
+<text x="940" y="1005" font-size="14" fill="#a9682b" font-weight="700">main dev · ACL 미적용</text>
+</g>
+<g data-cell-id="chatDb">
+<rect x="60" y="1070" width="260" height="150" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="80" y="1100" font-size="21" fill="#172b3a" font-weight="700">편지 DB</text>
+<text x="80" y="1129" font-size="16" fill="#4d5a66" font-weight="400">gromo_chat · 편지 정본</text>
+<text x="80" y="1153" font-size="16" fill="#4d5a66" font-weight="400">inbound_events</text>
+<text x="80" y="1177" font-size="16" fill="#4d5a66" font-weight="400">eventId PK · 중복 거름</text>
+<text x="80" y="1205" font-size="14" fill="#a9682b" font-weight="700">Realtime 소유 · dev</text>
+</g>
+<g data-cell-id="outboxSource">
+<rect x="60" y="1350" width="260" height="170" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="80" y="1380" font-size="21" fill="#172b3a" font-weight="700">Data · outbox</text>
+<text x="80" y="1409" font-size="16" fill="#4d5a66" font-weight="400">상태 · receipt · outbox</text>
+<text x="80" y="1433" font-size="16" fill="#4d5a66" font-weight="400">같은 TX로 사건 보존</text>
+<text x="80" y="1457" font-size="16" fill="#4d5a66" font-weight="400">대상 4종: KAFKA · NOTI</text>
+<text x="80" y="1481" font-size="16" fill="#4d5a66" font-weight="400">LINK · REALTIME</text>
+<text x="80" y="1505" font-size="14" fill="#3866a0" font-weight="700">코어 DB 소유</text>
+</g>
+<g data-cell-id="relay">
+<rect x="440" y="1350" width="360" height="180" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="460" y="1380" font-size="21" fill="#172b3a" font-weight="700">Outbox relay</text>
+<text x="460" y="1409" font-size="16" fill="#4d5a66" font-weight="400">Data 안 · lease · 대상별 재시도</text>
+<text x="460" y="1433" font-size="16" fill="#4d5a66" font-weight="400">대상마다 경로 하나</text>
+<text x="460" y="1457" font-size="16" fill="#4d5a66" font-weight="400">REALTIME: HTTP 기본 · Kafka 선택</text>
+<text x="460" y="1481" font-size="16" fill="#4d5a66" font-weight="400">OUTBOX_RELAY_ENABLED=false</text>
+<text x="460" y="1515" font-size="14" fill="#7860aa" font-weight="700">main 구현 · 기본 OFF</text>
+</g>
+<g data-cell-id="kafka">
+<rect x="920" y="1350" width="360" height="150" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="940" y="1380" font-size="21" fill="#172b3a" font-weight="700">Kafka</text>
+<text x="940" y="1409" font-size="16" fill="#4d5a66" font-weight="400">notification-events · userId 키</text>
+<text x="940" y="1433" font-size="16" fill="#4d5a66" font-weight="400">realtime-events · 플래그 선택</text>
+<text x="940" y="1457" font-size="16" fill="#4d5a66" font-weight="400">KRaft 1노드 · RF 1 · DLT</text>
+<text x="940" y="1485" font-size="14" fill="#7860aa" font-weight="700">dev overlay · 활성화 미확인</text>
+</g>
+<g data-cell-id="notification">
+<rect x="1400" y="1350" width="300" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="1420" y="1380" font-size="21" fill="#172b3a" font-weight="700">Notification</text>
+<text x="1420" y="1409" font-size="16" fill="#4d5a66" font-weight="400">입구: Kafka 소비 · HTTP</text>
+<text x="1420" y="1433" font-size="16" fill="#4d5a66" font-weight="400">POST /internal/events</text>
+<text x="1420" y="1457" font-size="16" fill="#4d5a66" font-weight="400">eventId 중복 제거 · version</text>
+<text x="1420" y="1481" font-size="16" fill="#4d5a66" font-weight="400">템플릿 · 이력 · FCM 발송</text>
+<text x="1420" y="1525" font-size="14" fill="#7860aa" font-weight="700">소비·스케줄 기본 OFF</text>
+</g>
+<g data-cell-id="link">
+<rect x="440" y="1580" width="360" height="120" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4" stroke-dasharray="2 5"/>
+<text x="460" y="1610" font-size="21" fill="#172b3a" font-weight="700">링크 서버</text>
+<text x="460" y="1639" font-size="16" fill="#4d5a66" font-weight="400">레포 밖 · Vercel origin</text>
+<text x="460" y="1663" font-size="16" fill="#4d5a66" font-weight="400">A23 흡수 결정 · LINK 대상 잔존</text>
+<text x="460" y="1685" font-size="14" fill="#607583" font-weight="700">외부 · 흡수 예정</text>
+</g>
+<g data-cell-id="notiDb">
+<rect x="1400" y="1580" width="300" height="120" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="1420" y="1610" font-size="21" fill="#172b3a" font-weight="700">알림 DB</text>
+<text x="1420" y="1639" font-size="16" fill="#4d5a66" font-weight="400">gromo_notification</text>
+<text x="1420" y="1663" font-size="16" fill="#4d5a66" font-weight="400">Notification 소유</text>
+<text x="1420" y="1685" font-size="14" fill="#a9682b" font-weight="700">prod RDS 별도 DB: 목표</text>
+</g>
+<g data-cell-id="score">
+<rect x="60" y="1815" width="330" height="120" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
+<text x="80" y="1845" font-size="21" fill="#172b3a" font-weight="700">score-events · DLT</text>
+<text x="80" y="1874" font-size="16" fill="#4d5a66" font-weight="400">Data outbox · 절대 점수 + version</text>
+<text x="80" y="1920" font-size="14" fill="#a67b26" font-weight="700">설계 · 알림과 별도 스트림</text>
+</g>
+<g data-cell-id="rankConsumer">
+<rect x="600" y="1815" width="330" height="120" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
+<text x="620" y="1845" font-size="21" fill="#172b3a" font-weight="700">랭킹 컨슈머</text>
+<text x="620" y="1874" font-size="16" fill="#4d5a66" font-weight="400">중복 · 역순 적용 수렴</text>
+<text x="620" y="1920" font-size="14" fill="#a67b26" font-weight="700">설계 · 조건 충족 후 도입</text>
+</g>
+<g data-cell-id="rankRedis">
+<rect x="1130" y="1815" width="570" height="120" rx="12" fill="#fff8e7" stroke="#a67b26" stroke-width="1.4" stroke-dasharray="2 5"/>
+<text x="1150" y="1845" font-size="21" fill="#172b3a" font-weight="700">랭킹 Redis</text>
+<text x="1150" y="1874" font-size="16" fill="#4d5a66" font-weight="400">완료 ZSET + 라이브 presence · 정본 DB에서 재구축</text>
+<text x="1150" y="1920" font-size="14" fill="#a67b26" font-weight="700">설계 · 코어 정본의 projection</text>
+</g>
+</g></svg>

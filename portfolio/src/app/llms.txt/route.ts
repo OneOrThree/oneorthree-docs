@@ -28,7 +28,8 @@ export function GET(): Response {
       }
     } else {
       for (const doc of getDocs(section.slug)) {
-        const meta = [doc.status, doc.date].filter(Boolean).join(" · ");
+        const recordLabel = doc.recordType === "current" ? "현재 안내" : doc.recordType === "decision" ? "결정 기록 · 적용 범위 확인" : "당시 기록";
+        const meta = [recordLabel, doc.status, doc.date].filter(Boolean).join(" · ");
         lines.push(
           `- [${doc.title}](${site.origin}${doc.href})` +
             (meta ? ` (${meta})` : "") +

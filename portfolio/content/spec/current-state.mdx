@@ -1,0 +1,50 @@
+---
+title: "Cattus 현재 안내 — 제품·코드·운영 문서 찾기"
+summary: "2026-11-03에 머지된 phone main을 기준으로 제품, 서버 4종, 운영 V2와 과거 기록의 읽는 순서를 정리합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 0
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## 먼저 볼 문서
+
+| 알고 싶은 것 | 바로가기 |
+| --- | --- |
+| 어떤 제품인가 | [제품과 용어](/spec/context) · [주요 사용자 흐름](/spec/use-cases) |
+| 어디까지 구현됐나 | [구현 범위와 확인할 것](/spec/scope-roadmap) · [도메인 상태](/spec/domain-states) |
+| 서버가 어떻게 연결되나 | [아키텍처 개요](/spec/architecture) · [서비스 경계](/spec/service-architecture) |
+| 어디에서 어떻게 배포하나 | [시스템 구성](/spec/system-architecture) · [V2 배포](/operations/06-v2-deployment) |
+| 우체통과 실시간 통신은 어떻게 다른가 | [편지·채팅·실시간 권한](/spec/messaging-and-realtime) |
+| 왜 바뀌었나 | [설계 결정](/adr) · [10~11월 변화](/history/10-cattus-v2) |
+| 수치를 어디까지 믿을 수 있나 | [성능 기록](/performance) · [그로스 자료의 범위](/growth/current-data-scope) |
+
+## 이번 대조 기준
+
+기준은 [phone main af80af042](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/README.md)입니다. 사용자에게 보여 주는 제품 이름은 **Cattus**, 한국어 앱 이름은 **집중할고양**입니다. `GROMO-####`, `catus-*`, `docs/prd/fishcat/` 같은 코드·배포 식별자는 유지합니다.
+
+코드에 있는 기능, 설정 기본값, 배포 기록, 실기기 확인은 서로 다른 근거입니다. 이 사이트의 현재 안내는 코드와 저장소의 운영 기록을 대조한 결과입니다. 운영 호스트를 새로 조사하거나 기능별 운영 성공을 재검증한 것은 아닙니다.
+
+## 9월 문서에서 달라진 것
+
+| 항목 | 현재 기준 |
+| --- | --- |
+| 앱 | `app/app-dev`가 활성 2.0 앱, `app/legacy/app-dev`는 동결된 Gromo 1.x |
+| 공개 HTTP | Business API가 받으며 Data의 제품 API는 내부 계약으로 호출 |
+| 친구 편지 | Data의 `letters`에 저장. 게스트 발송은 소셜 로그인 필요 |
+| 우리 섬 채팅방 | Realtime의 채팅 DB에 저장. 앱은 REST 전송·조회와 10초 폴링 사용 |
+| 실시간 | 집중·휴식·응원·섬 사건·이동·바다 채널. 모든 기능이 STOMP로 전달되는 것은 아님 |
+| Redis | Shared와 Business 두 인스턴스. Business는 미리보기 캐시가 아닌 폐기 세션 판정에 사용 |
+| 운영 | AWS V2 EC2 4대. 구 dev·운영 서버는 11월 2일 종료한 것으로 운영 문서에 기록 |
+| release | main → release PR을 merge commit으로 승격. 발행 뒤 수동 CD·환경 승인 |
+
+## 오래된 기록 읽기
+
+연대기·연구 노트·실험·회고는 당시 문제를 어떻게 해결했는지 보여 주는 기록입니다. 날짜를 오늘로 바꿔 현재 사실처럼 만들지 않습니다. ADR-021의 fast-forward 승격과 ADR-030의 게스트 동일 취급처럼 바뀐 결정에는 대체 상태와 후속 안내를 붙였습니다.
+
+성능 수치는 10월 22일까지 보관한 실험 조건에 한정됩니다. AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지되어 있으며 이번 갱신에서도 실행하지 않았습니다. GA4 최신 스냅샷은 저장소에 없어 기존 주간 분석을 현재 사용자 지표로 환산하지 않습니다.
+
+## 문서가 어긋날 때
+
+제품 이름은 [CONTEXT.md](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/CONTEXT.md), 기능 정책은 해당 `docs/prd/fishcat/` 문서, 구현은 고정한 커밋의 코드, 배포 절차는 [파이프라인 지도](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/pipeline-map.md)를 대조합니다. 문서와 코드가 다르면 차이를 기록하고, 의도한 정책과 현재 동작을 구분합니다. 이 사이트의 설명만으로 정책이나 운영 설정을 바꾸지 않습니다.

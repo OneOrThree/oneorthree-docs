@@ -1,0 +1,58 @@
+---
+title: "V2 운영·배포 — 서버 먼저, 앱은 그다음"
+summary: "서버·Kafka·Redis의 release 발행과 수동 CD, 백오피스 main 배포, 앱 출시 게이트와 복구 제한을 현재 워크플로 기준으로 정리합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 0
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## 경로별 파이프라인
+
+| 단위 | 반영 흐름 | 운영 태그 |
+| --- | --- | --- |
+| 서버 4종 | main → release merge commit PR → `prod-ci-V2.yml` 발행 → `prod-cd-V2.yml` 수동 실행·승인 | `catus-vX.Y.Z-V2` |
+| Kafka | release 발행 → Kafka 수동 CD·승인 | `kafka-vX.Y.Z-V2` |
+| Redis | release 발행 → Redis 수동 CD·승인 | `redis-vX.Y.Z-V2` |
+| 백오피스 | main 머지 → 테스트·빌드 → `backoffice-production` 승인 → 발행·배포 | `backoffice-vX.Y.Z-V2` |
+| dev V2 | main의 관련 CI → `cd-auto.dev-v2.yml` | 별도 dev 산출물·성공 상태 |
+
+서버·Kafka·Redis는 `release`에서 CD를 실행하며 환경 `catus-production-V2`의 승인 1회를 거칩니다. release 머지만으로 운영 컨테이너가 바뀌지 않습니다. 백오피스는 release를 거치지 않습니다.
+
+## 발행 단위와 버전
+
+서버 릴리스는 재사용 이미지를 포함한 네 서비스 digest 조합을 기록합니다. 서비스 변경 지문은 마지막 운영 성공 상태와 비교해 누적 변경을 놓치지 않습니다. Data 또는 Realtime 변경은 두 서비스를 함께 빌드하는 규칙이 있습니다.
+
+V2 태그와 S3 버전 기록에서 가장 큰 patch를 1 올립니다. `release:major/minor/patch` 라벨은 V2 스크립트가 읽지 않습니다. 과거 V1 태그의 더 큰 숫자도 V2 계산에 합치지 않습니다.
+
+서버 CD는 네 서비스를 Compose에 넘기고 이미지·env·라벨이 바뀐 서비스를 재생성합니다. Infra revision만 바뀌어도 Data는 `OBS_INFRA_REVISION` 값 때문에 재생성될 수 있습니다.
+
+## 앱 출시 게이트
+
+서버 의존 API가 있으면 운영 서버가 먼저 나가야 합니다. `app-server-gate.py`는 `deployment-status`의 마지막 운영 성공 태그를 커밋으로 풀고, 앱 HEAD와 서버 런타임 경로 차이를 비교합니다.
+
+마지막 CD가 실패·취소·진행 중이거나 기록을 조회할 수 없으면 판정 불가로 막습니다. 백오피스 출시 현황은 10분 캐시라 실제 실행 시의 게이트와 잠시 다를 수 있습니다. Infra·시크릿·nginx 같은 서버 코드 밖 의존성은 별도로 확인해야 합니다.
+
+## DB 변경과 복구
+
+마이그레이션 지문이 직전 성공과 다르면 기본으로 배포를 멈춥니다. DB 변경 릴리스는 명시적 `allow_migration`과 호환 계획을 필요로 하며 `rollback`과 함께 사용할 수 없습니다.
+
+서버 적용 실패는 직전 이미지 조합으로 자동 복구를 시도하지만 이미 적용한 스키마를 되돌리지는 않습니다. Kafka·Redis는 자동 복구하지 않습니다. 배포는 성공했고 기록 job만 실패했다면 서버를 다시 배포하지 말고 기록 단계를 복구합니다.
+
+Terraform 변경은 별도 plan 승인 절차입니다. 이 문서의 CD 설명을 Terraform apply 승인으로 사용하지 않습니다.
+
+## 관측과 구 환경
+
+11월 2일 구 dev·운영 서버와 V1 workflow 14개를 정리했습니다. 현행은 V2 workflow이며 공용 검사와 release 계약 검사는 유지됩니다.
+
+운영 문서가 확인한 Datadog Agent health와 웹 화면의 실제 최신 로그·APM 수신은 다른 점검입니다. 개발 환경에는 Datadog Agent를 설치하지 않습니다. [시스템 구성](/spec/system-architecture)에서 호스트별 역할을 확인합니다.
+
+AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지합니다. 과거 실험의 재시험 제안은 현재 운영 작업 지시가 아닙니다.
+
+## 근거
+
+- [운영 V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md)
+- [dev V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/dev-v2-pipeline.md)
+- [파이프라인 지도](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/pipeline-map.md)
+- [발행·배포 구현](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/.github/scripts/v2/prod/catus-runtime-V2.py)

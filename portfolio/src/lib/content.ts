@@ -33,6 +33,9 @@ export interface Doc {
   status?: string;
   /** ISO date, e.g. "2026-08-05". */
   date?: string;
+  /** Historical records retain their original dates; current guides cite a snapshot. */
+  recordType: "current" | "historical" | "decision";
+  sourceCommit?: string;
   /** Who wrote it. Shown on the index row and the document header. */
   author?: string;
   keywords: string[];
@@ -74,6 +77,8 @@ function readSectionDocs(section: string): Doc[] {
         summary: typeof data.summary === "string" ? data.summary : undefined,
         status: typeof data.status === "string" ? data.status : undefined,
         date: typeof data.date === "string" ? data.date : undefined,
+        recordType: data.recordType === "current" ? "current" : section === "adr" ? "decision" : "historical",
+        sourceCommit: typeof data.sourceCommit === "string" ? data.sourceCommit : undefined,
         author: typeof data.author === "string" ? data.author : undefined,
         keywords: Array.isArray(data.keywords) ? data.keywords.map(String) : [],
         order: typeof data.order === "number" ? data.order : undefined,

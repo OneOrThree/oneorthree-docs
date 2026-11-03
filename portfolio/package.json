@@ -2,7 +2,7 @@
   "name": "portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "팀 포트폴리오 문서 사이트",
+  "description": "\ud300 \ud3ec\ud2b8\ud3f4\ub9ac\uc624 \ubb38\uc11c \uc0ac\uc774\ud2b8",
   "scripts": {
     "predev": "node scripts/generate-evolution.mjs --if-available && node scripts/build-diagrams.mjs",
     "dev": "next dev",
@@ -20,7 +20,7 @@
     "fast-xml-parser": "^5.10.1",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
-    "next": "^15.5.23",
+    "next": "^15.5.28",
     "next-mdx-remote": "^6.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -37,5 +37,8 @@
     "@types/react-dom": "^19.2.4",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.23"
   }
 }

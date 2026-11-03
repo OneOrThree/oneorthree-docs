@@ -1,0 +1,34 @@
+---
+title: "ADR-038 — 게스트 권한은 기능별로 나누고 친구 요청·편지·구매에서 소셜 로그인을 요구한다"
+summary: "게스트의 모든 기능 동일 허용 설명을 대체합니다. 건설·보유품 적용·구매·직접 연락의 권한을 구분합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 38
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## 대체하는 설명
+
+[ADR-030](/adr/adr-030-guest-equals-social-user)의 포괄적인 게스트 동일 취급 설명과 R61 v5 그림의 전체 기능 허용 문구는 현재 계약이 아닙니다. 이 문서는 11월 3일 코드와 기능 정책에 남은 경계를 기록합니다.
+
+## 현재 경계
+
+| 작업 | 게스트 경계 |
+| --- | --- |
+| 집중·섬 생활 | 기능별 주민·시설 조건으로 참여 |
+| 친구 요청·편지 발송 | 소셜 로그인 필요 |
+| 상점 상품·음원 구매 | 활성 주민이더라도 게스트는 제외 |
+| 건설 목표·착공 | 섬장만 가능하며 게스트 섬장도 허용 |
+| 보유한 공동 테마 적용 | 구매와 별도 권한. 게스트 축을 구매와 묶지 않음 |
+
+## 결정 기록을 읽는 법
+
+친구 편지 LLD에는 9월 18일 허용, 9월 21일 제한, 9월 25일 재허용 제안이 남아 있습니다. 11월 3일 정정에서 재허용 제안은 채택되지 않았고 현재 컨트롤러의 게스트 차단을 유지한다고 명시합니다. 가장 나중에 적힌 제안만으로 코드를 제거하지 않습니다.
+
+## 근거
+
+- [친구 편지 LLD](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/friend-letter/low-level-design.md)
+- [건설 권한 C13](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/island-construction/policy.md)
+- [구매 권한](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/island-shop/policy.md)
+- [현재 사용자 흐름](/spec/use-cases)

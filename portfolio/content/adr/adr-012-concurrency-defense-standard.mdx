@@ -13,7 +13,15 @@ related:
     href: "/research/money-integrity"
   - label: "부딪히며 정리한 DB 설계 노트"
     href: "/research/db-design-notes"
+recordType: "decision"
 ---
+
+## 2026-11-03 적용 범위
+
+동시성 방어를 명령별로 정한다는 원칙은 유지합니다. 편지 발송에는 채팅 clientMessageId나 다른 명령의 Idempotency-Key 계약이 없습니다. [현재 안내](/spec/messaging-and-realtime)
+
+이하 본문은 당시 결정과 근거를 보존한 기록입니다.
+
 
 ## 맥락
 
