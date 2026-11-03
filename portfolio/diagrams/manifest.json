@@ -260,11 +260,23 @@
     "detailHref": "/spec/system-architecture",
     "versions": [
       {
-        "id": "v9",
-        "label": "v9 · 현재",
+        "id": "v10",
+        "label": "v10 · 현재",
         "date": "2026-11-03",
         "artifactId": "04-system",
-        "status": "S3 수집 범위·확인 상태 구분",
+        "status": "11/03 S3·앱 호스트 확인",
+        "summary": "호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "2026-11-03 15:06–15:10 KST: 네 서버·nginx·canary S3 객체 확인. Notification 마지막 원본 로그와 S3 log_id 일치. 호스트의 사용자 행동 파일 업로더 미설치와 V2 버킷의 해당 객체 부재를 확인했습니다. 전수·무손실 검증은 아닙니다.",
+        "detailHref": "/spec/system-architecture",
+        "sourceHref": "https://github.com/OneOrThree/cattus-infra/tree/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2"
+      },
+      {
+        "id": "v9",
+        "label": "v9 · 이전",
+        "date": "2026-11-03",
+        "artifactId": "04-system.v9",
+        "status": "운영 S3·파일 업로더 확인 전",
         "summary": "호스트·컨테이너·포트·보안 그룹, DB·Kafka·Redis 연결과 로그·백오피스 경로를 실제 배포 설정으로 풀어 씁니다.",
         "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
         "evidenceSummary": "V2 시스템 로그의 Fluent Bit→S3 경로는 구현·설정 ON입니다. 별도 user-activity 파일은 V2 배포 코드에 업로더 기동이 없지만 호스트 설치·실제 전송은 미확인으로 표시합니다. AWS SSO 만료로 최신 객체는 직접 확인하지 못했습니다.",
@@ -422,11 +434,23 @@
     "format": "html",
     "versions": [
       {
-        "id": "v2",
-        "label": "v2 · 현재",
+        "id": "v3",
+        "label": "v3 · 현재",
         "date": "2026-11-03",
         "artifactId": "06-logging",
-        "status": "S3 수집 범위·확인 상태 구분",
+        "status": "11/03 S3·앱 호스트 확인",
+        "summary": "서비스별 실제 S3 적재와 Notification 마지막 로그를 대조하고, 사용자 행동 파일의 업로더 미설치·S3 객체 부재를 현장에서 확인했습니다.",
+        "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
+        "evidenceSummary": "2026-11-03 15:06–15:10 KST: 네 서버·nginx·canary S3 객체 확인. Notification 마지막 원본 로그와 S3 log_id 일치. 호스트의 사용자 행동 파일 업로더 미설치와 V2 버킷의 해당 객체 부재를 확인했습니다. 전수·무손실 검증은 아닙니다.",
+        "detailHref": "/spec/logging-and-observability",
+        "sourceHref": "https://github.com/OneOrThree/phone/tree/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/observability"
+      },
+      {
+        "id": "v2",
+        "label": "v2 · 이전",
+        "date": "2026-11-03",
+        "artifactId": "06-logging.v2",
+        "status": "운영 S3·파일 업로더 확인 전",
         "summary": "네 서버·nginx의 S3 업로드 경로와 별도 사용자 행동 파일을 구분하고, 파일 업로더의 운영 상태는 미확인으로 정정합니다.",
         "evidenceTitle": "phone af80af042 + cattus-infra 8522746ea",
         "evidenceSummary": "V2 시스템 로그의 Fluent Bit→S3 경로는 구현·설정 ON입니다. 별도 user-activity 파일은 V2 배포 코드에 업로더 기동이 없지만 호스트 설치·실제 전송은 미확인으로 표시합니다. AWS SSO 만료로 최신 객체는 직접 확인하지 못했습니다.",

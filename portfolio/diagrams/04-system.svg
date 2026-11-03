@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1760" height="3050" viewBox="0 0 1760 3050" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 운영 호스트·컨테이너·포트</title>
-<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</desc>
+<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
 <g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="3050" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 운영 호스트·컨테이너·포트</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
 <rect x="40" y="140" width="1680" height="290" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 공개 진입</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">Cloudflare 프록시 → Origin TLS. app·backoffice의 80/443은 Cloudflare IPv4만 허용한다.</text>
@@ -16,7 +16,7 @@
 <text x="64" y="1201" font-size="16" fill="#4d5a66" font-weight="400">EC2 간에는 VPC 사설 IP 사용. 아래 app-network들은 호스트마다 별개이며 하나의 분산 Docker 네트워크가 아니다.</text>
 <rect x="40" y="1690" width="1680" height="410" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="1724" font-size="19" fill="#334d61" font-weight="700">04 · 로그·APM·지표 · 앱과 수집기가 같은 호스트 자원을 사용</text>
-<text x="64" y="1751" font-size="16" fill="#4d5a66" font-weight="400">설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다.</text>
+<text x="64" y="1751" font-size="16" fill="#4d5a66" font-weight="400">11/03 확인: 네 서버·nginx S3 적재 / Fluent Bit·Loki running / Grafana OFF. Datadog SaaS 수신은 별도다.</text>
 <rect x="40" y="2140" width="1680" height="390" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="2174" font-size="19" fill="#334d61" font-weight="700">05 · 백오피스의 별도 호스트와 관리 경로</text>
 <text x="64" y="2201" font-size="16" fill="#4d5a66" font-weight="400">백오피스가 DB로 직접 들어가지 않고 앱 호스트의 관리 프록시를 거친다. Cloudflare 뒤 Origin TLS는 앱과 별도다.</text>
@@ -162,7 +162,7 @@
 <text x="90" y="963" font-size="16" fill="#4d5a66" font-weight="400">사설 :18082 → notification:8082</text>
 <text x="90" y="987" font-size="16" fill="#4d5a66" font-weight="400">정해진 /internal/admin 경로만</text>
 <text x="90" y="1011" font-size="16" fill="#4d5a66" font-weight="400">SG: 백오피스 호스트만 허용</text>
-<text x="90" y="1055" font-size="14" fill="#3866a0" font-weight="700">backoffice-gateway · 별도 프로젝트</text>
+<text x="90" y="1055" font-size="14" fill="#3866a0" font-weight="700">backoffice-gateway · app-network</text>
 </g>
 <g data-cell-id="notification">
 <rect x="655" y="880" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
@@ -255,8 +255,8 @@
 <text x="1260" y="1873" font-size="16" fill="#4d5a66" font-weight="400">Loki: 127.0.0.1:3100 · 로컬 7일</text>
 <text x="1260" y="1897" font-size="16" fill="#4d5a66" font-weight="400">S3: system_log/v2/ · 만료 90일</text>
 <text x="1260" y="1921" font-size="16" fill="#4d5a66" font-weight="400">Grafana OFF · 조회는 로그 안내 참고</text>
-<text x="1260" y="1945" font-size="16" fill="#4d5a66" font-weight="400">user-activity 파일 전송: 운영 미확인</text>
-<text x="1260" y="2005" font-size="14" fill="#a9682b" font-weight="700">상세 도면: 로그·추적 / 수신 상태 미확인</text>
+<text x="1260" y="1945" font-size="16" fill="#4d5a66" font-weight="400">user-activity: 파일 업로더 미설치 확인</text>
+<text x="1260" y="2005" font-size="14" fill="#a9682b" font-weight="700">11/03 S3 객체 확인 · 상세 도면: 로그·추적</text>
 </g>
 <g data-cell-id="operator">
 <rect x="70" y="2240" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>

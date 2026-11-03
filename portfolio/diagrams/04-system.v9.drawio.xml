@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="31.4.5">
+  <diagram id="04-system" name="Cattus · 운영 호스트·컨테이너·포트">
+    <mxGraphModel dx="1760" dy="3050" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="3050">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="heading" value="Cattus · 운영 호스트·컨테이너·포트" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
+        </mxCell>
+        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
+        </mxCell>
+        <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="140" width="1680" height="290" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="01 · 공개 진입" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub0" value="Cloudflare 프록시 → Origin TLS. app·backoffice의 80/443은 Cloudflare IPv4만 허용한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="480" width="1680" height="620" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="02 · catus-prod-V2 · m6g.large · Docker app-network" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="492" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub1" value="nginx와 아래 서버 4종이 한 EC2를 공유한다. 서버 포트는 브리지 내부, 관리 프록시만 사설 IP에 bind한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="523" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="1140" width="1680" height="510" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="03 · 호스트 간 저장소 연결 · 동일 서비스를 호출 주체로 다시 표시" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="1152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub2" value="EC2 간에는 VPC 사설 IP 사용. 아래 app-network들은 호스트마다 별개이며 하나의 분산 Docker 네트워크가 아니다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="1183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band3" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="1690" width="1680" height="410" />
+        </mxCell>
+        <mxCell id="bandTitle3" value="04 · 로그·APM·지표 · 앱과 수집기가 같은 호스트 자원을 사용" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="1702" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub3" value="설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="1733" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band4" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="2140" width="1680" height="390" />
+        </mxCell>
+        <mxCell id="bandTitle4" value="05 · 백오피스의 별도 호스트와 관리 경로" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="2152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub4" value="백오피스가 DB로 직접 들어가지 않고 앱 호스트의 관리 프록시를 거친다. Cloudflare 뒤 Origin TLS는 앱과 별도다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="2183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band5" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="2570" width="1680" height="400" />
+        </mxCell>
+        <mxCell id="bandTitle5" value="06 · 개발 환경은 GCP V2 · 운영과 다른 배치" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="2582" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub5" value="oneorthree-v2.dev.mooo.com · main 자동 CD. dev 세 VM에는 Datadog Agent가 없고 dev 백오피스도 없다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="2613" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="internet" value="443" source="client" target="cf" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="origin" value="443" source="cf" target="nginx" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicHttp" value="허용한 공개 HTTP" source="nginx" target="business" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.28888888888888886;exitY=1.0;entryX=0.0;entryY=0.21052631578947367;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="1370" y="455" />
+              <mxPoint x="50" y="455" />
+              <mxPoint x="50" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publicWs" value="WSS" source="nginx" target="realtime" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.7333333333333333;exitY=1.0;entryX=0.7333333333333333;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bizData" value="HTTP" source="business" target="data" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.34210526315789475;entryX=0.0;entryY=0.34210526315789475;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bizChat" value="Business → Realtime 내부 채팅 REST" source="business" target="realtime" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.7777777777777778;exitY=1.0;entryX=0.4666666666666667;entryY=1.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="420" y="795" />
+              <mxPoint x="1450" y="795" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dataEvents" value="사건 HTTP" source="data" target="realtime" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.34210526315789475;entryX=0.0;entryY=0.34210526315789475;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="realtimeAuth" value="권한 조회" source="realtime" target="data" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.0;exitY=0.6578947368421053;entryX=1.0;entryY=0.6578947368421053;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bizNoti" value="기기·설정 HTTP" source="business" target="notification" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.8157894736842105;entryX=0.0;entryY=0.34210526315789475;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="600" y="735" />
+              <mxPoint x="600" y="945" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="adminData" value="관리 HTTP :18080 → :8080" source="gateway" target="data" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.9333333333333333;exitY=0.0;entryX=0.5;entryY=1.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="490" y="835" />
+              <mxPoint x="880" y="835" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="adminNoti" value=":18082" source="gateway" target="notification" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.6842105263157895;entryX=0.0;entryY=0.6842105263157895;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jdbc" value="JDBC :5432" source="sqlClients" target="rds" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="broker" value=":9092" source="eventClients" target="kafka" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redisTcp" value=":6379 / :6380" source="redisClients" target="redis" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="collectLogs" value="각각 수집" source="sources" target="collectors" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.43478260869565216;entryX=0.0;entryY=0.43478260869565216;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="storeLogs" value="분기 전송" source="collectors" target="sinks" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.43478260869565216;entryX=0.0;entryY=0.43478260869565216;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="consoleWeb" value="443" source="operator" target="backoffice" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.47368421052631576;entryX=0.0;entryY=0.47368421052631576;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="consoleInternal" value="사설 HTTP" source="backoffice" target="adminTargets" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.47368421052631576;entryX=0.0;entryY=0.47368421052631576;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="devDb" value="사설 TCP" source="devApp" target="devData" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.47368421052631576;entryX=0.0;entryY=0.47368421052631576;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="devRedisTcp" value="앱 → Redis 사설 TCP" source="devApp" target="devRedis" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=1.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="295" y="2920" />
+              <mxPoint x="1465" y="2920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="client" value="&lt;b&gt;모바일 앱&lt;/b&gt;&lt;br&gt;HTTPS REST · WSS&lt;br&gt;catus-api-v2.oneorthree.world&lt;br&gt;단체 채팅: REST + 10초 폴링&lt;br&gt;&lt;b&gt;React Native · Expo&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="225" width="450" height="190" />
+        </mxCell>
+        <mxCell id="cf" value="&lt;b&gt;Cloudflare&lt;/b&gt;&lt;br&gt;DNS · 프록시&lt;br&gt;Origin 인증서로 nginx에 HTTPS&lt;br&gt;ALB 없이 EC2 nginx로 진입&lt;br&gt;&lt;b&gt;앱 / 백오피스 호스트 별도&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="225" width="450" height="190" />
+        </mxCell>
+        <mxCell id="nginx" value="&lt;b&gt;nginx · 앱 호스트&lt;/b&gt;&lt;br&gt;호스트 :80 → HTTPS / :443 TLS&lt;br&gt;공개 경로 allowlist → Business&lt;br&gt;/ws/realtime → Realtime&lt;br&gt;/internal · /actuator → 404&lt;br&gt;&lt;b&gt;nginx:1.28-alpine · 로그 stdout/stderr&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="225" width="450" height="190" />
+        </mxCell>
+        <mxCell id="business" value="&lt;b&gt;Business · :8080&lt;/b&gt;&lt;br&gt;공개 인증·응답·/screens 조합&lt;br&gt;Data·Realtime·Notification 내부 HTTP&lt;br&gt;DB 없음 · Redis :6380 사용&lt;br&gt;mem 2GiB · cpu 2 · read_only&lt;br&gt;&lt;b&gt;business-api · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="580" width="450" height="190" />
+        </mxCell>
+        <mxCell id="data" value="&lt;b&gt;Data · app:8080&lt;/b&gt;&lt;br&gt;내부 권한·도메인 명령·정산&lt;br&gt;제품 상태 + outbox 같은 TX&lt;br&gt;PostgreSQL · Shared Redis&lt;br&gt;mem 1536MiB&lt;br&gt;&lt;b&gt;app = data-api · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="580" width="450" height="190" />
+        </mxCell>
+        <mxCell id="realtime" value="&lt;b&gt;Realtime · :8081&lt;/b&gt;&lt;br&gt;WSS /ws/realtime · 내부 REST&lt;br&gt;채팅 DB · 이동·presence·fanout&lt;br&gt;Data에 현재 권한 조회&lt;br&gt;mem 768MiB · Shared Redis :6379&lt;br&gt;&lt;b&gt;realtime · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="580" width="450" height="190" />
+        </mxCell>
+        <mxCell id="gateway" value="&lt;b&gt;관리 전용 nginx&lt;/b&gt;&lt;br&gt;사설 :18080 → app:8080&lt;br&gt;사설 :18082 → notification:8082&lt;br&gt;정해진 /internal/admin 경로만&lt;br&gt;SG: 백오피스 호스트만 허용&lt;br&gt;&lt;b&gt;backoffice-gateway · 별도 프로젝트&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="880" width="450" height="190" />
+        </mxCell>
+        <mxCell id="notification" value="&lt;b&gt;Notification · :8082&lt;/b&gt;&lt;br&gt;내부 HTTP: 기기·설정·관리&lt;br&gt;Kafka 사건 소비 → FCM HTTPS&lt;br&gt;알림 DB · 중복·발송·재시도&lt;br&gt;mem 768MiB&lt;br&gt;&lt;b&gt;notification · /actuator :9091&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="880" width="450" height="190" />
+        </mxCell>
+        <mxCell id="localObs" value="&lt;b&gt;앱 호스트 관측 컨테이너&lt;/b&gt;&lt;br&gt;Datadog Agent 512MiB · app-network&lt;br&gt;Fluent Bit 256MiB · host network&lt;br&gt;Loki 512MiB · observability network&lt;br&gt;Grafana: 구성 있음 · OFF&lt;br&gt;&lt;b&gt;수집·저장 흐름은 04절 / 로그 도면&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="880" width="450" height="190" />
+        </mxCell>
+        <mxCell id="sqlClients" value="&lt;b&gt;Data · Realtime · Notification&lt;/b&gt;&lt;br&gt;각 서비스 JDBC → 자신의 DB&lt;br&gt;Business는 DB에 직접 연결하지 않음&lt;br&gt;&lt;b&gt;PostgreSQL TCP :5432&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="1230" width="450" height="135" />
+        </mxCell>
+        <mxCell id="eventClients" value="&lt;b&gt;Data relay · Notification 소비자&lt;/b&gt;&lt;br&gt;알림: notification-events · DLT&lt;br&gt;Realtime Kafka 소비는 선택 경로&lt;br&gt;&lt;b&gt;Kafka TCP :9092&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="1230" width="450" height="135" />
+        </mxCell>
+        <mxCell id="redisClients" value="&lt;b&gt;Data·Realtime / Business&lt;/b&gt;&lt;br&gt;Shared: presence·fanout·이동 상태&lt;br&gt;Business: 폐기 세션 등 전용 키&lt;br&gt;&lt;b&gt;Shared :6379 / Business :6380&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="1230" width="450" height="135" />
+        </mxCell>
+        <mxCell id="rds" value="&lt;b&gt;기존 RDS · catus-prod-db&lt;/b&gt;&lt;br&gt;db.t4g.small · PostgreSQL :5432&lt;br&gt;gromo / gromo_chat / gromo_notification&lt;br&gt;별도 catus-prod-db-v2는 미사용&lt;br&gt;&lt;b&gt;물리 인스턴스 공유 · 논리 DB 분리&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="1440" width="450" height="190" />
+        </mxCell>
+        <mxCell id="kafka" value="&lt;b&gt;catus-kafka-prod-V2&lt;/b&gt;&lt;br&gt;m6g.medium · Kafka 3.8.1&lt;br&gt;1 broker + controller · RF 1&lt;br&gt;사설 :9092 · controller :9093 내부&lt;br&gt;/var/lib/catus-V2/kafka 영속 저장&lt;br&gt;&lt;b&gt;SG: app 호스트 → :9092&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="1440" width="450" height="190" />
+        </mxCell>
+        <mxCell id="redis" value="&lt;b&gt;catus-redis-prod-V2&lt;/b&gt;&lt;br&gt;m6g.medium · Redis 7.4.11 두 개&lt;br&gt;:6379→6379 / :6380→6379&lt;br&gt;maxmemory 384 / 128MiB · noeviction&lt;br&gt;AOF · ACL · shared/business 경로 분리&lt;br&gt;&lt;b&gt;SG: app 호스트 → :6379 / :6380&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="1440" width="450" height="190" />
+        </mxCell>
+        <mxCell id="sources" value="&lt;b&gt;실제 수집 입력&lt;/b&gt;&lt;br&gt;네 JVM: JSON stdout + DD tracer&lt;br&gt;nginx: JSON access / stderr error&lt;br&gt;Docker json-file: 50MiB × 4&lt;br&gt;기타 3호스트: 각자 Datadog Agent&lt;br&gt;&lt;b&gt;Data user-activity 파일은 별도 경로&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="1790" width="450" height="230" />
+        </mxCell>
+        <mxCell id="collectors" value="&lt;b&gt;두 수집 경로&lt;/b&gt;&lt;br&gt;Datadog: Docker 로그·APM·지표&lt;br&gt;APM :8126 / DogStatsD UDP :8125&lt;br&gt;OpenMetrics: 각 앱 :9091 allowlist&lt;br&gt;Fluent Bit: 허용한 앱·nginx만 tail&lt;br&gt;fluent_bit_state: offset·디스크 버퍼&lt;br&gt;&lt;b&gt;앱 stdout 파일을 두 수집기가 각각 읽음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="1790" width="450" height="230" />
+        </mxCell>
+        <mxCell id="sinks" value="&lt;b&gt;검색·보관&lt;/b&gt;&lt;br&gt;Datadog SaaS: 로그·APM·지표&lt;br&gt;Loki: 127.0.0.1:3100 · 로컬 7일&lt;br&gt;S3: system_log/v2/ · 만료 90일&lt;br&gt;Grafana OFF · 조회는 로그 안내 참고&lt;br&gt;user-activity 파일 전송: 운영 미확인&lt;br&gt;&lt;b&gt;상세 도면: 로그·추적 / 수신 상태 미확인&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="1790" width="450" height="230" />
+        </mxCell>
+        <mxCell id="operator" value="&lt;b&gt;운영자 브라우저&lt;/b&gt;&lt;br&gt;backoffice-v2.oneorthree.world&lt;br&gt;HTTPS → Cloudflare → nginx :443&lt;br&gt;구 backoffice 주소는 302 이동&lt;br&gt;&lt;b&gt;운영자 인증&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="2240" width="450" height="190" />
+        </mxCell>
+        <mxCell id="backoffice" value="&lt;b&gt;catus-backoffice-prod-V2&lt;/b&gt;&lt;br&gt;t4g.small · nginx → app:4310&lt;br&gt;/var/lib/catus-V2/backoffice → /state&lt;br&gt;별도 Datadog Agent · APM OFF&lt;br&gt;일일 상태 백업 → S3&lt;br&gt;&lt;b&gt;백오피스 UI와 로컬 상태&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="2240" width="450" height="190" />
+        </mxCell>
+        <mxCell id="adminTargets" value="&lt;b&gt;앱 호스트 관리 프록시&lt;/b&gt;&lt;br&gt;사설 :18080 → Data :8080&lt;br&gt;사설 :18082 → Notification :8082&lt;br&gt;관리 API allowlist + 서비스 인증&lt;br&gt;공개 nginx의 /internal은 404&lt;br&gt;&lt;b&gt;02절 backoffice-gateway 재표시&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="2240" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devApp" value="&lt;b&gt;catus-dev-v2-app · e2-medium&lt;/b&gt;&lt;br&gt;nginx + 서버 4종&lt;br&gt;운영과 같은 서비스 경계&lt;br&gt;data VM · redis VM에 사설 연결&lt;br&gt;&lt;b&gt;개발 앱 호스트&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="2670" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devData" value="&lt;b&gt;catus-dev-v2-data · e2-small&lt;/b&gt;&lt;br&gt;PostgreSQL 16.14 :5432&lt;br&gt;Kafka 3.8.1 :9092 · RF 1&lt;br&gt;운영 RDS·Kafka와 다른 배치&lt;br&gt;&lt;b&gt;개발 DB + broker&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="2670" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devRedis" value="&lt;b&gt;catus-dev-v2-redis · e2-micro&lt;/b&gt;&lt;br&gt;Shared·Business Redis 7.4.11&lt;br&gt;:6379 / :6380 · ACL · AOF&lt;br&gt;운영보다 작은 메모리 한도&lt;br&gt;&lt;b&gt;개발 Redis&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="2670" width="450" height="190" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

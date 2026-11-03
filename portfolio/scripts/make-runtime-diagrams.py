@@ -8,7 +8,7 @@ INFRA_COMMIT = '8522746eab28cb14020aff9e4aba312556909bcc'
 
 def frame(name, title, height):
     d = base.Diagram(name, title,
-                     '2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 기준 · 최신 수신 상태를 실측한 그림은 아님', height)
+                     '2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서', height)
     d.infra_source_commit = INFRA_COMMIT
     return d
 
@@ -35,7 +35,7 @@ def system():
     box(d, 'business', 70, 580, 'Business · :8080', ['공개 인증·응답·/screens 조합', 'Data·Realtime·Notification 내부 HTTP', 'DB 없음 · Redis :6380 사용', 'mem 2GiB · cpu 2 · read_only'], 'business-api · /actuator :9091')
     box(d, 'data', 655, 580, 'Data · app:8080', ['내부 권한·도메인 명령·정산', '제품 상태 + outbox 같은 TX', 'PostgreSQL · Shared Redis', 'mem 1536MiB'], 'app = data-api · /actuator :9091')
     box(d, 'realtime', 1240, 580, 'Realtime · :8081', ['WSS /ws/realtime · 내부 REST', '채팅 DB · 이동·presence·fanout', 'Data에 현재 권한 조회', 'mem 768MiB · Shared Redis :6379'], 'realtime · /actuator :9091', 'event')
-    box(d, 'gateway', 70, 880, '관리 전용 nginx', ['사설 :18080 → app:8080', '사설 :18082 → notification:8082', '정해진 /internal/admin 경로만', 'SG: 백오피스 호스트만 허용'], 'backoffice-gateway · 별도 프로젝트')
+    box(d, 'gateway', 70, 880, '관리 전용 nginx', ['사설 :18080 → app:8080', '사설 :18082 → notification:8082', '정해진 /internal/admin 경로만', 'SG: 백오피스 호스트만 허용'], 'backoffice-gateway · app-network')
     box(d, 'notification', 655, 880, 'Notification · :8082', ['내부 HTTP: 기기·설정·관리', 'Kafka 사건 소비 → FCM HTTPS', '알림 DB · 중복·발송·재시도', 'mem 768MiB'], 'notification · /actuator :9091', 'event')
     box(d, 'localObs', 1240, 880, '앱 호스트 관측 컨테이너', ['Datadog Agent 512MiB · app-network', 'Fluent Bit 256MiB · host network', 'Loki 512MiB · observability network', 'Grafana: 구성 있음 · OFF'], '수집·저장 흐름은 04절 / 로그 도면', 'external')
     edge(d, 'publicHttp', 'nginx', 'business', [(1370,415),(1370,455),(50,455),(50,620),(70,620)], '허용한 공개 HTTP', (760,445))
@@ -60,10 +60,10 @@ def system():
         edge(d, ident, src, dst, [(x,1365),(x,1440)], label, (x,1410))
 
     d.band(40, 1690, 1680, 410, '04 · 로그·APM·지표 · 앱과 수집기가 같은 호스트 자원을 사용',
-           '설정: Fluent Bit·Loki·S3 ON / Grafana OFF. Agent health 기록(11/02)과 최신 로그 수신 확인은 별개다.')
+           '11/03 확인: 네 서버·nginx S3 적재 / Fluent Bit·Loki running / Grafana OFF. Datadog SaaS 수신은 별도다.')
     box(d, 'sources', 70, 1790, '실제 수집 입력', ['네 JVM: JSON stdout + DD tracer', 'nginx: JSON access / stderr error', 'Docker json-file: 50MiB × 4', '기타 3호스트: 각자 Datadog Agent'], 'Data user-activity 파일은 별도 경로', h=230)
     box(d, 'collectors', 655, 1790, '두 수집 경로', ['Datadog: Docker 로그·APM·지표', 'APM :8126 / DogStatsD UDP :8125', 'OpenMetrics: 각 앱 :9091 allowlist', 'Fluent Bit: 허용한 앱·nginx만 tail', 'fluent_bit_state: offset·디스크 버퍼'], '앱 stdout 파일을 두 수집기가 각각 읽음', 'external', h=230)
-    box(d, 'sinks', 1240, 1790, '검색·보관', ['Datadog SaaS: 로그·APM·지표', 'Loki: 127.0.0.1:3100 · 로컬 7일', 'S3: system_log/v2/ · 만료 90일', 'Grafana OFF · 조회는 로그 안내 참고', 'user-activity 파일 전송: 운영 미확인'], '상세 도면: 로그·추적 / 수신 상태 미확인', 'data', h=230)
+    box(d, 'sinks', 1240, 1790, '검색·보관', ['Datadog SaaS: 로그·APM·지표', 'Loki: 127.0.0.1:3100 · 로컬 7일', 'S3: system_log/v2/ · 만료 90일', 'Grafana OFF · 조회는 로그 안내 참고', 'user-activity: 파일 업로더 미설치 확인'], '11/03 S3 객체 확인 · 상세 도면: 로그·추적', 'data', h=230)
     edge(d, 'collectLogs', 'sources', 'collectors', [(520,1890),(655,1890)], '각각 수집', (588,1880))
     edge(d, 'storeLogs', 'collectors', 'sinks', [(1105,1890),(1240,1890)], '분기 전송', (1172,1880))
 
@@ -105,20 +105,20 @@ def logging():
     edge(d, 'tracer', 'jvm', 'ddAgent', [(70,400),(20,400),(20,665),(295,665),(295,680)], 'APM·runtime 지표', (155,671))
 
     d.band(40, 1100, 1680, 490, '03 · 목적지와 보관 한도',
-           'Loki·S3: 설정상 ON · 앱 배포 성공과 각 목적지의 최신 수신은 별도 확인')
+           '11/03: S3 서비스별 최신 객체 확인 · Loki running · Loki 최신 수신은 별도 확인')
     box(d, 'datadog', 70, 1210, 'Datadog SaaS', ['Agent → HTTPS 전송', '로그·trace·호스트·컨테이너 지표', '로그에서 dd.trace_id로 APM 연결', '보관 기간: 조직 설정에서 확인', 'dev V2에는 Agent 없음'], 'Agent healthy ≠ SaaS 최신 수신', 'external', h=250)
     box(d, 'loki', 655, 1210, 'Loki 3.3.2 · 로컬 7일', ['Fluent Bit → 127.0.0.1:3100', '별도 observability network', 'loki_data → /loki · 단일 인스턴스', 'retention 168h + compactor ON', '라벨은 env / service / log_kind', 'ID는 JSON 필드로 조회'], 'app-network에 미연결 · 인증 없는 API', 'data', h=250)
-    box(d, 's3', 1240, 1210, 'S3 · system_log/v2/', ['gzip JSONL · env/service/date/hour', '10MiB 또는 5분 단위 업로드', '앱 EC2 IAM: prod 접두 쓰기만', '로그 만료 규칙: 90일', 'Loki 청크 저장소가 아닌 별도 아카이브', '객체 파티션 시간 = 첫 레코드 시각'], 'ap-northeast-2 · retry_limit 60', 'data', h=250)
+    box(d, 's3', 1240, 1210, 'S3 · system_log/v2/', ['gzip JSONL · env/service/date/hour', '10MiB 또는 5분 단위 업로드', '앱 EC2 IAM: prod 접두 쓰기만', '로그 만료 규칙: 90일', 'Loki 청크 저장소가 아닌 별도 아카이브', '객체 파티션 시간 = 첫 레코드 시각'], '11/03 서비스별 S3 객체 확인 · retry 60', 'data', h=250)
     edge(d, 'agentSaas', 'ddAgent', 'datadog', [(295,950),(295,1075),(50,1075),(50,1280),(70,1280)], 'HTTPS', (295,1065))
     edge(d, 'otherAgentSaas', 'hostAgents', 'datadog', [(1465,950),(1465,1040),(30,1040),(30,1310),(70,1310)], '다른 3호스트 로그·지표', (1090,1030))
     edge(d, 'lokiOutput', 'fluent', 'loki', [(880,950),(880,1210)], ':3100', (880,1175))
     edge(d, 's3Output', 'fluent', 's3', [(1105,870),(1170,870),(1170,1175),(1465,1175),(1465,1210)], '복제 → S3 HTTPS', (1430,1165))
 
     d.band(40, 1630, 1680, 400, '04 · 조회 도구·수집 한계·빠진 범위',
-           '점선 상자는 OFF 또는 운영 미확인 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.')
+           '점선 상자는 OFF 또는 업로더 미설치 경로다. 사용자 행동 로그와 시스템 stdout을 같은 수집 범위로 보지 않는다.')
     box(d, 'grafana', 70, 1730, 'Grafana · OFF', ['구성은 있으나 배포 스위치 false', '활성화 시 Loki datasource 사용', 'Cloudflare Access JWT · JWKS/aud', '현재 Grafana 접속 주소 없음'], '대신 Datadog / 승인된 Loki 접근 사용', 'future', 'off', h=230)
     box(d, 'buffer', 655, 1730, '유실·지연을 판별할 지점', ['Loki 엔진 버퍼 128MiB', 'S3 엔진 64MiB + store_dir 64MiB', '상한·회전·재시도 소진 시 유실 가능', 'canary 60초 간격 · 목적지별 도착 확인', 'canary 도착 ≠ 모든 앱 로그 수집 성공'], '기존 canary 관찰 · 새 트래픽 생성 불필요', 'external', h=230)
-    box(d, 'ua', 1240, 1730, 'Data user-activity · 별도 파일', ['additivity=false · stdout에 안 섞임', '/app/logs/user-activity.log', '호스트 /var/log/catus-V2/data-api', '로컬 30일 · 1GiB cap', 'V2 파일 업로더: 운영 설치 미확인'], '위 stdout 수집과 별개 · 배포 코드에 기동 없음', 'future', 'unknown', h=230)
+    box(d, 'ua', 1240, 1730, 'Data user-activity · 별도 파일', ['additivity=false · stdout에 안 섞임', '/app/logs/user-activity.log', '호스트 /var/log/catus-V2/data-api', '로컬 30일 · 1GiB cap', '11/03 호스트: 파일 업로더 미설치'], 'V2 버킷에 사용자 행동 객체 없음', 'future', 'off', h=230)
     edge(d, 'grafanaQuery', 'grafana', 'loki', [(295,1730),(295,1540),(880,1540),(880,1460)], '활성화할 때 Loki 조회', (610,1530), 'off')
 
     d.band(40, 2070, 1680, 660, '05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름',
