@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cattus · 시스템 아키텍처</title><style>
+*{box-sizing:border-box}body{margin:0;color:#172b3a;background:#fff;font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+header{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #dce4eb;padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button,a{font:inherit;font-size:13px;border:1px solid #dce4eb;border-radius:6px;padding:7px 10px;background:#f8fafc;color:#172b3a;text-decoration:none;cursor:pointer}
+button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0;font-size:12px;color:#4d5a66;flex-basis:100%}
+#viewport{overflow:auto;height:calc(100vh - 105px);min-height:400px}svg{display:block;width:100%;height:auto;min-width:900px}
+[data-cell-id]{transition:opacity .15s}g[role=button]{cursor:pointer}g[role=button]:focus{outline:none}g[role=button]:focus rect{stroke:#172b3a;stroke-width:4}
+.dim{opacity:.16}#text{max-width:1000px;margin:0 auto;padding:20px}article{border-bottom:1px solid #dce4eb;padding:12px 0}h2{font-size:20px}li,p{line-height:1.7}
+[hidden]{display:none!important}@media print{header{position:static}header button{display:none}#viewport{height:auto;overflow:visible}svg{width:100%!important;min-width:0}}
+</style></head><body><header>
+<button id="diagram" aria-pressed="true">다이어그램</button><button id="textView" aria-pressed="false">문서 보기</button>
+<button id="fit">전체 보기</button><button id="zoomIn" aria-label="확대">＋</button><button id="zoomOut" aria-label="축소">−</button><button id="reset">연결 강조 해제</button>
+<a href="04-system.v7.svg" download>SVG ↓</a><a href="04-system.v7.drawio.xml" download>draw.io 원본 ↓</a>
+<a href="/spec/system-architecture" target="_top">근거 문서</a><p id="hint" aria-live="polite">상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.</p>
+</header><main><div id="viewport"><svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 시스템 아키텍처</title>
+<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 시스템 아키텍처</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">운영 · AWS V2</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">catus-api-v2.oneorthree.world · backoffice-v2.oneorthree.world</text>
+<rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">개발 · GCP V2</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">oneorthree-v2.dev.mooo.com · main 변경 → CI → Auto CD</text>
+<rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">승격·발행·배포</text>
+<text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">구 서버와 V1 workflow는 2026-11-02 정리. V2 경로를 사용한다.</text>
+<g data-cell-id="runtime"><path d="M 520 315 L 655 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="546.0" y="289" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="305" font-size="14" text-anchor="middle" fill="#405768">사설 연결</text>
+</g>
+<g data-cell-id="devInternal"><path d="M 520 655 L 655 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="552.5" y="629" width="69.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="645" font-size="14" text-anchor="middle" fill="#405768">사설 IP</text>
+</g>
+<g data-cell-id="promotePublish"><path d="M 520 995 L 655 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="564.5" y="969" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="985" font-size="14" text-anchor="middle" fill="#405768">승격</text>
+</g>
+<g data-cell-id="publishDeploy"><path d="M 1105 995 L 1240 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="969" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="985" font-size="14" text-anchor="middle" fill="#405768">태그 지정</text>
+</g>
+<g data-cell-id="prodApp">
+<rect x="70" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="260" font-size="21" fill="#172b3a" font-weight="700">서버 호스트 · m6g.large</text>
+<text x="90" y="289" font-size="16" fill="#4d5a66" font-weight="400">nginx · 서버 4종</text>
+<text x="90" y="313" font-size="16" fill="#4d5a66" font-weight="400">HTTP → Business · WSS → Realtime</text>
+<text x="90" y="337" font-size="16" fill="#4d5a66" font-weight="400">내부 Data · Notification</text>
+<text x="90" y="405" font-size="14" fill="#3866a0" font-weight="700">catus-prod-V2</text>
+</g>
+<g data-cell-id="prodRuntime">
+<rect x="655" y="230" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">Kafka·Redis 별도 호스트</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">Kafka m6g.medium · 3.8.1</text>
+<text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">Redis m6g.medium · 7.4.11</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">Shared·Business · noeviction·AOF</text>
+<text x="675" y="405" font-size="14" fill="#a9682b" font-weight="700">서버·Kafka·Redis 각각 CD</text>
+</g>
+<g data-cell-id="prodStorage">
+<rect x="1240" y="230" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">RDS·백오피스</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">기존 RDS catus-prod-db 계속 사용</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">catus-prod-db-v2는 아직 미사용</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">백오피스 t4g.small 별도 EC2</text>
+<text x="1260" y="405" font-size="14" fill="#a9682b" font-weight="700">운영 EC2 총 4대</text>
+</g>
+<g data-cell-id="devApp">
+<rect x="70" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="600" font-size="21" fill="#172b3a" font-weight="700">app · e2-medium</text>
+<text x="90" y="629" font-size="16" fill="#4d5a66" font-weight="400">nginx · 서버 4종</text>
+<text x="90" y="653" font-size="16" fill="#4d5a66" font-weight="400">컨테이너별 한도 적용</text>
+<text x="90" y="677" font-size="16" fill="#4d5a66" font-weight="400">dev 백오피스 없음</text>
+<text x="90" y="745" font-size="14" fill="#3866a0" font-weight="700">catus-dev-v2-app</text>
+</g>
+<g data-cell-id="devData">
+<rect x="655" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">data · e2-small</text>
+<text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL 16.14</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">Kafka 3.8.1 · KRaft · RF=1</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">각 runtime 산출물·성공 기록</text>
+<text x="675" y="745" font-size="14" fill="#a9682b" font-weight="700">catus-dev-v2-data</text>
+</g>
+<g data-cell-id="devRedis">
+<rect x="1240" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="600" font-size="21" fill="#172b3a" font-weight="700">redis · e2-micro</text>
+<text x="1260" y="629" font-size="16" fill="#4d5a66" font-weight="400">Shared·Business Redis</text>
+<text x="1260" y="653" font-size="16" fill="#4d5a66" font-weight="400">prod와 다른 메모리 한도</text>
+<text x="1260" y="677" font-size="16" fill="#4d5a66" font-weight="400">dev VM 3대에 Datadog 없음</text>
+<text x="1260" y="745" font-size="14" fill="#a9682b" font-weight="700">catus-dev-v2-redis</text>
+</g>
+<g data-cell-id="promote">
+<rect x="70" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">main → release PR</text>
+<text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">Create a merge commit</text>
+<text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">main 부모 이력 보존</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">코드 검토는 main PR에서 완료</text>
+<text x="90" y="1085" font-size="14" fill="#607583" font-weight="700">fast-forward 절차 대체</text>
+</g>
+<g data-cell-id="publish">
+<rect x="655" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">release · CI 발행</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">네 서버 digest 조합·태그</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">서버·Kafka·Redis 개별 버전</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">V2 patch 자동 증가</text>
+<text x="675" y="1085" font-size="14" fill="#607583" font-weight="700">발행만으로 운영은 안 바뀜</text>
+</g>
+<g data-cell-id="deploy">
+<rect x="1240" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="940" font-size="21" fill="#172b3a" font-weight="700">수동 CD·환경 승인</text>
+<text x="1260" y="969" font-size="16" fill="#4d5a66" font-weight="400">release에서 version 지정</text>
+<text x="1260" y="993" font-size="16" fill="#4d5a66" font-weight="400">catus-production-V2 승인 1회</text>
+<text x="1260" y="1017" font-size="16" fill="#4d5a66" font-weight="400">백오피스는 main 승인 배포</text>
+<text x="1260" y="1085" font-size="14" fill="#607583" font-weight="700">서버 먼저 · 앱은 그다음</text>
+</g>
+</g></svg>
+</div><section id="text" hidden><article><h2>서버 호스트 · m6g.large</h2><p>nginx · 서버 4종 · HTTP → Business · WSS → Realtime · 내부 Data · Notification</p><p>catus-prod-V2</p><ul><li>사설 연결 → Kafka·Redis 별도 호스트</li></ul></article><article><h2>Kafka·Redis 별도 호스트</h2><p>Kafka m6g.medium · 3.8.1 · Redis m6g.medium · 7.4.11 · Shared·Business · noeviction·AOF</p><p>서버·Kafka·Redis 각각 CD</p><ul><li>서버 호스트 · m6g.large → 사설 연결</li></ul></article><article><h2>RDS·백오피스</h2><p>기존 RDS catus-prod-db 계속 사용 · catus-prod-db-v2는 아직 미사용 · 백오피스 t4g.small 별도 EC2</p><p>운영 EC2 총 4대</p><ul></ul></article><article><h2>app · e2-medium</h2><p>nginx · 서버 4종 · 컨테이너별 한도 적용 · dev 백오피스 없음</p><p>catus-dev-v2-app</p><ul><li>사설 IP → data · e2-small</li></ul></article><article><h2>data · e2-small</h2><p>PostgreSQL 16.14 · Kafka 3.8.1 · KRaft · RF=1 · 각 runtime 산출물·성공 기록</p><p>catus-dev-v2-data</p><ul><li>app · e2-medium → 사설 IP</li></ul></article><article><h2>redis · e2-micro</h2><p>Shared·Business Redis · prod와 다른 메모리 한도 · dev VM 3대에 Datadog 없음</p><p>catus-dev-v2-redis</p><ul></ul></article><article><h2>main → release PR</h2><p>Create a merge commit · main 부모 이력 보존 · 코드 검토는 main PR에서 완료</p><p>fast-forward 절차 대체</p><ul><li>승격 → release · CI 발행</li></ul></article><article><h2>release · CI 발행</h2><p>네 서버 digest 조합·태그 · 서버·Kafka·Redis 개별 버전 · V2 patch 자동 증가</p><p>발행만으로 운영은 안 바뀜</p><ul><li>main → release PR → 승격</li><li>태그 지정 → 수동 CD·환경 승인</li></ul></article><article><h2>수동 CD·환경 승인</h2><p>release에서 version 지정 · catus-production-V2 승인 1회 · 백오피스는 main 승인 배포</p><p>서버 먼저 · 앱은 그다음</p><ul><li>release · CI 발행 → 태그 지정</li></ul></article></section></main>
+<script type="application/json" id="graph">{"nodes": [{"id": "prodApp", "x": 70, "y": 230, "w": 450, "h": 190, "title": "서버 호스트 · m6g.large", "lines": ["nginx · 서버 4종", "HTTP → Business · WSS → Realtime", "내부 Data · Notification"], "kind": "core", "stage": "catus-prod-V2", "state": "code"}, {"id": "prodRuntime", "x": 655, "y": 230, "w": 450, "h": 190, "title": "Kafka·Redis 별도 호스트", "lines": ["Kafka m6g.medium · 3.8.1", "Redis m6g.medium · 7.4.11", "Shared·Business · noeviction·AOF"], "kind": "data", "stage": "서버·Kafka·Redis 각각 CD", "state": "code"}, {"id": "prodStorage", "x": 1240, "y": 230, "w": 450, "h": 190, "title": "RDS·백오피스", "lines": ["기존 RDS catus-prod-db 계속 사용", "catus-prod-db-v2는 아직 미사용", "백오피스 t4g.small 별도 EC2"], "kind": "data", "stage": "운영 EC2 총 4대", "state": "code"}, {"id": "devApp", "x": 70, "y": 570, "w": 450, "h": 190, "title": "app · e2-medium", "lines": ["nginx · 서버 4종", "컨테이너별 한도 적용", "dev 백오피스 없음"], "kind": "core", "stage": "catus-dev-v2-app", "state": "code"}, {"id": "devData", "x": 655, "y": 570, "w": 450, "h": 190, "title": "data · e2-small", "lines": ["PostgreSQL 16.14", "Kafka 3.8.1 · KRaft · RF=1", "각 runtime 산출물·성공 기록"], "kind": "data", "stage": "catus-dev-v2-data", "state": "code"}, {"id": "devRedis", "x": 1240, "y": 570, "w": 450, "h": 190, "title": "redis · e2-micro", "lines": ["Shared·Business Redis", "prod와 다른 메모리 한도", "dev VM 3대에 Datadog 없음"], "kind": "data", "stage": "catus-dev-v2-redis", "state": "code"}, {"id": "promote", "x": 70, "y": 910, "w": 450, "h": 190, "title": "main → release PR", "lines": ["Create a merge commit", "main 부모 이력 보존", "코드 검토는 main PR에서 완료"], "kind": "external", "stage": "fast-forward 절차 대체", "state": "code"}, {"id": "publish", "x": 655, "y": 910, "w": 450, "h": 190, "title": "release · CI 발행", "lines": ["네 서버 digest 조합·태그", "서버·Kafka·Redis 개별 버전", "V2 patch 자동 증가"], "kind": "external", "stage": "발행만으로 운영은 안 바뀜", "state": "code"}, {"id": "deploy", "x": 1240, "y": 910, "w": 450, "h": 190, "title": "수동 CD·환경 승인", "lines": ["release에서 version 지정", "catus-production-V2 승인 1회", "백오피스는 main 승인 배포"], "kind": "external", "stage": "서버 먼저 · 앱은 그다음", "state": "code"}], "edges": [{"id": "runtime", "source": "prodApp", "target": "prodRuntime", "points": [[520, 315], [655, 315]], "label": "사설 연결", "at": [587, 305], "async_": false, "state": "code"}, {"id": "devInternal", "source": "devApp", "target": "devData", "points": [[520, 655], [655, 655]], "label": "사설 IP", "at": [587, 645], "async_": false, "state": "code"}, {"id": "promotePublish", "source": "promote", "target": "publish", "points": [[520, 995], [655, 995]], "label": "승격", "at": [587, 985], "async_": false, "state": "code"}, {"id": "publishDeploy", "source": "publish", "target": "deploy", "points": [[1105, 995], [1240, 995]], "label": "태그 지정", "at": [1172, 985], "async_": false, "state": "code"}]}</script><script>
+const graph=JSON.parse(document.getElementById('graph').textContent),svg=document.querySelector('svg'),hint=document.getElementById('hint');let zoom=1;
+function reset(){svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.remove('dim'));hint.textContent='상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.';}
+function select(id){const ids=new Set([id]);graph.edges.filter(e=>e.source===id||e.target===id).forEach(e=>{ids.add(e.id);ids.add(e.source);ids.add(e.target)});svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.toggle('dim',!ids.has(el.dataset.cellId)));const n=graph.nodes.find(n=>n.id===id);hint.textContent=n.title+' · '+n.lines.join(' · ')+' · '+n.stage;}
+graph.nodes.forEach(n=>{const el=svg.querySelector('[data-cell-id="'+n.id+'"]');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label',n.title+' '+n.stage);el.addEventListener('click',()=>select(n.id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(n.id)}})});
+document.getElementById('reset').onclick=reset;document.addEventListener('keydown',e=>{if(e.key==='Escape')reset()});
+function scale(v){zoom=Math.max(.5,Math.min(3,v));svg.style.width=(zoom*100)+'%';svg.style.minWidth=zoom===1?'0':'900px';}
+document.getElementById('fit').onclick=()=>scale(1);document.getElementById('zoomIn').onclick=()=>scale(zoom+.25);document.getElementById('zoomOut').onclick=()=>scale(zoom-.25);
+function view(text){document.getElementById('text').hidden=!text;document.getElementById('viewport').hidden=text;document.getElementById('diagram').setAttribute('aria-pressed',String(!text));document.getElementById('textView').setAttribute('aria-pressed',String(text));}
+document.getElementById('diagram').onclick=()=>view(false);document.getElementById('textView').onclick=()=>view(true);
+</script></body></html>

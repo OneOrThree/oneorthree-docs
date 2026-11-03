@@ -1,0 +1,241 @@
+{
+  "version": 7,
+  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "title": "Cattus · 시스템 아키텍처",
+  "nodes": [
+    {
+      "id": "prodApp",
+      "x": 70,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "서버 호스트 · m6g.large",
+      "lines": [
+        "nginx · 서버 4종",
+        "HTTP → Business · WSS → Realtime",
+        "내부 Data · Notification"
+      ],
+      "kind": "core",
+      "stage": "catus-prod-V2",
+      "state": "code"
+    },
+    {
+      "id": "prodRuntime",
+      "x": 655,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "Kafka·Redis 별도 호스트",
+      "lines": [
+        "Kafka m6g.medium · 3.8.1",
+        "Redis m6g.medium · 7.4.11",
+        "Shared·Business · noeviction·AOF"
+      ],
+      "kind": "data",
+      "stage": "서버·Kafka·Redis 각각 CD",
+      "state": "code"
+    },
+    {
+      "id": "prodStorage",
+      "x": 1240,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "RDS·백오피스",
+      "lines": [
+        "기존 RDS catus-prod-db 계속 사용",
+        "catus-prod-db-v2는 아직 미사용",
+        "백오피스 t4g.small 별도 EC2"
+      ],
+      "kind": "data",
+      "stage": "운영 EC2 총 4대",
+      "state": "code"
+    },
+    {
+      "id": "devApp",
+      "x": 70,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "app · e2-medium",
+      "lines": [
+        "nginx · 서버 4종",
+        "컨테이너별 한도 적용",
+        "dev 백오피스 없음"
+      ],
+      "kind": "core",
+      "stage": "catus-dev-v2-app",
+      "state": "code"
+    },
+    {
+      "id": "devData",
+      "x": 655,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "data · e2-small",
+      "lines": [
+        "PostgreSQL 16.14",
+        "Kafka 3.8.1 · KRaft · RF=1",
+        "각 runtime 산출물·성공 기록"
+      ],
+      "kind": "data",
+      "stage": "catus-dev-v2-data",
+      "state": "code"
+    },
+    {
+      "id": "devRedis",
+      "x": 1240,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "redis · e2-micro",
+      "lines": [
+        "Shared·Business Redis",
+        "prod와 다른 메모리 한도",
+        "dev VM 3대에 Datadog 없음"
+      ],
+      "kind": "data",
+      "stage": "catus-dev-v2-redis",
+      "state": "code"
+    },
+    {
+      "id": "promote",
+      "x": 70,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "main → release PR",
+      "lines": [
+        "Create a merge commit",
+        "main 부모 이력 보존",
+        "코드 검토는 main PR에서 완료"
+      ],
+      "kind": "external",
+      "stage": "fast-forward 절차 대체",
+      "state": "code"
+    },
+    {
+      "id": "publish",
+      "x": 655,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "release · CI 발행",
+      "lines": [
+        "네 서버 digest 조합·태그",
+        "서버·Kafka·Redis 개별 버전",
+        "V2 patch 자동 증가"
+      ],
+      "kind": "external",
+      "stage": "발행만으로 운영은 안 바뀜",
+      "state": "code"
+    },
+    {
+      "id": "deploy",
+      "x": 1240,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "수동 CD·환경 승인",
+      "lines": [
+        "release에서 version 지정",
+        "catus-production-V2 승인 1회",
+        "백오피스는 main 승인 배포"
+      ],
+      "kind": "external",
+      "stage": "서버 먼저 · 앱은 그다음",
+      "state": "code"
+    }
+  ],
+  "edges": [
+    {
+      "id": "runtime",
+      "source": "prodApp",
+      "target": "prodRuntime",
+      "points": [
+        [
+          520,
+          315
+        ],
+        [
+          655,
+          315
+        ]
+      ],
+      "label": "사설 연결",
+      "at": [
+        587,
+        305
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "devInternal",
+      "source": "devApp",
+      "target": "devData",
+      "points": [
+        [
+          520,
+          655
+        ],
+        [
+          655,
+          655
+        ]
+      ],
+      "label": "사설 IP",
+      "at": [
+        587,
+        645
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "promotePublish",
+      "source": "promote",
+      "target": "publish",
+      "points": [
+        [
+          520,
+          995
+        ],
+        [
+          655,
+          995
+        ]
+      ],
+      "label": "승격",
+      "at": [
+        587,
+        985
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "publishDeploy",
+      "source": "publish",
+      "target": "deploy",
+      "points": [
+        [
+          1105,
+          995
+        ],
+        [
+          1240,
+          995
+        ]
+      ],
+      "label": "태그 지정",
+      "at": [
+        1172,
+        985
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}

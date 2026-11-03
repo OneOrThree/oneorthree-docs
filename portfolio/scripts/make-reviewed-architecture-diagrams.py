@@ -179,14 +179,14 @@ def write_html(d):
     diagram_dir = ROOT / "diagrams"
     current = diagram_dir / f"{d.name}.html"
     previous = diagram_dir / f"{d.name}.v{VERSION-1}.html"
-    if current.exists() and not previous.exists():
+    source = diagram_dir / f'{d.name}.source.json'
+    source_version = json.loads(source.read_text())['version'] if source.exists() else None
+    if VERSION > 1 and source_version != VERSION and current.exists() and not previous.exists():
         archived = current.read_text()
         for suffix in ('svg', 'drawio.xml'):
             archived = archived.replace(f'href="{d.name}.{suffix}"',
                                         f'href="{d.name}.v{VERSION-1}.{suffix}"')
         previous.write_text(archived)
-    source = diagram_dir / f'{d.name}.source.json'
-    source_version = json.loads(source.read_text())['version'] if source.exists() else None
     # 버전 근거가 있는 동반 산출물만 보존한다. R61 HTML과 오래된 SVG의 판은 다르다.
     for suffix in ('svg', 'drawio.xml', 'source.json'):
         legacy = diagram_dir / f'{d.name}.{suffix}'
@@ -230,10 +230,10 @@ document.getElementById('fit').onclick=()=>scale(1);document.getElementById('zoo
 function view(text){document.getElementById('text').hidden=!text;document.getElementById('viewport').hidden=text;document.getElementById('diagram').setAttribute('aria-pressed',String(!text));document.getElementById('textView').setAttribute('aria-pressed',String(text));}
 document.getElementById('diagram').onclick=()=>view(false);document.getElementById('textView').onclick=()=>view(true);
 </script></body></html>'''
-    detail = {'01-ia': 'use-cases', '02-journey': 'use-cases', '03-service': 'service-architecture', '04-system': 'system-architecture'}[d.name]
+    detail = {'01-ia': 'use-cases', '02-journey': 'use-cases', '03-service': 'service-architecture', '04-system': 'system-architecture', '06-logging': 'logging-and-observability'}[d.name]
     html = template.replace('__TITLE__',escape(d.title)).replace('__NAME__',d.name).replace('__DETAIL__', detail).replace('__SVG__',svg).replace('__ROWS__',''.join(rows)).replace('__GRAPH__',graph_json)
     current.write_text(html)
-    (diagram_dir / f"{d.name}.source.json").write_text(json.dumps({"version":VERSION,"sourceCommit":COMMIT,"title":d.title,**graph},ensure_ascii=False,indent=2)+"\n")
+    (diagram_dir / f"{d.name}.source.json").write_text(json.dumps({"version":VERSION,"sourceCommit":COMMIT,"title":d.title,**({"infraSourceCommit":d.infra_source_commit} if hasattr(d,"infra_source_commit") else {}),**graph},ensure_ascii=False,indent=2)+"\n")
 
 
 if __name__ == '__main__':

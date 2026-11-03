@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="31.4.5">
+  <diagram id="04-system" name="Cattus · 시스템 아키텍처">
+    <mxGraphModel dx="1760" dy="1220" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="1220">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="heading" value="Cattus · 시스템 아키텍처" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
+        </mxCell>
+        <mxCell id="subtitle" value="2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
+        </mxCell>
+        <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="140" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="운영 · AWS V2" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub0" value="catus-api-v2.oneorthree.world · backoffice-v2.oneorthree.world" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="480" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="개발 · GCP V2" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="492" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub1" value="oneorthree-v2.dev.mooo.com · main 변경 → CI → Auto CD" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="523" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="820" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="승격·발행·배포" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="832" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub2" value="구 서버와 V1 workflow는 2026-11-02 정리. V2 경로를 사용한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="863" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="runtime" value="사설 연결" source="prodApp" target="prodRuntime" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="devInternal" value="사설 IP" source="devApp" target="devData" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="promotePublish" value="승격" source="promote" target="publish" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="publishDeploy" value="태그 지정" source="publish" target="deploy" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="prodApp" value="&lt;b&gt;서버 호스트 · m6g.large&lt;/b&gt;&lt;br&gt;nginx · 서버 4종&lt;br&gt;HTTP → Business · WSS → Realtime&lt;br&gt;내부 Data · Notification&lt;br&gt;&lt;b&gt;catus-prod-V2&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="prodRuntime" value="&lt;b&gt;Kafka·Redis 별도 호스트&lt;/b&gt;&lt;br&gt;Kafka m6g.medium · 3.8.1&lt;br&gt;Redis m6g.medium · 7.4.11&lt;br&gt;Shared·Business · noeviction·AOF&lt;br&gt;&lt;b&gt;서버·Kafka·Redis 각각 CD&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="prodStorage" value="&lt;b&gt;RDS·백오피스&lt;/b&gt;&lt;br&gt;기존 RDS catus-prod-db 계속 사용&lt;br&gt;catus-prod-db-v2는 아직 미사용&lt;br&gt;백오피스 t4g.small 별도 EC2&lt;br&gt;&lt;b&gt;운영 EC2 총 4대&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devApp" value="&lt;b&gt;app · e2-medium&lt;/b&gt;&lt;br&gt;nginx · 서버 4종&lt;br&gt;컨테이너별 한도 적용&lt;br&gt;dev 백오피스 없음&lt;br&gt;&lt;b&gt;catus-dev-v2-app&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devData" value="&lt;b&gt;data · e2-small&lt;/b&gt;&lt;br&gt;PostgreSQL 16.14&lt;br&gt;Kafka 3.8.1 · KRaft · RF=1&lt;br&gt;각 runtime 산출물·성공 기록&lt;br&gt;&lt;b&gt;catus-dev-v2-data&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="devRedis" value="&lt;b&gt;redis · e2-micro&lt;/b&gt;&lt;br&gt;Shared·Business Redis&lt;br&gt;prod와 다른 메모리 한도&lt;br&gt;dev VM 3대에 Datadog 없음&lt;br&gt;&lt;b&gt;catus-dev-v2-redis&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="promote" value="&lt;b&gt;main → release PR&lt;/b&gt;&lt;br&gt;Create a merge commit&lt;br&gt;main 부모 이력 보존&lt;br&gt;코드 검토는 main PR에서 완료&lt;br&gt;&lt;b&gt;fast-forward 절차 대체&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="910" width="450" height="190" />
+        </mxCell>
+        <mxCell id="publish" value="&lt;b&gt;release · CI 발행&lt;/b&gt;&lt;br&gt;네 서버 digest 조합·태그&lt;br&gt;서버·Kafka·Redis 개별 버전&lt;br&gt;V2 patch 자동 증가&lt;br&gt;&lt;b&gt;발행만으로 운영은 안 바뀜&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="910" width="450" height="190" />
+        </mxCell>
+        <mxCell id="deploy" value="&lt;b&gt;수동 CD·환경 승인&lt;/b&gt;&lt;br&gt;release에서 version 지정&lt;br&gt;catus-production-V2 승인 1회&lt;br&gt;백오피스는 main 승인 배포&lt;br&gt;&lt;b&gt;서버 먼저 · 앱은 그다음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="910" width="450" height="190" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
