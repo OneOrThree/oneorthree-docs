@@ -1,13 +1,21 @@
-# 팀 포트폴리오 문서 사이트 템플릿
+# OneOrThree · Cattus 문서 사이트
 
-엔지니어링 문서를 그대로 공개하는 포트폴리오 사이트. Next 15 App Router + Tailwind v4, 전 페이지 정적 생성.
 
-구조와 디자인은 `hosted-clones/`의 두 사이트(PokeClip 아키텍처, FillMap 문서)에서 겹치는 골격을 뽑아 온 것이고, 두 사이트가 갈렸던 부분은 골라서 합쳤다. 다만 두 사이트가 공통으로 갖고 있던 구조적 문제 — 헤더·내비를 페이지마다 복붙, 컴포넌트 150~315개 중복, 없는 모듈을 `ignoreBuildErrors`로 덮기, 다크모드 없음, 다이어그램 컨트롤이 마크업만 있고 죽어 있음 — 은 전부 여기서 없앴다.
+## 바로가기
+
+| 작업 | 내용 |
+| --- | --- |
+| 실행·문서 | [시작하기](#시작하기) · [문서 추가](#문서-추가하기) |
+| 그림 | [다이어그램 추가](#다이어그램-추가하기) · [Cattus 갱신](#cattus-다이어그램-갱신) · [버전 보존](#아키텍처-버전-보존) |
+| 데이터 | [기여도](#팀-기여도-스냅샷-갱신) · [발전 기록](#발전-기록-자동-생성) |
+| 게시 | [운영 기록](#운영트러블슈팅-기록) · [배포](#배포-vercel) · [검증](#검증할-때-주의) |
+
+Cattus의 현재 안내와 팀의 과거 기록을 함께 공개합니다. Next.js 15 App Router와 Tailwind v4를 사용하며, 문서는 정적 생성하고 비밀번호로 보호한 갈등관리 페이지는 동적으로 제공합니다.
 
 ## 시작하기
 
 ```bash
-npm install
+npm ci
 npm run dev          # http://localhost:3000
 ```
 
@@ -27,7 +35,9 @@ npm run dev          # http://localhost:3000
 title: "ADR-003 — 제목" # 필수
 summary: "본문 위 요약 박스에 들어갈 한두 문장"
 status: "유효" # 유효/검토됨/대체됨 … 색은 단어에서 추론
-date: "2026-08-13"
+date: "2026-11-03"
+recordType: "current" # 현재 안내만 명시. 생략하면 ADR은 결정 기록, 나머지는 시점 기록
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa" # phone 근거 커밋
 order: 3 # 없으면 date 내림차순 → 제목순
 keywords: ["키워드", "키워드"]
 related:
@@ -72,20 +82,18 @@ related:
 
 **`다이어그램 / 문서 보기` 토글.** 문서 보기는 같은 그래프를 텍스트로 렌더한다 — 요소마다 나가는/들어오는 연결과 엣지 라벨. 별도로 쓰는 내용이 아니라 `.drawio.xml` 에서 뽑은 그래프 그대로다.
 
-## Gromo 아키텍처 갱신
+## Cattus 다이어그램 갱신
 
-현재 서비스·시스템 v6은 `scripts/make-reviewed-architecture-diagrams.py`의 같은 노드·상태·연결 정의에서 SVG·draw.io XML·HTML·`<id>.source.json`을 생성한다. v3의 archify 스펙과 HTML은 이전 버전 근거이며 현재 생성 원본이 아니다.
+현재 IA·유저 저니 v6, 서비스·시스템 v7, AWS v3은 `scripts/make-current-diagrams.py`에서 생성합니다. 같은 노드·간선으로 SVG·draw.io XML·source JSON을 만들고 앞의 네 도면은 HTML도 생성합니다.
 
 ```bash
-python3 scripts/make-reviewed-architecture-diagrams.py
+python3 scripts/make-current-diagrams.py
 npm run build
 ```
 
-이 생성기는 `03-service`, `04-system`만 갱신한다. v3 HTML과 v2 SVG/XML은 첫 실행에서 보존하고 이후 보존본을 덮어쓰지 않는다. 이전 `make-architecture-diagrams.py`는 더 최신 manifest를 발견하면 덮어쓰기를 거절한다. 원본 근거·고정 커밋·구현 단계는 `content/spec/architecture.mdx`와 상세 문서에 기록한다. 상자를 더할 때는 구현 상태와 소유자를 함께 확인하며 main의 dev 설정을 prod 운영 실적으로 바꾸지 않는다.
+기준 커밋은 phone `af80af042`입니다. main 코드와 저장소의 운영 기록을 대조한 도면이며 새 운영 실측이 아닙니다. 이전 R61 HTML과 서비스·시스템 v6, AWS v2는 버전 선택에서 볼 수 있습니다. 과거 생성기는 현재 버전의 원본이 아니며 실행하지 않습니다.
 
-현재 도면의 실선은 main 구현, 긴 점선은 구현·활성화 기본 OFF, 짧은 점선은 설계·배포 미확정이다. 비동기 여부는 간선 라벨로 표시한다. 운영 활성화는 별도 근거가 있어야 한다. HTML의 SVG/XML 동반 산출물은 `build-diagrams.mjs`가 연결 그래프와 다운로드 파일로 함께 빌드한다. 따라서 HTML과 내려받는 원본이 서로 다른 버전으로 남지 않는다.
-
-manifest의 `detailHref`는 다이어그램 아래에 근거 문서 링크를 표시한다. 다이어그램의 연결 강조와 문서 보기, 원본 다운로드는 기존 빌드 파이프라인을 사용한다.
+HTML의 동반 SVG/XML은 빌드가 연결 그래프·다운로드와 함께 검증합니다. 근거 문서는 manifest의 `detailHref`로 연결합니다.
 
 ### 아키텍처 버전 보존
 
@@ -97,11 +105,11 @@ manifest는 최신 버전을 맨 앞에 두고, 최신 항목만 현재 별칭(`
 
 ### 공통 시각 문법
 
-`04-system`을 모든 현재 다이어그램의 시각 기준으로 사용한다. 흰 캔버스, 32px 제목과 17px 부제, `#f8fafc` 영역 밴드, 12px 모서리의 의미별 카드, `#607583` 2px 연결선, `Apple SD Gothic Neo, Noto Sans KR, sans-serif` 글꼴을 공통으로 쓴다. 유스케이스처럼 구조가 다른 도면도 같은 토큰과 제목 계층을 유지한다. 예외는 IA·유저 저니 v4 이후로, 설계 쪽 R61 원본을 가공 없이 보여 주기 위해 원본의 시각 문법을 그대로 둔다(아래 "HTML 다이어그램의 표시").
+`04-system`을 모든 현재 다이어그램의 시각 기준으로 사용한다. 흰 캔버스, 32px 제목과 17px 부제, `#f8fafc` 영역 밴드, 12px 모서리의 의미별 카드, `#607583` 2px 연결선, `Apple SD Gothic Neo, Noto Sans KR, sans-serif` 글꼴을 공통으로 쓴다. 유스케이스처럼 구조가 다른 도면도 같은 토큰과 제목 계층을 유지한다. 과거 IA·유저 저니 v4·v5는 R61 원본의 시각 문법을 보존합니다.
 
 현재 도면을 고칠 때는 먼저 생성기의 `TARGET_VERSION` 또는 `TARGET_VERSIONS`를 올리고 manifest에 새 현재 버전과 이전 버전을 함께 등록한다. 생성기는 직전 현재 별칭을 해당 버전 파일로 한 번만 보존하며, 같은 버전으로 다시 실행해도 보존본을 덮어쓰지 않는다.
 
-현재 생성기는 `VERSION`을 사용한다. 다음 버전으로 올리면 HTML은 직전 버전으로, SVG/XML/source JSON은 source JSON에 기록된 실제 생성 버전으로 함께 보존한다. v3는 HTML, 그 이전 SVG/XML은 v2였으므로 이번 전환에서 서로 다른 산출물을 같은 v3로 이름 붙이지 않았다.
+현재 생성기는 도면별 `VERSIONS`를 사용합니다. HTML은 직전 버전, SVG/XML/source JSON은 확인된 실제 생성 버전으로 보존합니다. 이전 R61 HTML과 같은 이름의 오래된 SVG를 같은 판으로 간주하지 않습니다.
 
 ## 운영·트러블슈팅 기록
 
@@ -109,20 +117,9 @@ manifest는 최신 버전을 맨 앞에 두고, 최신 항목만 현재 별칭(`
 
 현재 v1은 문서 저장소의 `345aa78`(2026-09-08)에서 복원했고, v2는 2026-09-13의 Kafka·Redis 경계 반영본이다.
 
-## R61 유스케이스 갱신
+## 이전 R61 유스케이스
 
-유스케이스는 화면·API 목록을 옮기지 않고 `content/spec/use-cases.mdx`의 사용자 목표를 한 장으로 요약한다. 도면을 바꿀 때는 생성기의 영역·행위·연결 정의를 고친 뒤 SVG와 draw.io XML을 함께 다시 만든다. 생성기는 최초 실행 시 기존 도면을 `00-usecase.v1.*`로 보존하고 R61 목표 지도를 v2 현재 별칭으로 만든다.
-
-```bash
-node scripts/make-usecase-diagram.mjs
-node scripts/make-product-html-diagrams.mjs
-python3 scripts/make-architecture-diagrams.py
-npm run build
-```
-
-`00-usecase.svg`만 직접 고치면 XML 연결 그래프와 화면이 어긋나므로 두 산출물을 항상 같이 생성한다. 화면 구조는 IA, 상태 순서는 유저 저니가 정본이며 유스케이스에 중복해서 넣지 않는다.
-
-두 번째 생성기(`make-product-html-diagrams.mjs`)는 IA·유저 저니 v3까지만 만든다. v4부터 IA·유저 저니는 설계 쪽 R61 HTML 원본을 `scripts/sync-r61-html.py`로 가져온다. 생성기는 manifest의 현재 버전이 자기 버전보다 높으면 덮어쓰지 않고 멈춘다 (아래 "HTML 다이어그램의 표시").
+R61 기획 HTML은 IA·유저 저니의 v1~v5에서 보존합니다. `sync-r61-html.py`와 과거 제품 생성기는 당시 복원용입니다. 현재 그림을 바꿀 때는 위의 Cattus 생성기와 `content/spec/use-cases.mdx`를 함께 고칩니다.
 
 ## 팀 기여도 스냅샷 갱신
 
@@ -173,13 +170,14 @@ npm run build
 
 1. 이 저장소를 Vercel 프로젝트로 임포트
 2. **Root Directory** 를 `portfolio` 로 지정
-3. 환경변수 `NEXT_PUBLIC_SITE_ORIGIN` 에 실제 도메인 (`metadataBase`·sitemap·llms.txt의 절대 URL에 쓰인다)
+3. `DEPLOY_ENABLED=1`을 배포 환경에 설정합니다. `vercel.json`의 ignoreCommand가 이 값 없이는 빌드를 건너뜁니다.
+4. `NEXT_PUBLIC_SITE_ORIGIN`으로 절대 URL을 설정할 수 있습니다. 기본값은 `https://docs.oneorthree.world`입니다.
 
 프레임워크·빌드 명령은 자동 감지된다. `prebuild` 가 다이어그램을 만들므로 별도 설정은 없다.
 
 ## 검증할 때 주의
 
-`npm run verify` 는 200만 확인한다. 하이드레이션 단계에서만 터지는 클라이언트 예외는 잡지 못한다 — 실제로 이 템플릿 개발 중 `IntersectionObserver` 의 `rootMargin` 에 `rem` 을 써서 모든 문서 페이지가 죽었는데, 빌드·타입체크·200 검증이 전부 통과했다. 문서 페이지 하나와 다이어그램 하나는 브라우저에서 콘솔을 열고 확인할 것.
+`npm run verify`는 경로의 HTTP 상태를 확인합니다. 추가로 `node --test scripts/build-diagrams.test.mjs`를 실행하고 문서 목차·내부 링크·버전별 그림과 모바일 화면을 확인합니다. HTTP 상태 검사는 하이드레이션 단계에서만 터지는 클라이언트 예외는 잡지 못한다 — 실제로 이 템플릿 개발 중 `IntersectionObserver` 의 `rootMargin` 에 `rem` 을 써서 모든 문서 페이지가 죽었는데, 빌드·타입체크·200 검증이 전부 통과했다. 문서 페이지 하나와 다이어그램 하나는 브라우저에서 콘솔을 열고 확인할 것.
 
 ## 알려진 한계
 

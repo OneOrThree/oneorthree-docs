@@ -1,0 +1,702 @@
+{
+  "version": 6,
+  "sourceCommit": "c247e7108b1296a3f76c280553fa8779d221d753",
+  "title": "Gromo · 시스템 아키텍처",
+  "nodes": [
+    {
+      "id": "app",
+      "x": 60,
+      "y": 300,
+      "w": 240,
+      "h": 130,
+      "title": "모바일 앱",
+      "lines": [
+        "HTTPS · 공개 REST",
+        "React Native · Expo"
+      ],
+      "kind": "core",
+      "stage": "클라이언트",
+      "state": "code"
+    },
+    {
+      "id": "cloudflare",
+      "x": 380,
+      "y": 300,
+      "w": 260,
+      "h": 130,
+      "title": "Cloudflare",
+      "lines": [
+        "DNS · 프록시",
+        "Origin 인증서"
+      ],
+      "kind": "external",
+      "stage": "prod 공개 진입",
+      "state": "code"
+    },
+    {
+      "id": "nginx",
+      "x": 700,
+      "y": 300,
+      "w": 340,
+      "h": 170,
+      "title": "nginx :443",
+      "lines": [
+        "TLS 종료 · /api/v1 → Data",
+        "위성 include: 무접두 → Business",
+        "/internal/admin → Notification",
+        "그 밖의 /internal · /actuator 404"
+      ],
+      "kind": "core",
+      "stage": "prod · include 수동 적용",
+      "state": "code"
+    },
+    {
+      "id": "dataProd",
+      "x": 1100,
+      "y": 300,
+      "w": 280,
+      "h": 130,
+      "title": "Data API · prod",
+      "lines": [
+        "app 컨테이너 · /api/v1",
+        "코어 정본 gromo 접근"
+      ],
+      "kind": "core",
+      "stage": "release → ECR · SSM",
+      "state": "code"
+    },
+    {
+      "id": "prodRds",
+      "x": 1440,
+      "y": 300,
+      "w": 260,
+      "h": 130,
+      "title": "RDS PostgreSQL",
+      "lines": [
+        "gromo-prod-db · 코어",
+        "gromo_notification: 목표"
+      ],
+      "kind": "data",
+      "stage": "prod · 알림 DB 미확인",
+      "state": "code"
+    },
+    {
+      "id": "prodCd",
+      "x": 60,
+      "y": 470,
+      "w": 400,
+      "h": 120,
+      "title": "prod 배포",
+      "lines": [
+        "release push → ECR 이미지",
+        "compose → S3 → SSM send-command"
+      ],
+      "kind": "external",
+      "stage": "prod-cd.yml",
+      "state": "code"
+    },
+    {
+      "id": "datadog",
+      "x": 1100,
+      "y": 480,
+      "w": 190,
+      "h": 110,
+      "title": "datadog-agent",
+      "lines": [
+        "APM · 로그"
+      ],
+      "kind": "external",
+      "stage": "prod 사이드카",
+      "state": "code"
+    },
+    {
+      "id": "s3",
+      "x": 1310,
+      "y": 480,
+      "w": 200,
+      "h": 120,
+      "title": "S3 로그 버킷",
+      "lines": [
+        "gromo-prod-logs",
+        "접두 3개 · 90일 만료"
+      ],
+      "kind": "data",
+      "stage": "적용 2026-09-19",
+      "state": "code"
+    },
+    {
+      "id": "business",
+      "x": 600,
+      "y": 740,
+      "w": 320,
+      "h": 150,
+      "title": "Business API · :8080",
+      "lines": [
+        "공개 인증 · /screens 14종",
+        "내부 호출: Data · Notification",
+        "Realtime 우체통 · 영속 DB 없음"
+      ],
+      "kind": "core",
+      "stage": "satellites.yml · 수동",
+      "state": "code"
+    },
+    {
+      "id": "notification",
+      "x": 980,
+      "y": 740,
+      "w": 320,
+      "h": 150,
+      "title": "Notification · :8082",
+      "lines": [
+        "/internal/admin 콘솔",
+        "Kafka 소비 · HTTP 사건 입구",
+        "FCM 발송 · 전용 DB"
+      ],
+      "kind": "event",
+      "stage": "소비·스케줄 기본 OFF",
+      "state": "off"
+    },
+    {
+      "id": "previewRedis",
+      "x": 260,
+      "y": 740,
+      "w": 280,
+      "h": 150,
+      "title": "미리보기 Redis",
+      "lines": [
+        "business-redis · 128mb",
+        "allkeys-lru · 비영속"
+      ],
+      "kind": "data",
+      "stage": "Business 전용",
+      "state": "code"
+    },
+    {
+      "id": "realtime",
+      "x": 60,
+      "y": 1040,
+      "w": 420,
+      "h": 150,
+      "title": "Realtime · :8081",
+      "lines": [
+        "/ws/chat · /ws/realtime STOMP",
+        "POST /internal/events 사건 입구",
+        "편지 · inbound_events 저장"
+      ],
+      "kind": "event",
+      "stage": "dev overlay 전용 · prod 없음",
+      "state": "code"
+    },
+    {
+      "id": "devData",
+      "x": 600,
+      "y": 1040,
+      "w": 320,
+      "h": 150,
+      "title": "Data API · :8080",
+      "lines": [
+        "dev app · 코어 정본",
+        "presence 조건부 쓰기",
+        "relay 내장 · 기본 OFF"
+      ],
+      "kind": "core",
+      "stage": "main push → GAR 자동",
+      "state": "code"
+    },
+    {
+      "id": "kafka",
+      "x": 980,
+      "y": 1040,
+      "w": 320,
+      "h": 150,
+      "title": "Kafka overlay",
+      "lines": [
+        "내부 :9092 · KRaft 1노드",
+        "notification-events",
+        "realtime-events (선택)"
+      ],
+      "kind": "event",
+      "stage": "dev overlay · 수동",
+      "state": "off"
+    },
+    {
+      "id": "chatRedis",
+      "x": 300,
+      "y": 1240,
+      "w": 460,
+      "h": 120,
+      "title": "Redis · 채팅·집중",
+      "lines": [
+        "chat:fanout · presence:focus:*",
+        "탈퇴 tombstone"
+      ],
+      "kind": "data",
+      "stage": "dev compose · ACL 미적용",
+      "state": "code"
+    },
+    {
+      "id": "devPg",
+      "x": 60,
+      "y": 1400,
+      "w": 860,
+      "h": 100,
+      "title": "PostgreSQL 컨테이너",
+      "lines": [
+        "gromo: Data / gromo_chat: Realtime · 같은 인스턴스 별도 database"
+      ],
+      "kind": "data",
+      "stage": "dev compose",
+      "state": "code"
+    },
+    {
+      "id": "devCd",
+      "x": 1360,
+      "y": 1040,
+      "w": 340,
+      "h": 150,
+      "title": "dev 배포",
+      "lines": [
+        "main push → GAR back:<sha>",
+        "self-hosted 러너 → VM",
+        "gromo/dev/env · 오버레이"
+      ],
+      "kind": "external",
+      "stage": "dev-cd.yml",
+      "state": "code"
+    },
+    {
+      "id": "rankRedis",
+      "x": 60,
+      "y": 1560,
+      "w": 660,
+      "h": 150,
+      "title": "Target-2 · 랭킹 Redis",
+      "lines": [
+        "score-events · 알림과 별도 스트림 · 소비자",
+        "리그 p95 > 1.5초 / findRankOf p95 > 500ms",
+        "또는 Business 다중 인스턴스 필요"
+      ],
+      "kind": "future",
+      "stage": "설계 · 조건 충족 후 도입",
+      "state": "plan"
+    },
+    {
+      "id": "wssPolicy",
+      "x": 760,
+      "y": 1560,
+      "w": 940,
+      "h": 150,
+      "title": "prod WSS · 배포 미확정",
+      "lines": [
+        "prod compose에 Realtime·Kafka·Redis가 아직 없다",
+        "TLS 종료 · rate limit · 연결 수 상한을 배포 전에 확정",
+        "편지 DB prod 배치 · Redis ACL 적용 후속 확인"
+      ],
+      "kind": "future",
+      "stage": "prod 배포 미확정",
+      "state": "unknown"
+    }
+  ],
+  "edges": [
+    {
+      "id": "appCf",
+      "source": "app",
+      "target": "cloudflare",
+      "points": [
+        [
+          300,
+          365
+        ],
+        [
+          380,
+          365
+        ]
+      ],
+      "label": "HTTPS",
+      "at": [
+        340,
+        355
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "cfNginx",
+      "source": "cloudflare",
+      "target": "nginx",
+      "points": [
+        [
+          640,
+          365
+        ],
+        [
+          700,
+          365
+        ]
+      ],
+      "label": "Proxy",
+      "at": [
+        670,
+        355
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "nginxData",
+      "source": "nginx",
+      "target": "dataProd",
+      "points": [
+        [
+          1040,
+          365
+        ],
+        [
+          1100,
+          365
+        ]
+      ],
+      "label": "/api/v1",
+      "at": [
+        1070,
+        355
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dataRds",
+      "source": "dataProd",
+      "target": "prodRds",
+      "points": [
+        [
+          1380,
+          365
+        ],
+        [
+          1440,
+          365
+        ]
+      ],
+      "label": "JDBC",
+      "at": [
+        1410,
+        355
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dataDatadog",
+      "source": "dataProd",
+      "target": "datadog",
+      "points": [
+        [
+          1180,
+          430
+        ],
+        [
+          1180,
+          480
+        ]
+      ],
+      "label": "APM",
+      "at": [
+        1225,
+        460
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dataLogs",
+      "source": "dataProd",
+      "target": "s3",
+      "points": [
+        [
+          1350,
+          430
+        ],
+        [
+          1350,
+          480
+        ]
+      ],
+      "label": "app.log",
+      "at": [
+        1405,
+        460
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "nginxBusiness",
+      "source": "nginx",
+      "target": "business",
+      "points": [
+        [
+          780,
+          470
+        ],
+        [
+          780,
+          740
+        ]
+      ],
+      "label": "무접두 · /screens",
+      "at": [
+        780,
+        635
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "nginxNotification",
+      "source": "nginx",
+      "target": "notification",
+      "points": [
+        [
+          1010,
+          470
+        ],
+        [
+          1010,
+          740
+        ]
+      ],
+      "label": "/internal/admin",
+      "at": [
+        1010,
+        635
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "businessPreview",
+      "source": "business",
+      "target": "previewRedis",
+      "points": [
+        [
+          600,
+          815
+        ],
+        [
+          540,
+          815
+        ]
+      ],
+      "label": "캐시",
+      "at": [
+        570,
+        805
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "notificationDb",
+      "source": "notification",
+      "target": "prodRds",
+      "points": [
+        [
+          1300,
+          800
+        ],
+        [
+          1600,
+          800
+        ],
+        [
+          1600,
+          430
+        ]
+      ],
+      "label": "gromo_notification",
+      "at": [
+        1600,
+        635
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "businessData",
+      "source": "business",
+      "target": "devData",
+      "points": [
+        [
+          760,
+          890
+        ],
+        [
+          760,
+          1040
+        ]
+      ],
+      "label": "/internal",
+      "at": [
+        760,
+        935
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "kafkaNotification",
+      "source": "kafka",
+      "target": "notification",
+      "points": [
+        [
+          1130,
+          1040
+        ],
+        [
+          1130,
+          890
+        ]
+      ],
+      "label": "소비",
+      "at": [
+        1130,
+        935
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "dataKafka",
+      "source": "devData",
+      "target": "kafka",
+      "points": [
+        [
+          920,
+          1100
+        ],
+        [
+          980,
+          1100
+        ]
+      ],
+      "label": "relay",
+      "at": [
+        950,
+        1090
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "dataRealtime",
+      "source": "devData",
+      "target": "realtime",
+      "points": [
+        [
+          600,
+          1100
+        ],
+        [
+          480,
+          1100
+        ]
+      ],
+      "label": "REALTIME",
+      "at": [
+        540,
+        1090
+      ],
+      "async_": false,
+      "state": "off"
+    },
+    {
+      "id": "realtimeRedis",
+      "source": "realtime",
+      "target": "chatRedis",
+      "points": [
+        [
+          400,
+          1190
+        ],
+        [
+          400,
+          1240
+        ]
+      ],
+      "label": "fanout",
+      "at": [
+        440,
+        1220
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "dataRedis",
+      "source": "devData",
+      "target": "chatRedis",
+      "points": [
+        [
+          650,
+          1190
+        ],
+        [
+          650,
+          1240
+        ]
+      ],
+      "label": "presence",
+      "at": [
+        705,
+        1220
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "realtimeDb",
+      "source": "realtime",
+      "target": "devPg",
+      "points": [
+        [
+          150,
+          1190
+        ],
+        [
+          150,
+          1400
+        ]
+      ],
+      "label": "gromo_chat",
+      "at": [
+        150,
+        1300
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "devDataDb",
+      "source": "devData",
+      "target": "devPg",
+      "points": [
+        [
+          850,
+          1190
+        ],
+        [
+          850,
+          1400
+        ]
+      ],
+      "label": "gromo",
+      "at": [
+        850,
+        1300
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}

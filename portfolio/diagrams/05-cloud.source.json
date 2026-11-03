@@ -1,0 +1,219 @@
+{
+  "version": 3,
+  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "title": "Cattus · AWS 운영 V2",
+  "nodes": [
+    {
+      "id": "client",
+      "x": 70,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "앱·운영자",
+      "lines": [
+        "앱: catus-api-v2 도메인",
+        "운영자: backoffice-v2 도메인",
+        "HTTPS·WSS 공개 경로"
+      ],
+      "kind": "external",
+      "stage": "*.oneorthree.world",
+      "state": "code"
+    },
+    {
+      "id": "edge",
+      "x": 655,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "Cloudflare·nginx",
+      "lines": [
+        "공개 주소·TLS·라우팅",
+        "HTTP는 Business로 전달",
+        "WSS는 Realtime으로 전달"
+      ],
+      "kind": "external",
+      "stage": "내부 API는 앱 진입점 아님",
+      "state": "code"
+    },
+    {
+      "id": "app",
+      "x": 1240,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "서버 EC2 · m6g.large",
+      "lines": [
+        "Business·Data·Realtime·Notification",
+        "서비스별 이미지·설정·DB 계약",
+        "nginx와 서버 4종 한 호스트"
+      ],
+      "kind": "core",
+      "stage": "catus-prod-V2",
+      "state": "code"
+    },
+    {
+      "id": "kafka",
+      "x": 70,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "Kafka · m6g.medium",
+      "lines": [
+        "Kafka 3.8.1",
+        "알림 사건과 선택 REALTIME 경로",
+        "별도 발행·수동 CD"
+      ],
+      "kind": "event",
+      "stage": "catus-kafka-prod-V2",
+      "state": "code"
+    },
+    {
+      "id": "redis",
+      "x": 655,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "Redis · m6g.medium",
+      "lines": [
+        "Redis 7.4.11 두 인스턴스",
+        "Shared maxmemory 384MB",
+        "Business maxmemory 128MB"
+      ],
+      "kind": "data",
+      "stage": "noeviction · AOF · ACL",
+      "state": "code"
+    },
+    {
+      "id": "db",
+      "x": 1240,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "RDS PostgreSQL",
+      "lines": [
+        "catus-prod-db · db.t4g.small",
+        "서비스별 데이터 소유권",
+        "별도 catus-prod-db-v2는 미사용"
+      ],
+      "kind": "data",
+      "stage": "마이그레이션 배포 게이트",
+      "state": "code"
+    },
+    {
+      "id": "backoffice",
+      "x": 70,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "백오피스 · t4g.small",
+      "lines": [
+        "공지·운영진 편지·잡지·정책",
+        "서버·앱 출시 현황",
+        "main → 환경 승인 → 배포"
+      ],
+      "kind": "core",
+      "stage": "catus-backoffice-prod-V2",
+      "state": "code"
+    },
+    {
+      "id": "artifacts",
+      "x": 655,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "ECR·S3·SSM",
+      "lines": [
+        "이미지 digest·불변 릴리스",
+        "deployments 성공 상태 기록",
+        "SSM으로 지정한 버전 적용"
+      ],
+      "kind": "external",
+      "stage": "Infra revision 고정",
+      "state": "code"
+    },
+    {
+      "id": "observability",
+      "x": 1240,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "관측",
+      "lines": [
+        "운영 4호스트 Datadog Agent",
+        "11월 2일 health 확인 기록",
+        "로그 rollout·수신은 별도 확인"
+      ],
+      "kind": "external",
+      "stage": "V1 로그 경로와 구분",
+      "state": "code"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edgeEntry",
+      "source": "client",
+      "target": "edge",
+      "points": [
+        [
+          520,
+          315
+        ],
+        [
+          655,
+          315
+        ]
+      ],
+      "label": "HTTPS/WSS",
+      "at": [
+        587,
+        305
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "appEntry",
+      "source": "edge",
+      "target": "app",
+      "points": [
+        [
+          1105,
+          315
+        ],
+        [
+          1240,
+          315
+        ]
+      ],
+      "label": "라우팅",
+      "at": [
+        1172,
+        305
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "appDb",
+      "source": "app",
+      "target": "db",
+      "points": [
+        [
+          1465,
+          420
+        ],
+        [
+          1465,
+          570
+        ]
+      ],
+      "label": "DB",
+      "at": [
+        1465,
+        462
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}

@@ -13,7 +13,15 @@ related:
     href: "/spec/service-architecture"
   - label: "Kafka와 Redis를 넣은 뒤 더 많은 경계를 설명해야 했다"
     href: "/retrospective/02-kafka-redis-boundaries"
+recordType: "decision"
 ---
+
+## 2026-11-03 적용 범위
+
+PostgreSQL 정본 원칙은 유지합니다. Redis는 Shared와 Business 두 인스턴스이며 Business의 link-preview 용도는 제거됐습니다. 운영 V2는 둘 다 noeviction·AOF를 사용합니다. [현재 안내](/spec/system-architecture)
+
+이하 본문은 당시 결정과 근거를 보존한 기록입니다.
+
 
 ## 맥락
 

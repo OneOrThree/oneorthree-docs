@@ -5,7 +5,7 @@ import { Kicker } from "@/components/kicker";
 
 export const metadata: Metadata = {
   title: "발전 기록",
-  description: "Gromo의 설계·아키텍처·전달 경계를 바꾼 main 커밋의 자동 생성 연대기",
+  description: "Cattus의 문서·배포·서버 실행 경로를 바꾼 phone main 최근 240개 커밋",
 };
 
 export default function EvolutionPage() {
@@ -25,8 +25,8 @@ export default function EvolutionPage() {
           발전 기록
         </h1>
         <p className="mt-4 leading-relaxed text-muted-foreground">
-          완성된 구조만 보여주면 왜 바뀌었는지가 사라집니다. Gromo의 설계·아키텍처·전달
-          경계를 바꾼 main 커밋을 시간순으로 보존합니다.
+          Cattus의 문서·배포·서버 실행 경로를 바꾼 main 최근 240개 커밋입니다.
+          전체 제품 변경 목록은 아니며, 각 항목에서 기준 커밋과 변경 파일을 확인할 수 있습니다.
         </p>
       </header>
 
@@ -41,6 +41,10 @@ export default function EvolutionPage() {
           {evolution.source} · {evolution.entries.length} commits · source {evolution.generatedFrom?.slice(0, 7)}
         </p>
       </aside>
+
+      <nav aria-label="월별 바로가기" className="mt-6 flex flex-wrap gap-4 text-sm">
+        {[...months.keys()].map((month) => <a className="text-primary underline" key={month} href={`#month-${month}`}>{month}</a>)}
+      </nav>
 
       <div className="mt-12 space-y-14">
         {[...months.entries()].map(([month, entries]) => (

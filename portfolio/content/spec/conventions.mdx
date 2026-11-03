@@ -1,233 +1,42 @@
 ---
-title: "팀 규약 — 계층 배치, 조회 계층, 응답·예외, 날짜 축, 지라, 문서"
-summary: "phone 저장소의 docs/conventions/ 와 docs/README.md 에 정본으로 둔 팀 전체 규약의 공개 요약. 백엔드 패키지 배치·조회 계층·도메인 의존 방향, 에러 봉투, 날짜 축, 지라 4축, 문서 5종 세트와 회고 작성 규칙을 다룹니다."
-status: "유효"
-date: "2026-09-13"
-order: 7
+title: "팀 규약 — 계약·날짜·문서·배포"
+summary: "현재 저장소 규약을 찾아가는 지도입니다. API 계약·데이터 소유권·날짜 축과 main→release 승격 규칙을 구분합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 9
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 author: "조재영"
-keywords: [패키지 배치, QueryService, ArchUnit, ErrorCode, 날짜 축, KST, 지라, 문서 규약]
-related:
-  - label: "패키지 경로가 계층을 말하게 — 리팩토링 에픽 1643"
-    href: "/research/backend-layering-refactor"
-  - label: "타임존 버킷 전쟁"
-    href: "/research/timezone-wars"
-  - label: "정본이 낡으면 정합이 회귀가 된다"
-    href: "/research/docs-canonicalization"
-  - label: "결정 기록(ADR)"
-    href: "/adr"
 ---
 
-<div className="architecture-doc">
+## 코드와 계약
 
-<Callout label="범위">
-기능 하나에 갇히지 않고 도메인을 가로지르는 규칙만 여기 있다. 정본은 phone 저장소의 `docs/conventions/` 와 `docs/README.md` 이며, 이 페이지는 그 요약이다. 둘이 어긋나면 phone 쪽 문서가 맞다.
-</Callout>
+Business는 공개 HTTP와 화면 조합을, Data는 제품 상태와 원자 명령을 맡습니다. 공개 DTO에 DB 엔티티나 내부 전송 DTO를 그대로 노출하지 않습니다. 에러 코드·상태·retryable 같은 클라이언트 분기 계약은 서버와 앱에서 함께 검증합니다.
 
-## 백엔드 계층·패키지 배치
+새 기능은 가까운 구현의 관례만 복사하지 말고 [현재 규약 디렉터리](https://github.com/OneOrThree/phone/tree/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/conventions)와 해당 서비스 README를 확인합니다. 레거시와 2.0 계약의 차이를 숨기는 호환 코드를 추가하지 않습니다.
 
-`server/data-api` 는 도메인 17개가 각자 계층 패키지를 갖는 도메인 우선 구조다. 같은 성격의 클래스가 도메인마다 다른 자리에 있어 **패키지 경로만 보고는 계층을 알 수 없던** 상태를 GROMO-1654 에서 정리했다. 상위 에픽은 GROMO-1643 이고, 후속은 GROMO-1655(조회 계층) → GROMO-1656(도메인 간 의존) → GROMO-1657(응답·예외) → GROMO-1662(ArchUnit) 순서다.
+## 데이터와 날짜
 
-### 표준 레이아웃
+시간 저장, 화면의 ‘오늘’, 집중 분 적립일, 주간 집계는 각각의 도메인 계약을 따릅니다. Cattus 물고기는 분이 완성된 UTC 날짜에 귀속합니다. Gromo 1.x의 country-zone 또는 클라이언트 date 규칙을 모든 2.0 도메인에 일괄 적용하지 않습니다.
 
-```
-com.oneorthree.phone.<domain>/
-├── XxxController.java          컨트롤러 — 도메인 루트에 평평하게
-├── XxxControllerDocs.java      Swagger 애노테이션 전용 인터페이스
-├── dto/                        요청·응답 타입 (API 계약)
-├── service/                    비즈니스 로직 · 트랜잭션 경계
-├── support/                    순수 헬퍼·정책·계산기·값 타입
-├── repository/                 Spring Data 인터페이스 + 커스텀 구현
-│   ├── XxxQueryService.java    조회 계층 — id 조회 전담
-│   └── domain/                 @Entity · 영속 enum
-├── event/                      이 도메인이 발행하는 이벤트 payload
-├── listener/                   이 도메인이 구독하는 핸들러
-├── client/                     외부 API 클라이언트
-├── scheduler/                  @Scheduled 진입점
-└── exception/                  <Domain>ErrorCode enum + <Domain>Exception
+잔액·정산·현재 주민 자격은 서버가 판정합니다. 중복 요청은 API별 멱등 계약을 사용합니다. 친구 편지에는 단체 채팅의 `clientMessageId` 규칙이 없습니다.
 
-com.oneorthree.phone.config/    @Configuration · 서블릿 필터 (도메인 아님)
-com.oneorthree.phone.common/    소유 도메인이 없는 공유물
-```
+## PR과 운영 승격
 
-하위 패키지를 전부 만들 필요는 없다. 해당하는 것이 생길 때 위 이름으로 만들고, 목록에 없는 이름 — `util/`·`handler/`·`facade/`·`search/`·`policy/` — 은 새로 만들지 않는다. 계층이 이름에 드러나지 않기 때문이다. 영속성이 없는 도메인(`analytics`)은 `repository/domain/` 대신 `domain/` 을 쓴다.
+일반 변경은 main 대상 PR에서 검토합니다. main → release 승격 PR은 **Create a merge commit**으로 병합해 main 부모 이력을 보존합니다. 과거 fast-forward push·PR close 절차는 대체됐습니다.
 
-### 배치 판정 — 이름이 아니라 의존성
+승격 리뷰는 기준 SHA와 사용자 기능·수정·운영 변경을 한국어로 요약합니다. 서버·Kafka·Redis의 release 발행과 운영 CD는 별도 단계입니다. V2 버전 스크립트는 patch를 올리며 `release:major/minor/patch` 라벨을 읽지 않습니다.
 
-| 갈림길 | 질문 | 판정 |
-| --- | --- | --- |
-| `service/` vs `support/` | repository 나 다른 service 를 **주입받는가** | 주입받으면 `service/`, 입력만 받아 계산하면 `support/` |
-| `dto/` vs `repository/domain/` | **DB 에 저장되는가** | 저장되면 `repository/domain/`, API 계약에만 쓰이면 `dto/` |
-| `event/` vs `listener/` | 이 도메인이 **발행**하는가 **구독**하는가 | 발행 payload 는 `event/`, 구독 핸들러는 `listener/` |
-| `client/` vs `service/` | **프로세스 밖**(HTTP·FCM·OpenAI)으로 나가는가 | 나가면 `client/` |
-| `config/` vs 도메인 | 스프링 컨텍스트를 **조립**하는가 | 조립이면 최상위 `config/`. 도메인별 `config/` 는 두지 않는다 |
-| `common/` vs 도메인 | **소유 도메인이 있는가** | 있으면 그 도메인, 진짜 없을 때만 `common/` |
+자세한 규칙은 [AGENTS.md](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/AGENTS.md), [Git·PR 규약](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/conventions/git-pr-conventions.md), [운영 V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md)를 따릅니다.
 
-이름만 보고 고른 이동 후보 13개를 이 기준으로 실측하니 8개만 실제 대상이었다. `GroupBetJudge` 는 이름이 판정기지만 리포지토리 5개를 주입받으므로 `service/` 에 남는다.
+## 문서 기준
 
-### 컨트롤러가 도메인 루트에, 엔티티가 `repository/domain/` 에 있는 이유
+제품 이름은 `CONTEXT.md`, 기능 의도는 PRD·정책·설계, 실제 구현은 고정 커밋의 코드, 배포는 파이프라인과 성공 기록으로 확인합니다. 서로 어긋나면 차이와 근거를 남깁니다. 사이트 설명을 가장 높은 정본으로 두지 않습니다.
 
-`api/` 패키지를 한 겹 더 두는 안도 검토했지만 GROMO-1654 시점 실측에서 16개 도메인 중 15개가 이미 루트에 평평했다. 다수파를 정본으로 삼아 이동량을 최소화했고, `XxxController` 라는 이름이 계층을 이미 드러내므로 패키지로 한 번 더 표시할 실익이 적다고 봤다.
+기존 기록의 날짜·측정값은 보존합니다. 뒤집힌 ADR에는 대체 상태와 후속 문서를 붙입니다. 긴 문서는 제목 다음에 바로가기 목차를 두고, 실행 방법은 현재 경로로 연결합니다.
 
-엔티티는 `@Entity`·`@Table`·페치 전략이 박힌 **영속성 계층의 산물**이다. 도메인 최상위에 두면 "순수 도메인 모델"이라는 거짓 신호를 주고, `repository/` 아래에 두면 서버를 분리할 때(GROMO-1661) 잘라낼 경계가 패키지로 드러난다.
+## 운영 제약
 
-### 패키지를 옮길 때 컴파일러가 안 잡는 곳
+AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지합니다. 과거 측정 기록은 재실행 승인으로 사용할 수 없습니다.
 
-`@Query` JPQL 의 enum 리터럴, `logback-spring.xml` 의 `converterClass`, Javadoc `{@link}` 는 FQCN 이 문자열로 박혀 있어 빌드는 초록인데 기동에서 터진다. GROMO-1654 직전 커밋이 JPQL 리터럴 39개를 낡은 경로로 남겨 테스트 1881개 중 434개가 무너졌다. 이동 후에는 옛 경로를 grep 하고, 컨텍스트가 뜨는지는 테스트로, 문서 참조는 `./gradlew javadoc` 으로 확인한다.
-
-출처: `phone/docs/conventions/backend-layering.md` · [/research/backend-layering-refactor](/research/backend-layering-refactor)
-
-## 조회 계층과 도메인 간 의존 방향
-
-### `<Domain>QueryService`
-
-service 가 repository 를 직접 들면 `findById(...).orElseThrow(...)` 가 service 마다 반복되고, 같은 엔티티를 여러 service 가 제각기 조회하면서 필터·락·예외가 도메인 안에서도 갈린다. `repository/` 안에 조회 전담 클래스를 두어 그 갈래를 하나로 접는다(GROMO-1655). 선례 `user/repository/UserQueryService` 는 31개 service 의 User 조회 66건을 흡수했고 25개 파일에서 `userRepository` 필드가 사라졌다.
-
-| | |
-| --- | --- |
-| 이름·위치 | `<Domain>QueryService`, `<domain>/repository/` — 영속성 관심사라 `service/` 가 아니다 |
-| 애노테이션 | `@Service` + `@RequiredArgsConstructor`. `@Transactional` 을 붙이지 않고 호출한 service 의 트랜잭션에 참여만 한다 |
-| 책임 | **id 로 하는 조회만.** 저장·수정·범위 스캔·검색·프로젝션은 repository 직행 |
-| 동사 | 둘뿐 — `get*` 은 없으면 던지고 `find*` 는 `Optional` 을 준다. `require*`·`ensure*` 를 새로 만들지 않는다 |
-
-시그니처가 감추면 안 되는 것이 둘 있다. **락 등급**은 메서드 이름에 남긴다(접미사 없음 · `ForShare` · `ForUpdate`) — 계층이 락을 자동으로 고르면 "이 경로가 어떤 락을 쓰는가"를 테스트로 강제할 방법이 사라진다. **실패의 의미**는 `getTarget*`(지목 대상 부재 → 도메인 NOT_FOUND)과 `getCaller*`(요청자 본인 부재 → 재로그인 코드)로 가른다. 앱이 응답의 code 문자열로 분기하므로 합치면 계약이 깨진다.
-
-```java
-Optional<Xxx> findActive(UUID id);          // 부재가 정상 흐름
-Xxx getTarget(UUID id);                     // 지목 대상 부재 → 도메인 NOT_FOUND
-Xxx getCaller(UUID id);                     // 요청자 본인 부재 → 재로그인 코드
-Xxx getTargetForShare(UUID id);             // 공유 락
-Xxx getTargetForUpdate(UUID id);            // 배타 락
-Optional<Xxx> findActiveForUpdate(UUID id); // 배타 락인데 부재가 정상 흐름(배치 스킵 등)
-```
-
-필요한 것만 만든다. 관계 조회(`getMembership`/`findMembership`)도 같은 계층에 들지만 부재의 뜻이 화면마다 다른 자리(`MEMBER_ONLY`·`ALREADY_MEMBER` 등)는 **판정을 호출부에 남긴다.** 소프트딜리트 필터를 일부러 걸지 않는 `getAny(id)` 는 해제 경로처럼 탈퇴자도 대상이어야 하는 자리에서만 쓴다(GROMO-801). "단일 진입점"이라고 쓰지 않는다 — 예외가 남아 있고, `user` 의 탈퇴자 401 게이트는 계층이 아니라 `config/JwtFilter` 에 있다(GROMO-827).
-
-계층을 만들면 호출부 테스트가 `given(queryService.getXxx(id)).willThrow(...)` 동어반복이 되어 매핑 증명력이 사라진다. 그래서 `<Domain>QueryServiceTest` 를 두고 리포지토리 목에 **부재를 입력**해 예외 코드, 던짐/안 던짐, 그리고 **어떤 리포지토리 메서드를 부르는가**를 단언한다. 마지막 항목은 락 등급이 그 한 줄에만 남기 때문에 여기서만 계약이다. 호출부 테스트에서는 값과 예외만 다루고 리포지토리 `verify` 는 쓰기 부작용에만 쓴다.
-
-### 허용 의존 방향
-
-```
-Controller  →  Service  →  Repository  →  Entity
-                  ↓
-              Support · Client · Event
-```
-
-- 컨트롤러는 엔티티를 주고받지 않는다. 영속 enum(`Provider`·`Occupation` 등) 노출도 같은 위반이다.
-- 트랜잭션 경계는 `service/` 에만 있다. `@Transactional` 을 컨트롤러나 repository 인터페이스에 붙이지 않는다. 유일한 인정 예외는 무트랜잭션 `@Scheduled` 진입점이 직접 부르는 벌크 `@Modifying` — `GroupChallengeBetSessionRepository.recordFailure` 1건이며 이유와 함께 규약 §5 에 적혀 있다.
-- `repository/` 에는 쿼리만 둔다. service 에서 `EntityManager` 를 직접 잡아 `flush()`·`clear()`·`detach()` 를 부르지 않는다.
-- 도메인 간 접근은 그 도메인의 **service** 를 통한다. 남의 `repository/` 를 직접 주입하면 트랜잭션 경계가 도메인 밖으로 새고 서버 분리 때 컴파일 단위가 갈라지지 않는다.
-- 순환이 생기면 이벤트(`event/`)나 포트 인터페이스(`common/port/`)로 끊는다. 선례는 `common/port/PushNotificationPort`.
-
-### 순환 금지와 ArchUnit 고정
-
-"service 를 통한다"는 규칙은 누구를 통할지만 말하고 어느 쪽으로 갈지를 말하지 않아 A→B·B→A 가 둘 다 규약을 지키면서 순환이었다. GROMO-1656·1724 에서 도메인에 높이(레이어 L0~L9)를 주고 **아래에서 위로 가는 참조만 금지**했다. 사실은 아래에, 그 사실에 반응하거나 조립하는 것은 위에 있다.
-
-| L0 | L1 | L2 | L3 | L4 | L5 | L6 | L7 | L8 | L9 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `user` | `currency` `item` | `focus` `screentime` | `friend` | `stats` `league` | `group` | `invitelink` | `notification` | `auth` `character` `bot` `analytics` | `profile` `withdrawal` |
-
-실측 결과 착수 시 역행 참조 15쌍/49건, 순환 238개였고 PR 세 개(#721~#723) 뒤 **0/0** 이 됐다. 순서 제약이 있는 탈퇴 절차는 `withdrawal/AccountWithdrawalService` 오케스트레이터로, 제약이 없는 `group → notification` 은 이벤트로 끊었다. `DomainLayerRulesTest`(#724) 의 ArchUnit 규칙 세 개 — ① 역행 금지 ② 순환 금지 ③ 모든 도메인 패키지가 레이어 표에 등록 — 가 빌드에서 이를 고정한다. ③이 없으면 새 도메인이 검사 대상에서 조용히 빠지는데, 실제로 측정 스크립트가 그 이유로 두 번 「위반 0」을 잘못 보고했다. `support/` 가 `service/` 의 static 메서드를 부르는 컴파일 타임 방향 1건(`GroupBetSessionFactory` → `WindowFocusAggregator`)은 인정된 예외다.
-
-출처: `phone/docs/conventions/backend-layering.md` · [/research/backend-layering-refactor](/research/backend-layering-refactor)
-
-## 응답·예외 규약
-
-에러 봉투는 `{code, message}` 하나다. 각 도메인은 `exception/` 에 `<Domain>ErrorCode` enum 과 `<Domain>Exception` 쌍을 두고, 핸들러는 판단하지 않는다 — `code.getStatus()` 를 HTTP 상태로, `code.name()` 을 `code` 로 옮길 뿐이다. **응답을 바꾸려면 핸들러가 아니라 그 도메인의 enum 을 고친다.**
-
-GROMO-1657 이전에는 enum 11개가 같은 `(HttpStatus, String)` 모양인데 공통 타입이 없어 `GlobalExceptionHandler` 가 같은 핸들러를 11개 들고 있었고, 새 도메인이 한 줄을 빠뜨리면 스프링 기본 `/error` 바디(`code` 없음)로 새어 나갔다. `common/exception/ErrorCode`(인터페이스)·`DomainException`(추상 베이스)를 두고 핸들러를 `handleDomain` 하나로 접었다(#725). 계약 테스트 `ErrorContractTest` 는 `ErrorCode` 를 구현한 enum 을 클래스패스에서 찾아 상수마다 `(status, code, message)` 를 단언하므로 새 도메인이 팩토리 표에 없으면 그것 자체가 실패다 — 현재 120건.
-
-봉투 밖으로 새던 경로 7종(`@Valid` 실패·깨진 JSON·파라미터 누락·405·404·item 의 `EntityNotFound` 500·그 외)은 `CommonErrorCode` 15개로 봉투에 넣었다. `@RestControllerAdvice` 가 닿지 않는 필터 응답(`JwtFilter` 401 · `RequestSizeLimitFilter` 413)은 같은 봉투를 직접 쓴다.
-
-앱 계약이 바뀌는 항목은 GROMO-1725 로 따로 모았다.
-
-| 계약 | 종전 | 지금 |
-| --- | --- | --- |
-| 404 | `GroupErrorCode.NOT_FOUND` 와 `UserErrorCode.NOT_FOUND` 가 같은 문자열로 나가 앱 그룹 화면 17곳이 유저 부재에도 「그룹이 사라졌다」를 띄움 | `GROUP_NOT_FOUND`·`CHALLENGE_NOT_FOUND`·`TARGET_USER_NOT_FOUND` 세 갈래. `NOT_FOUND` 는 그룹 안의 것(공지·멤버십)에만 남김. 앱은 `case` 병기(GROMO-1726), 배포 순서는 **앱 → 서버** |
-| 409 vs 400 | `IllegalArgumentException` 그물이 409 라 잘못된 입력을 「충돌」로 답해 앱이 재시도로 오해 가능 | 400. 앱의 `status === 409` 분기 8곳은 전부 도메인 코드가 원천이라 영향 없음. IAE 가 앱까지 닿던 3경로는 도메인 코드로 치환 |
-
-<Callout label="주의" tone="warn">
-`userId` 파라미터를 요청자라고 가정하지 않는다. `InventoryService.grantItem` 의 `userId` 는 요청 본문의 지급 대상이고, 지갑 접근자는 요청자와 참가자 두 경로를 다 지나 `WalletOwner {CALLER, TARGET}` 을 호출자가 명시한다. 축 판단은 컨트롤러 시그니처(`@LoginUser` 인지 경로·본문 id 인지)까지 추적한다.
-</Callout>
-
-출처: `phone/docs/conventions/backend-layering.md`(§4·§7) · [/research/backend-layering-refactor](/research/backend-layering-refactor)
-
-## 날짜 축 규약
-
-앱이 "오늘"이라고 부르는 날짜에는 축이 세 개 있다. 어떤 값을 어느 축에서 뽑느냐를 틀리면 **비KST 기기**에서 하루씩 어긋난 화면이 나온다 — 오늘 칸을 비켜 찍힌 마커, 빈 캘린더, 두 번 뜨는 축하 모달, 매번 1일로 리셋되는 연속 달성일.
-
-| 부류 | 축 | 규칙 |
-| --- | --- | --- |
-| ① 서버 결합 | **서버 축 = KST** | 서버로 나가는 `date` 파라미터, 서버가 내려준 날짜 키와 비교·인덱싱되는 값, 그 위에 찍는 그리드·마커 |
-| ② 측정 / 저장 | **기기 로컬** | 기기가 직접 측정하고 로컬에 적립하는 값의 하루 경계 — 로컬 자정 리셋 스토어, 네이티브 익스텐션 dayKey, 사용자가 체감하는 "내일부터" |
-| ③ 코스메틱 | 자유(로컬) | 서버로 나가지 않고 데이터와 비교되지도 않는 값 — 공유 파일명, dev fixture |
-
-부류를 가르는 질문은 "이 값이 **누구와 비교되는가**"다. 값의 출처가 아니다. 한 함수 안에 축이 둘 있을 수 있다 — `screentimeSync.scheduleYesterdayScreenTimeCelebration` 은 하루 1회 가드가 ②, 연속 달성일 카운트가 ①이다. "이 파일은 로컬"식 파일 단위 판정이 GROMO-1254 가 찾아낸 결함의 원인이었다.
-
-### 서버 축은 KST 고정이다
-
-서버의 판정·저장·조회 날짜 버킷은 전부 `Asia/Seoul` 이며, 정본은 `server/data-api/.../common/util/ZonePolicy.java` 의 `ZonePolicy.KST` 한 상수다. GROMO-1259 가 통계 저장 일자만 유저 `country_code` 파생 존으로 갈리던 것을 KST 로 통일하고 `CountryZoneResolver` 를 제거했다. 수용된 한계 L5: 기기의 그날 UTC 오프셋이 `+09:00` 이 아니면 "내 하루"와 앱의 하루가 어긋난다 — 「해외 유저」가 아니라 「오프셋이 다른 기기」다(`Asia/Tokyo` 는 대상이 아니고, 국내 기기라도 타임존을 바꾸면 대상이다).
-
-앱에서는 **서버 결합 지점에 `todayStrKst()` · `kstDateStr()` · `kstTodayDate()` 계열을 쓴다.** `utils/serverZone.ts`(`getServerZone()` · `serverTodayStr()`)는 GROMO-1259 이전의 잔재다 — `GET /users/me → timeZone` 이 항상 상수 `Asia/Seoul` 을 돌려주므로 정확도를 더하지 않고, 1259 배포 이전 캐시(`gromo:user`)에 남은 `Europe/London` 같은 값이 오프라인 콜드 스타트에서 세션 내내 유지되는 오염 경로만 남긴다. 새 코드에서 쓰지 않고, 한 체인(발행 → 저장 → 조회 → 소비 → 완료 기록) 안에서 두 표현을 섞지 않는다. 반쪽 이전은 dedup 을 반대로 깨뜨린다.
-
-### `LocalDate.now` 금지
-
-서버는 "오늘"을 계산하지 않는다. 조회 API 11개(통계 6종 + `/users/{id}/stats` + `/pins` + `/friends` + `/groups/{id}` + `/league/me/ranking`)가 `date` 를 필수로 받고, 클라가 `date` 를 줄 상대가 없는 배치는 `endedAt`(절대시각)의 KST 윈도우로 판정한다. 그 결과 서버 코드에 `LocalDate.now` 호출은 0건이다. `date` 가 없으면 400 이므로 "서버가 몰래 `now()` 로 폴백"하는 회귀가 구조적으로 불가능하다.
-
-여기까지 오는 데 일곱 단계가 걸렸다 — 경로별 제각각 → UTC 일원화 → UTC 버킷 writer(KST 유저가 하루의 3/8을 전날 버킷에 잃음) → 클라 `localDate` 계약 → `local_date` 컬럼 승격 → 낡은 `schema.dbml` 을 권위로 삼은 정합 작업이 사흘 전 수정을 되돌린 회귀 → 서버 존 산정. 마지막 단계의 country-zone 산정은 GROMO-1259 에서 KST 고정으로 다시 바뀌었다. 상세는 [/research/timezone-wars](/research/timezone-wars).
-
-### 테스트 관행 — 3층
-
-러너 TZ 가 `Asia/Seoul` 고정이라 값만으로는 로컬과 KST 가 안 갈린다. 층 1 러너 TZ 고정(전제), 층 2 fake timers(경계 이동), 층 3 **독극물/센티널** — 로컬 유틸을 일부러 엉뚱한 날짜(`2000-01-02`)로, 서버 축 유틸을 시스템 시계와 다른 날짜(`2026-03-04`)로 목킹해 코드가 어느 축을 불렀는지 결과에 드러나게 한다. `jest.requireActual` 스프레드는 필수다 — 달력 포매터까지 덮으면 산법이 테스트에서 사라진다.
-
-<Callout label="기록" tone="warn">
-이 규약 문서 자체가 두 번 틀렸다. GROMO-1254 초안은 이미 삭제된 `CountryZoneResolver` 를 근거로 `serverZone` 을 정본이라 판정했고, 로컬 정오가 KST 와 같은 날인 오프셋 범위를 계산 없이 반대로 적었다(실제 조건 `X > UTC−3`). 날짜 축 문서는 서버 상수와 계산이 근거이며, 범위·경계를 적을 때는 양끝을 검산한 예시를 붙인다.
-</Callout>
-
-출처: `phone/docs/conventions/date-axis.md` · [/research/timezone-wars](/research/timezone-wars)
-
-## 지라 4축 규약
-
-프로젝트 키 `GROMO`. 2026-08-09 전면 재편(990건)으로 확정했다. 재편 전에는 영구 버킷형 에픽(`그룹 기능`, 자식 45)과 시한부 작업형 에픽(`TT 포커스 모드`)이 에픽 필드 하나에 섞여 비에픽 티켓의 64%가 에픽 없이 떠 있었고, `온보딩` 이 닫히자 `[Onboarding] 온보딩 플로우` 가 새로 생기는 식으로 같은 도메인의 에픽이 세대별로 쌓였다.
-
-| 축 | 필드 | 닫히나 | 답하는 질문 |
-| --- | --- | --- | --- |
-| 도메인 | `도메인` (드롭다운 커스텀 필드) | 영원히 안 닫힘 | "그룹 관련 전부" |
-| 플랫폼·성격 | Label | 영원히 안 닫힘 | "iOS 할 일" |
-| 이니셔티브 | Epic | 끝나면 닫는다 | "지금 무엇을 하는 중" |
-| 출시 | fixVersion | 릴리스로 끊는다 | "다음 출시에 뭐가 나가나" |
-
-- **`도메인`** — 작업·버그·Subtask 는 정확히 하나를 갖고 에픽에는 붙이지 않는다(에픽은 이름의 `[도메인]` 접두가 그 역할). 지라 표준 Component 는 team-managed FREE 프로젝트 UI 에 노출되지 않아 커스텀 필드(`customfield_10342`)를 정본으로 두고 Component 는 미러로 유지한다. 새 도메인을 만들기 전에 "앞으로도 티켓이 계속 생기는가"를 묻는다 — 아니면 에픽이다.
-- **Label** — 플랫폼 `iOS` · `Android` · `BE` · `App` · `Infra`, 성격 `chore` · `refactor` · `qa` · 배치 표식. 도메인을 라벨로 넣지 않는다. 제품 기능을 검증하는 티켓은 그 제품 도메인 + `qa` 라벨이고, 부하테스트 하네스·E2E 자동화처럼 검증 대상이 제품 기능이 아닌 것만 `QA` 도메인이다 — 무엇을 하느냐(활동)는 라벨, 무엇에 대해 하느냐(대상)는 도메인.
-- **Epic** — 이름은 `[<도메인>] <이니셔티브 이름>`. 시작과 끝이 있는 덩어리에만 만들고 끝나면 닫는다. 여러 도메인에 걸치는 시한부 묶음은 `[공통] 1.1.0 앱 개선` 처럼 **이름에 닫히는 조건이 드러나야** 한다. 모든 티켓이 에픽에 속할 필요는 없고, 30~40건을 넘으면 쪼갠다. 계층은 3단(에픽 → 작업·버그 → Subtask)이며 Subtask 는 에픽에 붙이지 않는다.
-- **fixVersion** — 출시된 완료 티켓은 반드시 버전을 갖는다. 취소·중복·기획·문서처럼 코드로 나가지 않는 완료 건은 예외. 릴리스가 끝나면 `released` 로 끊고, **archive 하지 않는다**(archived 버전에는 이슈를 할당할 수 없다).
-- **Summary** — 대괄호 접두는 에픽만. 작업·버그에 `[Group]` · `[BE]` · `[BUG]` 를 붙이지 않는다.
-
-규약 위반은 `project = GROMO AND "도메인" IS EMPTY AND issuetype != Epic` 으로 정기 점검한다. 같은 사이트에 다른 프로젝트(`RVUD`)가 있으므로 JQL 에 `project = GROMO` 를 반드시 붙인다. 재편 결과: 에픽 28 → 73(전부 `[도메인]` 규약), 에픽 없는 작업·버그 556 → 59, 완료·버전 미기입 371 → 0, `released` 버전 0 → 7.
-
-출처: `phone/docs/conventions/jira-conventions.md`
-
-## 문서 규약
-
-### 기능 문서 5종 세트
-
-`docs/prd/<기능-이름>/` 아래에 기능 단위로 둔다. 폴더 이름은 kebab-case 영문, 문서는 한국어로 쓴다. 다 갖춰질 필요는 없고 있는 것부터 커밋한다.
-
-| 문서 | 답하는 질문 |
-| --- | --- |
-| `prd.md` | 왜 만드는가? 무엇을 만드는가? (to-be 요구사항) |
-| `policy.md` | 정책의 근거와 결정 로그 — 정책 충돌 시 **이 문서가 정본** |
-| `information-architecture.md` | 사용자가 어디서 어떻게 진입·이동하는가? 화면·정보 구조는? |
-| `high-level-design.md` | 어떤 컴포넌트(앱·서버·DB·외부)가 어떻게 협력하는가? |
-| `low-level-design.md` | 정확히 어떤 테이블·API·로직으로 구현하는가? |
-
-`prd` 와 `policy` 가 어긋나면 `policy` 가 맞다. 기능 문서가 아닌 **팀 전체 규약**은 `docs/conventions/` 에 둔다 — 위 백엔드 배치·날짜 축·지라 규약이 여기에 있는 이유다. 개인 작업 메모는 gitignored `doc/` 에 두고 `docs/` 에 넣지 않는다.
-
-문서 브랜치는 `doc/` 프리픽스를 쓴다 — 신규 `doc/prd-<기능이름>`, 기존 수정 `doc/fix-prd-<기능이름>`.
-
-### 이 사이트의 회고 작성 규칙
-
-`content/retrospective/` 의 회고는 **목표 → Keep → Problem → Try → Action item → 근거** 순서로 쓴다. 회의 기록이 없으면 팀의 감정이나 합의를 추정하지 않고, 구현 문서·PR·커밋에서 확인되는 기술적 판단만 회고한다.
-
-출처: `phone/docs/README.md` · 이 사이트 `README.md` "기술 회고 추가" 절 · [/retrospective](/retrospective)
-
-</div>
+Terraform apply는 저장한 plan을 사용자가 보고 명시적으로 승인한 뒤에만 실행합니다. 의도 밖 변경이나 replace·destroy가 있으면 멈춥니다. 이 사이트의 갱신은 서버 배포·인프라 변경을 실행하는 작업이 아닙니다.

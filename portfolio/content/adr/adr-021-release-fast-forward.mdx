@@ -1,7 +1,7 @@
 ---
 title: "ADR-021 — release 승격은 PR 머지가 아니라 main→release fast-forward push로 한다"
 summary: "레포는 PR 버튼으로 squash만 허용하고, release는 첫 prod 배포(07-20)부터 main과 같은 SHA로 fast-forward 유지돼 왔다. release PR #325를 squash로 밀면 release가 main에서 갈라져 이후 FF가 영영 불가능해지므로, 승격은 `git push origin origin/main:release`로 하고 PR은 닫는다. 08-18에도 같은 방식으로 재확인했다."
-status: "유효"
+status: "대체됨 · 2026-11-03 현행 안내 참조"
 date: "2026-09-10"
 order: 21
 author: "조재영"
@@ -13,7 +13,15 @@ related:
     href: "/research/migration-incidents"
   - label: "패키지 경로가 계층을 말하게"
     href: "/research/backend-layering-refactor"
+recordType: "decision"
 ---
+
+## 2026-11-03 적용 범위
+
+fast-forward push와 release PR close 절차는 사용하지 않습니다. main → release PR을 Create a merge commit으로 병합하고, release 발행 뒤 수동 CD·환경 승인을 거칩니다. 후속 ADR-037을 따릅니다. [현재 안내](/adr/adr-037-v2-release)
+
+이하 본문은 당시 결정과 근거를 보존한 기록입니다.
+
 
 ## 맥락
 

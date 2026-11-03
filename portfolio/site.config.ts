@@ -60,7 +60,7 @@ export const sections: SectionConfig[] = [
     kicker: "DESIGN & SPEC",
     title: "설계와 명세",
     description:
-      "무엇을 만드는지 확정한 문서입니다. 위키나 옛 메모와 어긋나면 이 문서가 이깁니다.",
+      "2026-11-03 phone main 기준의 Cattus 제품·서버·권한·운영 안내입니다. 구현과 배포 기록, 조건부 기능을 구분합니다.",
     kind: "docs",
     search: true,
     sort: "date",
@@ -93,7 +93,7 @@ export const sections: SectionConfig[] = [
     kicker: "LOAD TEST HISTORY",
     title: "부하테스트와 개선 기록",
     description:
-      "7월의 첫 부하 시험부터 AWS 운영 한계 측정과 후속 개선까지, 실행 조건·실패·재시험을 시간순으로 연결합니다. 같은 조건의 개선 수치와 아직 재측정하지 않은 목표를 구분합니다.",
+      "2026년 7~10월에 보관한 측정·실패·개선 기록입니다. AWS 부하 테스트와 부하용 데이터 생성은 금지되어 있으며, 이 수치는 현재 V2 수용량을 보증하지 않습니다.",
     kind: "docs",
     search: true,
     sort: "curated",
@@ -104,7 +104,7 @@ export const sections: SectionConfig[] = [
     kicker: "RESEARCH NOTES",
     title: "연구 노트",
     description:
-      "측정하고 부딪히며 알아낸 것들. 결론뿐 아니라 재현 방법과 숫자를 함께 남깁니다.",
+      "당시 코드·측정·문제 해결의 근거를 보존합니다. 본문 날짜의 관측과 현재 Cattus 안내를 구분해 읽습니다.",
     kind: "docs",
     search: true,
     sort: "date",
@@ -115,7 +115,7 @@ export const sections: SectionConfig[] = [
     kicker: "GROWTH METRICS",
     title: "그로스 지표와 분석",
     description:
-      "실제 사용 데이터로 무엇을 판정했는지. 위쪽 수치는 GA4에서 매일 자동으로 갱신되고, 아래 문서는 그 수치로 내린 주간 판정과 기능별 실태 조사입니다.",
+      "8~9월 Gromo 1.x의 주간 분석과 기능 조사를 보존합니다. 최신 GA4 스냅샷이 없어 현재 Cattus 지표는 제공하지 않습니다.",
     kind: "docs",
     search: true,
     sort: "date",
@@ -126,7 +126,7 @@ export const sections: SectionConfig[] = [
     kicker: "EVOLUTION LOG",
     title: "발전 기록",
     description:
-      "아키텍처·제품 설계·전달 경계를 바꾼 main 커밋을 Git 로그에서 자동으로 모읍니다.",
+      "phone main에서 문서·배포·서버 실행 경로를 바꾼 최근 240개 커밋을 Git 로그로 모았습니다. 기준 커밋과 변경 파일을 함께 봅니다.",
     kind: "generated",
   },
   {
@@ -144,7 +144,7 @@ export const sections: SectionConfig[] = [
     kicker: "PROJECT HISTORY",
     title: "프로젝트 연대기",
     description:
-      "소프트웨어 마에스트로 시작부터 지금까지를 순서대로 복원합니다. 지라 티켓·스프린트, 컨플루언스 회의록·회고·멘토링 기록이 근거입니다.",
+      "소프트웨어 마에스트로 시작부터 Gromo 출시, Cattus 재설계와 V2 전환까지를 기록합니다. 과거 회의·티켓과 최근 코드·운영 기록의 기준일을 구분합니다.",
     kind: "docs",
     search: true,
   },
@@ -170,41 +170,41 @@ export const site = {
   /** Change these five lines to rebrand. */
   name: "OneOrThree",
   wordmark: "OneOrThree",
-  subLabel: "PORTFOLIO",
-  tagline: "결정을 남기는 팀",
+  subLabel: "CATTUS DOCS",
+  tagline: "Cattus를 만드는 기록",
   description:
-    "무엇을 만들었는지보다, 왜 그렇게 만들었는지를 남기는 팀 포트폴리오입니다.",
+    "Cattus의 제품·아키텍처·운영 안내와 OneOrThree의 설계 결정, 실험, 성장 기록입니다.",
 
   /** Absolute origin for metadataBase, sitemap and robots. */
-  origin: process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "http://localhost:3000",
+  origin: process.env.NEXT_PUBLIC_SITE_ORIGIN ?? "https://docs.oneorthree.world",
 
   hero: {
-    kicker: "TEAM PORTFOLIO",
-    headline: ["설계는 문서로 남고,", "문서는 결정으로 남는다."],
-    subline: "우리가 만든 것과, 그렇게 만든 이유.",
-    lede: "설계의 근거와 서비스가 어긋났을 때의 대응을 남깁니다. 아키텍처, 기각한 대안, 장애의 진단·복구·재발 방지 기록을 함께 읽을 수 있습니다.",
+    kicker: "CATTUS · ONEORTHREE",
+    headline: ["함께 집중하고,", "섬을 키우는 Cattus."],
+    subline: "제품과 시스템, 바뀐 결정의 근거를 한곳에서.",
+    lede: "2026-11-03 main 기준으로 제품·서버 4종·V2 운영을 안내합니다. 과거 결정과 실험은 당시 날짜와 수치를 보존하고 현재 안내로 연결합니다.",
     actions: [
       {
-        label: "다이어그램 보기",
-        href: "/diagrams",
+        label: "현재 안내부터 읽기",
+        href: "/spec/current-state",
         variant: "solid" as const,
       },
-      { label: "설계 결정 읽기", href: "/adr", variant: "outline" as const },
-      { label: "운영 사례 읽기", href: "/operations/01-incident-map", variant: "outline" as const },
+      { label: "다이어그램 보기", href: "/diagrams", variant: "outline" as const },
+      { label: "V2 운영·배포", href: "/operations/06-v2-deployment", variant: "outline" as const },
     ],
   },
 
   /** The "무엇으로 만들었나" strip on the landing page. */
   stack: [
-    { name: "TypeScript", role: "프론트엔드" },
+    { name: "React Native · Expo", role: "iOS · Android 앱" },
     { name: "Next.js", role: "웹 · 문서" },
-    { name: "Spring Boot", role: "코어 API" },
+    { name: "Spring Boot", role: "서버 4종" },
     { name: "PostgreSQL", role: "주 저장소" },
-    { name: "Redis", role: "채팅 · 상태 · 캐시" },
-    { name: "Kafka", role: "이벤트 · 활성화 기본 OFF" },
-    { name: "AWS", role: "인프라" },
+    { name: "Redis", role: "전파 · 소유권 · 세션" },
+    { name: "Kafka", role: "알림 · 선택 사건 경로" },
+    { name: "AWS · GCP", role: "운영 V2 · dev V2" },
   ],
 
   footer:
-    "이 사이트는 팀이 실제로 남긴 설계 문서를 그대로 공개한 것입니다. 각 문서의 날짜와 상태를 함께 확인해 주세요.",
+    "현재 안내는 2026-11-03 main 기준입니다. 과거 기록은 각 문서의 날짜·환경·적용 범위와 함께 읽어 주세요.",
 } as const;

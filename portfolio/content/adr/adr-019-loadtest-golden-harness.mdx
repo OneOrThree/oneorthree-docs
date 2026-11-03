@@ -1,7 +1,7 @@
 ---
 title: "ADR-019 — 부하테스트는 프로드 스케일 golden DB 복제 위에서 k6로 돌리고, 표적 가설은 코드·스키마 실측으로 먼저 검증한다"
 summary: "시드 완료 상태를 PostgreSQL TEMPLATE으로 동결한 golden DB를 run마다 복제하고, k6 open model로 부하를 건다. 도메인 지식으로 짚은 표적 가설 3개는 코드·스키마 전수 조사에서 전부 틀렸으므로, 부하를 걸기 전에 스키마와 리포지토리부터 읽는다."
-status: "유효"
+status: "실행 정책 대체 · 2026-11-03 현행 안내 참조"
 date: "2026-07-10"
 order: 19
 author: "조재영"
@@ -13,7 +13,15 @@ related:
     href: "/research/loadtest-harness"
   - label: "p99가 정확히 30,000ms였다"
     href: "/research/loadtest-error96"
+recordType: "decision"
 ---
+
+## 2026-11-03 적용 범위
+
+AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지합니다. 본문은 과거 하네스 설계이며 실행 지시나 과거 승인 재사용 근거가 아닙니다. [현재 안내](/performance/07-evidence-and-retest)
+
+이하 본문은 당시 결정과 근거를 보존한 기록입니다.
+
 
 ## 맥락
 

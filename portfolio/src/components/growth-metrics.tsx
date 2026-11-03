@@ -3,9 +3,8 @@ import growthData from "@/data/growth.json";
 /**
  * GA4 지표 블록 — 그로스 섹션 인덱스 상단.
  *
- * 데이터는 손으로 쓰지 않는다. 비공개 저장소(gromo-growth-lab)의 GitHub Actions가
- * 매일 자정 무렵 GA4에서 다시 뽑아 `src/data/growth.json`을 갱신·커밋하고, 그 푸시가
- * 이 사이트를 다시 빌드한다. 팀 계정과 안드로이드 테스터는 조회 단계에서 빠진다.
+ * 데이터는 손으로 만들지 않는다. 수집 결과가 growth.json에 들어오면 기준일과 함께 표시한다.
+ * 2026-11-03 저장소 스냅샷은 비어 있으며 자동 수집의 현재 가동 여부는 확인되지 않았다.
  *
  * 차트는 외부 라이브러리 없이 인라인 SVG다 — ContributionDonuts와 같은 규칙.
  */
@@ -50,7 +49,8 @@ export function GrowthMetrics() {
   if (!g.asOf || !g.summary) {
     return (
       <section className="mb-12 rounded-card border border-dashed border-border px-5 py-8 text-center text-sm text-muted-foreground">
-        지표를 아직 한 번도 수집하지 않았습니다. 다음 자동 갱신에서 채워집니다.
+        최신 GA4 스냅샷이 없습니다. 아래 분석은 각 문서에 적힌 기간의 기록입니다.
+        {" "}<a href="/growth/current-data-scope" className="text-primary underline">자료의 범위 확인하기</a>
       </section>
     );
   }

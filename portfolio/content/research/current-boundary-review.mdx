@@ -1,0 +1,29 @@
+---
+title: "9월 설명을 현재 코드와 대조하며 찾은 경계"
+summary: "문서의 같은 단어가 서로 다른 저장소·권한·배포 단계를 가리킬 때 생기는 오해를 실제 변경으로 정리합니다."
+status: "시점 기록"
+date: "2026-11-03"
+order: 0
+recordType: "historical"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+---
+
+## ‘편지’라는 이름만으로 저장소를 고를 수 없었다
+
+9월 도면은 Realtime DB를 편지 정본으로 표시했습니다. 현재 친구 편지는 Data의 `letters`에, 우리 섬 채팅방 메시지는 Realtime의 `gromo_chat`에 저장됩니다. 새 문서에서는 사용자 기능·공개 경로·저장소를 같은 표에 놓았습니다.
+
+## 서버 지원과 앱 사용 경로가 달랐다
+
+서버에 STOMP 채팅 destination이 있어도 현재 앱의 `useIslandChat`은 REST 전송·조회와 전경 10초 폴링을 사용합니다. 문서의 ‘실시간’이라는 표현만으로 앱이 어떤 채널을 구독하는지 판단할 수 없었습니다.
+
+## 기본값과 배포 상태는 다른 증거였다
+
+Realtime의 authorization·차단 필터·Kafka 소비는 기본 OFF이고, 이동 multi-instance는 기본 ON입니다. 운영 V2에 Redis·Kafka가 배치되어 있다는 사실만으로 개별 소비자나 필터가 켜졌다고 단정할 수 없습니다. 기본값 표와 운영 기록을 분리했습니다.
+
+## 승격과 발행과 배포를 나눠야 했다
+
+과거 ADR-021은 main을 release로 fast-forward push하라고 했습니다. 현재는 merge commit PR로 부모 이력을 보존하고, release에서 산출물을 발행한 뒤 수동 CD와 환경 승인을 거칩니다. 백오피스는 main에서 별도로 배포합니다. 하나의 ‘배포’ 화살표로 합치면 실제 변경 시점을 잘못 안내합니다.
+
+## 검증 범위
+
+이 대조는 [phone af80af042](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/README.md)의 코드·README·운영 문서를 사용했습니다. 운영 부하나 사용자 동작을 새로 실행한 결과가 아닙니다. [현재 안내](/spec/current-state)와 [서비스 경계](/spec/service-architecture)에서 확인한 내용과 근거를 연결합니다.

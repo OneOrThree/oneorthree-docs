@@ -1,116 +1,58 @@
 ---
-title: "시스템 아키텍처 — 배치·노출면·배포 경계"
-summary: "Target-1 배치 목표와 main dev 구성을 구분합니다. RDS 내 별도 database, Redis 역할, Kafka 기본 OFF와 prod WSS 미확정 상태를 정리합니다. 문서 Vercel 배포는 런타임과 독립입니다."
-status: "설계 확정 · 구현 진행"
-date: "2026-09-19"
-order: 3
-keywords: [Docker Compose, Kafka, Redis, AWS, GCP, Vercel, CI/CD, Datadog]
-related:
-  - label: "상호작용 다이어그램"
-    href: "/diagrams/04-system"
-  - label: "구현 단계와 출처"
-    href: "/spec/architecture"
-  - label: "서비스 책임과 전달 계약"
-    href: "/spec/service-architecture"
+title: "시스템 아키텍처 — 운영·dev V2와 공개 경로"
+summary: "AWS 운영 V2의 EC2 4대와 GCP dev V2의 VM 3대, 저장소·배포·관측 경계를 설명합니다."
+status: "2026-11-03 main 대조"
+date: "2026-11-03"
+order: 4
+recordType: "current"
+sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 ---
 
-<div className="architecture-doc">
+## 운영 V2 배치
 
-## 배치 구조
+아래는 2026-11-02 갱신된 운영 문서에 기록된 구성입니다. 이번 사이트 갱신에서 호스트 상태를 새로 조사한 결과는 아닙니다.
 
-[상호작용 다이어그램 열기 — 확대·연결 강조·내보내기](/diagrams/04-system)
-
-v6은 Target-1 목표 대신 main `c247e71`(2026-09-19)의 배포 정의를 그린다. 위부터 prod AWS(app·nginx·datadog-agent 컨테이너와 RDS·S3 로그), `satellites.yml`로 수동 적용하는 위성(Business·Notification), dev GCP의 overlay(Realtime·Kafka)다. AWS·GCP 호스트 실행 상태를 새로 실측한 기록은 아니다. Target-1 목표 배치는 아래 포트 표와 v5 도면에 남아 있다. [개요의 구성별 상태](/spec/architecture)를 따른다.
-
-## 현재 설정과 목표 포트
-
-| 서비스 | 확인한 main 설정 | Target-1 문서의 계획 |
+| 역할 | 호스트·사양 | 실행 대상 |
 | --- | --- | --- |
-| Data API | dev의 `app` :8080. 기존 prod Compose도 `app` 중심 | :8081, Compose 내부망만. 공개 REST는 Business 경유 |
-| Business API | `docker-compose.satellites.yml`의 :8080(expose만), 전용 `business-redis`. 수동 적용 · `/screens` 14종 | :8080, 인증·공개 REST·BFF 진입점 |
-| Realtime | :8081, `docker-compose.realtime.yml`은 dev 전용. STOMP와 사건 입구 `POST /internal/events` | 기존 Target-1 자원표에 없음. prod 라우팅·DB·Redis 배선은 후속 |
-| Notification | `satellites.yml`의 :8082. nginx include가 `/internal/admin/`만 연결. 소비·스케줄 기본 OFF | :8082, 전용 DB와 admin 제한 노출 |
-| Kafka | main의 별도 overlay, :9092 내부망. 호스트 활성화 미확인 | 동일 Compose의 KRaft 단일 노드 |
-| Redis | dev의 채팅·presence Redis + Business 전용 Redis | Realtime 편입에 맞춰 자원·ACL·prod 구성을 갱신. 랭킹 projection은 Target-2 |
+| 서버 | `catus-prod-V2` · m6g.large | nginx, Business, Data, Realtime, Notification |
+| Kafka | `catus-kafka-prod-V2` · m6g.medium | Kafka 3.8.1 |
+| Redis | `catus-redis-prod-V2` · m6g.medium | Redis 7.4.11 Shared·Business 두 인스턴스 |
+| 백오피스 | `catus-backoffice-prod-V2` · t4g.small | 운영 관리 웹 |
+| DB | RDS `catus-prod-db` · db.t4g.small | 기존 운영 DB를 V2가 계속 사용 |
 
-**이 두 포트 표를 섞어 한 Compose에 그대로 붙이지 않는다.** 현재 dev Realtime의 :8081은 목표 Data의 :8081과 겹친다. 실제 전환에는 내부 포트와 공개 라우팅을 함께 조정한 환경별 배포 정의가 필요하다.
+`catus-prod-db-v2`는 별도로 준비되어 있지만 위 기록에서는 아직 사용하지 않습니다. V2라는 이름만 보고 사용 DB가 바뀌었다고 판단하지 않습니다.
 
-## 컴퓨트와 저장소
+## 공개 경로
 
-기존 문서의 2026-09-09 실측은 prod EC2 t4g.medium 4 GB, dev e2-medium 4 GB다. Target-1은 각각 t4g.large 8 GB와 e2-standard-2 8 GB로 증설하는 계획이다. **증설 완료로 표기하지 않는다.**
+공개 API 주소는 `catus-api-v2.oneorthree.world`, 백오피스는 `backoffice-v2.oneorthree.world`입니다. HTTP는 Business, WSS는 Realtime으로 전달됩니다. Data 내부 API와 관리 포트를 앱의 공개 진입점으로 사용하지 않습니다.
 
-| 저장소 | 소유·배치 | 배포 전제 |
+구 `api`, `catus-api`, `focuscat-api`, `link` DNS는 11월 2일 삭제한 것으로 기록돼 있습니다. `backoffice.oneorthree.world`는 V2 백오피스로 302 이동합니다. 과거 문서의 주소로 새 환경을 구성하지 않습니다.
+
+## dev V2 배치
+
+| GCP VM | 사양 | 실행 대상 |
 | --- | --- | --- |
-| `gromo` | 코어 Data API. prod RDS PostgreSQL, dev PostgreSQL 컨테이너. 링크·클릭·캠페인·referrer·포스트백 원장도 여기에 있다(A23) | 코어 전용 DB 자격·Flyway |
-| `gromo_notification` | 같은 prod RDS 인스턴스 안의 별도 database가 Target-1 | DB·유저·권한을 먼저 생성한 뒤 Notification Flyway 실행 |
-| `gromo_chat` | 현재 main의 dev PostgreSQL에 별도 database | 멱등 DB init 잡 뒤 Realtime 실행. prod overlay는 아직 정의되지 않음 |
-| Kafka 볼륨 | 브로커의 로그·KRaft 메타데이터 영속화 | 단일 노드 RF 1. 볼륨 보존과 다중 노드 가용성은 별개 |
-| Redis | 채팅·집중과 미리보기는 다른 인스턴스 | 서비스별 ACL·메모리·eviction 정책을 용도별 적용 |
-| S3 로그 버킷 | `gromo-prod-logs-*`. `system_log/`·`user_log/`·`user-activity/` 접두 모두 90일 만료, 2026-09-19 적용 | Terraform 원본(레포 밖)과 동기화 전에는 Terraform 적용이 규칙을 덮어쓸 수 있다 |
+| `catus-dev-v2-app` | e2-medium | nginx와 서버 4종 |
+| `catus-dev-v2-data` | e2-small | PostgreSQL 16.14와 Kafka 3.8.1 |
+| `catus-dev-v2-redis` | e2-micro | Shared·Business Redis 7.4.11 |
 
-원래 Target-1의 JVM 3개·컨테이너 6개 계산에는 Realtime, 채팅 Redis, 미리보기 Redis가 없다. 이들을 운영에 편입할 때는 **전체 힙·비힙·버퍼·페이지 캐시를 다시 산정**한다. 기존 8 GB 계획을 확장 구성 전체의 검증 결과로 사용하지 않는다.
+공개 주소는 `oneorthree-v2.dev.mooo.com`입니다. main 변경은 해당 CI와 `cd-auto.dev-v2.yml`을 통해 자동 배포됩니다. dev 백오피스는 없으며 구 `gromo-dev-app` VM·디스크·러너 등록은 삭제됐습니다.
 
-## 공인 노출면
+## Redis와 관측
 
-| 진입 | 목표 라우팅·인증 |
-| --- | --- |
-| 앱 REST | Cloudflare → Nginx TLS → Business. 기존 `/api/v1/**` 호환 경로와 신규 API 계약을 구분 |
-| 내부 Data | Compose 내부 DNS·서비스 토큰. 외부가 보낸 사용자 헤더를 Business가 그대로 신뢰하지 않음 |
-| 알림 admin | Nginx가 허용된 `/internal/admin/**`만 Notification으로 연결. 콘솔 전용 자격 |
-| 실시간 소켓 | 현재 `/ws/chat`·`/ws/realtime` 계약 유지. prod WSS 라우팅·현재 인가 활성화는 후속 배포 조건 |
-| 링크·매치 | A23으로 별도 Link/Vercel/Neon 분리안 폐기. 공개 표면은 Business, 원장은 Data의 `gromo` |
-| Kafka·Redis·DB·관리 포트 | 공개 API 경로에 포함하지 않음. 서비스별 내부 자격과 최소 권한 |
+운영 Redis의 `maxmemory`는 Shared 384MB, Business 128MB이고 둘 다 `noeviction`·AOF를 사용합니다. dev의 한도는 이보다 작습니다. 컨테이너 메모리 한도와 Redis `maxmemory`는 같은 값이 아닙니다.
 
-Data는 코어 DB 자격, Notification은 알림 DB·FCM 자격, Business는 목표 인증 서명 책임을 갖는다. **현재 Realtime은 JWT 검증 계약을 유지한다.** 기존 “JWT 키는 Business만 보유” 목표 문구를 모든 현행 서비스에 적용 완료했다고 쓰지 않는다.
+운영 문서는 11월 2일 EC2 4대에서 Datadog Agent health를 확인했다고 기록합니다. 이는 Datadog 화면의 최신 로그·APM 수신 확인과 다릅니다. dev V2의 세 VM에는 Datadog Agent를 설치하지 않습니다. Fluent Bit·Loki·S3 경로는 관측 rollout과 실제 배포 설정을 함께 봅니다.
 
-## WSS 배포 전 확정할 노출면
+## 파일 소유권과 배포
 
-현재 확인한 `docker-compose.realtime.yml`은 **dev 전용**이며 호스트 `8081:8081`을 매핑한다. 이것만으로 공개 인터넷 직행, HTTPS 프록시 경유, prod TLS 종료를 판정할 수 없다. 현재 도면은 앱에서 Realtime으로 직행하는 WSS 간선을 운영 경로로 표시하지 않는다.
+AWS 자원·SSM·서버 및 백오피스 Compose·env 계약은 `cattus-infra/prod/catus-v2/`가 소유합니다. Kafka·Redis Compose는 phone의 `server/scripts/v2/prod/`, 발행·배포는 `.github/scripts/v2/prod/catus-runtime-V2.py`가 담당합니다.
 
-| 항목 | 확인한 내용 / 후속 확정 사항 |
-| --- | --- |
-| 인증 시점 | `/ws/chat`·`/ws/realtime` handshake 뒤 첫 STOMP CONNECT에서 Bearer 검증. 토큰은 URL에 싣지 않음 |
-| prod 라우팅·TLS | 확인한 저장소에 prod Realtime 라우팅이 없음. Cloudflare/Nginx 경유 여부와 TLS 종료 지점을 환경별 배포 정의로 확정할 것 |
-| handshake·메시지 제한 | edge/오리진의 접속 시도 제한과 Realtime의 SEND 빈도 제한을 나눠 수치·거절 동작·검증 결과를 남길 것. 현재 운영 적용은 미확인 |
-| 연결 수 상한 | 호스트·프로세스·유저별 상한과 초과 연결 거절·복구 동작을 부하 검증 후 기록할 것 |
-| 오리진 방어 | 프록시 경유 시 우회 직접 접속 차단 정책을, 직접 노출 시 방어 책임과 이유를 명시할 것 |
-
-배포 정의에 설정이 생긴 상태와 실제 적용·장애 검증을 마친 상태는 별도로 기록한다. prod `gromo_chat`의 물리 배치와 Redis ACL도 같은 활성화 확인 범위에 포함한다.
-
-## 배포와 관측
-
-현재 서버 CI는 `server/data-api/**`, `server/realtime/**`, `server/business-api/**` 경로별로 나뉜다. Data dev는 CI 뒤 CD로 이어지고, Realtime·Business는 main에서 이미지를 빌드해 GAR에 올리며 overlay 활성화는 별도다. prod Data 이미지는 release 경로에서 ECR을 사용한다.
-
-목표는 서비스별 이미지 digest와 환경 매니페스트로 배포·롤백을 재현하는 것이다. 서버 저장소 분리와 `services/<name>` 경로는 A17의 계획이며 현재 `phone/server/<name>`와 구분한다.
-
-- 내부 HTTP 변경은 제공자 선배포·소비자 후배포, 제거는 롤백 기간 밖에서 한다.
-- 이벤트 스키마는 호환 소비자를 먼저 준비한다. 신규 실시간 활성화는 Data 명령·스냅샷 → Realtime 권한·전달 → Business → 앱 순서를 따른다.
-- 서비스별 Datadog APM·로그·메트릭에 HTTP requestId와 eventId를 연결한다. Kafka lag, outbox 재시도, DLT, 알림 지연을 별도 관측한다.
-- 이미지 롤백과 DB rollback을 같은 것으로 취급하지 않는다. 파괴적 DDL이 포함된 변경은 expand/contract 또는 roll-forward 절차를 따른다.
-
-**이 문서 사이트의 배포는 Gromo 런타임과 독립적이다.** `OneOrThree/documentation`의 `portfolio`를 Vercel이 빌드하며, main의 Production 배포가 `docs.oneorthree.world`에 연결된다. 다이어그램 원본·SVG·설명 문서가 같은 커밋으로 배포된다.
-
-## 다음 확장의 기준
-
-아래는 시스템 정본이 정한 초기 임계값이다. 이번 작업에서 측정한 성능 결과가 아니다.
-
-| 확장 | 정본의 시작 조건 |
-| --- | --- |
-| 관리형 Kafka | 브로커 장애로 30분 이상 발송 지연이 월 1회 이상, 또는 디스크·업그레이드 수작업이 월 1회 이상 |
-| 랭킹 Redis | 리그 화면 p95 1.5초 초과, `findRankOf` p95 500ms 초과, 또는 Business 다중 인스턴스 필요 |
-| 알림 워커 분리 | fanout 잡 5분 초과 또는 대상 2,000명 초과 |
-| 알림 DB 별도 인스턴스 | 알림 DB가 RDS CPU 30% 이상 지속 사용 또는 Hikari pending이 일 1회 이상 발생 |
-| Business 다중 인스턴스 | 앱 API p95 1초 초과가 일 3회 이상, 또는 CPU 70% 이상이 10분 지속 |
-
-Kafka 이관은 새 주소만 바꾸는 작업이 아니다. 기존 토픽과 DLT의 backlog를 drain·처리 또는 보존하고, 생산자·소비자·relay의 전환 경계를 함께 맞춘다. 랭킹 스트림 도입 후에는 `score-events`와 그 DLT도 같은 절차에 포함한다.
+서버·Kafka·Redis는 release 발행 후 수동 CD, 백오피스는 main 머지 후 환경 승인 배포입니다. 절차와 복구 제한은 [V2 배포 안내](/operations/06-v2-deployment)를 따릅니다.
 
 ## 근거
 
-- v6 대조(main c247e71): [prod Compose](https://github.com/OneOrThree/phone/blob/c247e7108b1296a3f76c280553fa8779d221d753/server/scripts/docker-compose.prod.yml) · [위성 Compose](https://github.com/OneOrThree/phone/blob/c247e7108b1296a3f76c280553fa8779d221d753/server/scripts/docker-compose.satellites.yml) · [nginx 위성 include](https://github.com/OneOrThree/phone/blob/c247e7108b1296a3f76c280553fa8779d221d753/server/scripts/nginx-satellites.include.conf.example) · [S3 로그 수명주기](https://github.com/OneOrThree/phone/blob/c247e7108b1296a3f76c280553fa8779d221d753/server/scripts/s3-log-archive-lifecycle.json) · [dev Realtime overlay](https://github.com/OneOrThree/phone/blob/c247e7108b1296a3f76c280553fa8779d221d753/server/scripts/docker-compose.realtime.yml)
-- [2026-09-17 코드 대조 — dev Realtime overlay](https://github.com/OneOrThree/phone/blob/59790ce4916f3e91887caaa6945eefa86c0d6890/server/scripts/docker-compose.realtime.yml) · [Notification 활성화 기본값](https://github.com/OneOrThree/phone/blob/59790ce4916f3e91887caaa6945eefa86c0d6890/server/notification/src/main/resources/application.yml)
-- [시스템 정본 — 환경 실측·Target-1·Target-2](https://github.com/OneOrThree/phone/blob/875a9fd8952a96d0031eabe455c627cddb6a643d/docs/architecture/system-architecture.md)
-- [main의 환경별 Compose](https://github.com/OneOrThree/phone/tree/875a9fd8952a96d0031eabe455c627cddb6a643d/server/scripts) · [현재 CI/CD 정의](https://github.com/OneOrThree/phone/tree/875a9fd8952a96d0031eabe455c627cddb6a643d/.github/workflows)
-- [Kafka overlay의 포트·볼륨·기동 조건](https://github.com/OneOrThree/phone/blob/c015b2aa68115ca8c454cacdb3d9d2bfcf886b48/server/scripts/docker-compose.kafka.yml)
-- [Realtime HLD — 활성화와 다중 인스턴스](https://github.com/OneOrThree/phone/blob/875a9fd8952a96d0031eabe455c627cddb6a643d/docs/prd/realtime-events/high-level-design.md)
-
-</div>
+- [운영 V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md)
+- [dev V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/dev-v2-pipeline.md)
+- [운영 Redis 구성](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/scripts/v2/prod/redis-V2.yml)
+- [관측 rollout](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/architecture/server-log-observability/rollout.md)
