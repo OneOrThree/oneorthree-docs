@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 정보 구조</title>
+<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 정보 구조</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">진입과 섬 생활</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">게스트·소셜 계정, 주민·섬장·방문자와 시설 조건을 구분한다.</text>
+<rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">일곱 건물</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">건설 권한과 구매·조회 권한은 서로 다르다.</text>
+<rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">연락·탐색·플랫폼</text>
+<text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">현재 제품 용어와 기능별 전송 경로를 사용한다.</text>
+<g data-cell-id="entryHome"><path d="M 520 315 L 655 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="564.5" y="289" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="305" font-size="14" text-anchor="middle" fill="#405768">진입</text>
+</g>
+<g data-cell-id="homeFocus"><path d="M 1105 315 L 1240 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1149.5" y="289" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="305" font-size="14" text-anchor="middle" fill="#405768">집중</text>
+</g>
+<g data-cell-id="homeLife"><path d="M 880 420 L 880 570" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="857.5" y="446" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="462" font-size="14" text-anchor="middle" fill="#405768">시설</text>
+</g>
+<g data-cell-id="entry">
+<rect x="70" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="260" font-size="21" fill="#172b3a" font-weight="700">시작·계정</text>
+<text x="90" y="289" font-size="16" fill="#4d5a66" font-weight="400">게스트 또는 소셜 로그인</text>
+<text x="90" y="313" font-size="16" fill="#4d5a66" font-weight="400">닉네임·고양이 모습·온보딩</text>
+<text x="90" y="337" font-size="16" fill="#4d5a66" font-weight="400">친구 요청·편지·구매는 소셜 필요</text>
+<text x="90" y="405" font-size="14" fill="#3866a0" font-weight="700">현재 앱</text>
+</g>
+<g data-cell-id="home">
+<rect x="655" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">섬 홈</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">현재 섬·메인 섬</text>
+<text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">주민·방문자 상태</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">건물과 주민·이동</text>
+<text x="675" y="405" font-size="14" fill="#3866a0" font-weight="700">제품 중심 화면</text>
+</g>
+<g data-cell-id="focus">
+<rect x="1240" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">집중·휴식</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">낚시섬 집중·모닥불 휴식</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">현재 세션 복구·응원</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">유효 집중 → 섬 물고기</text>
+<text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">Data 정산 · Realtime 표시</text>
+</g>
+<g data-cell-id="manage">
+<rect x="70" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="600" font-size="21" fill="#172b3a" font-weight="700">마을회관·게시판</text>
+<text x="90" y="629" font-size="16" fill="#4d5a66" font-weight="400">건설 목표·공동 가계부·주민 관리</text>
+<text x="90" y="653" font-size="16" fill="#4d5a66" font-weight="400">공지·퀘스트·청사진·방명록</text>
+<text x="90" y="677" font-size="16" fill="#4d5a66" font-weight="400">건설 목표·착공은 섬장만</text>
+<text x="90" y="745" font-size="14" fill="#3866a0" font-weight="700">게스트 섬장도 건설 가능</text>
+</g>
+<g data-cell-id="life">
+<rect x="655" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">도서관·축음기·상점</text>
+<text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">내 일기장·이웃 일기장</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">보유 음악 재생·꾸미기 구매</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">가격·상품 발행·시설 조건</text>
+<text x="675" y="745" font-size="14" fill="#3866a0" font-weight="700">공동 구매: 주민 · 게스트 제외</text>
+</g>
+<g data-cell-id="outside">
+<rect x="1240" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="600" font-size="21" fill="#172b3a" font-weight="700">우체통·전망대</text>
+<text x="1260" y="629" font-size="16" fill="#4d5a66" font-weight="400">친구 편지·시스템 편지·잡지</text>
+<text x="1260" y="653" font-size="16" fill="#4d5a66" font-weight="400">섬 주간 순위·검색</text>
+<text x="1260" y="677" font-size="16" fill="#4d5a66" font-weight="400">친구 편지와 단체 채팅은 별도</text>
+<text x="1260" y="745" font-size="14" fill="#3866a0" font-weight="700">기능별 시설·권한 검사</text>
+</g>
+<g data-cell-id="chat">
+<rect x="70" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">친구·우리 섬 채팅방</text>
+<text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">친구 관계·차단·비동기 편지</text>
+<text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">단체 채팅 REST 전송·조회</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">전경·활성 화면에서 10초 폴링</text>
+<text x="90" y="1085" font-size="14" fill="#3866a0" font-weight="700">편지: Data · 채팅: Realtime</text>
+</g>
+<g data-cell-id="travel">
+<rect x="655" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">뗏목·먼바다</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">망원경에서 행선지 선택</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">항해·도착·섬에 내리기</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">고양이 잡지·섬 홍보</text>
+<text x="675" y="1085" font-size="14" fill="#3866a0" font-weight="700">이동 프레임과 제품 정본 분리</text>
+</g>
+<g data-cell-id="settings">
+<rect x="1240" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="940" font-size="21" fill="#172b3a" font-weight="700">설정·네이티브 기능</text>
+<text x="1260" y="969" font-size="16" fill="#4d5a66" font-weight="400">iOS 허용 앱·실드</text>
+<text x="1260" y="993" font-size="16" fill="#4d5a66" font-weight="400">Android 측정·위젯·일반 푸시</text>
+<text x="1260" y="1017" font-size="16" fill="#4d5a66" font-weight="400">Android 집중 차단은 제거됨</text>
+<text x="1260" y="1085" font-size="14" fill="#3866a0" font-weight="700">네이티브 변경은 새 바이너리</text>
+</g>
+</g></svg>

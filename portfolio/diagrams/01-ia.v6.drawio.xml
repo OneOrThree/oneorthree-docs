@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="31.4.5">
+  <diagram id="01-ia" name="Cattus · 정보 구조">
+    <mxGraphModel dx="1760" dy="1220" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="1220">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="heading" value="Cattus · 정보 구조" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
+        </mxCell>
+        <mxCell id="subtitle" value="2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
+        </mxCell>
+        <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="140" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle0" value="진입과 섬 생활" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="152" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub0" value="게스트·소셜 계정, 주민·섬장·방문자와 시설 조건을 구분한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="183" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band1" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="480" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle1" value="일곱 건물" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="492" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub1" value="건설 권한과 구매·조회 권한은 서로 다르다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="523" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band2" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="820" width="1680" height="310" />
+        </mxCell>
+        <mxCell id="bandTitle2" value="연락·탐색·플랫폼" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="832" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub2" value="현재 제품 용어와 기능별 전송 경로를 사용한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="863" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="entryHome" value="진입" source="entry" target="home" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="homeFocus" value="집중" source="home" target="focus" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="homeLife" value="시설" source="home" target="life" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=0.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="entry" value="&lt;b&gt;시작·계정&lt;/b&gt;&lt;br&gt;게스트 또는 소셜 로그인&lt;br&gt;닉네임·고양이 모습·온보딩&lt;br&gt;친구 요청·편지·구매는 소셜 필요&lt;br&gt;&lt;b&gt;현재 앱&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="home" value="&lt;b&gt;섬 홈&lt;/b&gt;&lt;br&gt;현재 섬·메인 섬&lt;br&gt;주민·방문자 상태&lt;br&gt;건물과 주민·이동&lt;br&gt;&lt;b&gt;제품 중심 화면&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="focus" value="&lt;b&gt;집중·휴식&lt;/b&gt;&lt;br&gt;낚시섬 집중·모닥불 휴식&lt;br&gt;현재 세션 복구·응원&lt;br&gt;유효 집중 → 섬 물고기&lt;br&gt;&lt;b&gt;Data 정산 · Realtime 표시&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="230" width="450" height="190" />
+        </mxCell>
+        <mxCell id="manage" value="&lt;b&gt;마을회관·게시판&lt;/b&gt;&lt;br&gt;건설 목표·공동 가계부·주민 관리&lt;br&gt;공지·퀘스트·청사진·방명록&lt;br&gt;건설 목표·착공은 섬장만&lt;br&gt;&lt;b&gt;게스트 섬장도 건설 가능&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="life" value="&lt;b&gt;도서관·축음기·상점&lt;/b&gt;&lt;br&gt;내 일기장·이웃 일기장&lt;br&gt;보유 음악 재생·꾸미기 구매&lt;br&gt;가격·상품 발행·시설 조건&lt;br&gt;&lt;b&gt;공동 구매: 주민 · 게스트 제외&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="outside" value="&lt;b&gt;우체통·전망대&lt;/b&gt;&lt;br&gt;친구 편지·시스템 편지·잡지&lt;br&gt;섬 주간 순위·검색&lt;br&gt;친구 편지와 단체 채팅은 별도&lt;br&gt;&lt;b&gt;기능별 시설·권한 검사&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="570" width="450" height="190" />
+        </mxCell>
+        <mxCell id="chat" value="&lt;b&gt;친구·우리 섬 채팅방&lt;/b&gt;&lt;br&gt;친구 관계·차단·비동기 편지&lt;br&gt;단체 채팅 REST 전송·조회&lt;br&gt;전경·활성 화면에서 10초 폴링&lt;br&gt;&lt;b&gt;편지: Data · 채팅: Realtime&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="910" width="450" height="190" />
+        </mxCell>
+        <mxCell id="travel" value="&lt;b&gt;뗏목·먼바다&lt;/b&gt;&lt;br&gt;망원경에서 행선지 선택&lt;br&gt;항해·도착·섬에 내리기&lt;br&gt;고양이 잡지·섬 홍보&lt;br&gt;&lt;b&gt;이동 프레임과 제품 정본 분리&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="910" width="450" height="190" />
+        </mxCell>
+        <mxCell id="settings" value="&lt;b&gt;설정·네이티브 기능&lt;/b&gt;&lt;br&gt;iOS 허용 앱·실드&lt;br&gt;Android 측정·위젯·일반 푸시&lt;br&gt;Android 집중 차단은 제거됨&lt;br&gt;&lt;b&gt;네이티브 변경은 새 바이너리&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="910" width="450" height="190" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

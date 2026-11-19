@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "version": 4,
+  "sourceCommit": "1281cbfc4559ba3bbe991c8acd529e66257cc5fc",
   "title": "Cattus · AWS 운영 V2",
   "nodes": [
     {
@@ -28,7 +28,7 @@
       "title": "Cloudflare·nginx",
       "lines": [
         "공개 주소·TLS·라우팅",
-        "HTTP는 Business로 전달",
+        "허용한 HTTP → Business · reports 미허용",
         "WSS는 Realtime으로 전달"
       ],
       "kind": "external",
@@ -43,8 +43,9 @@
       "h": 190,
       "title": "서버 EC2 · m6g.large",
       "lines": [
-        "Business·Data·Realtime·Notification",
-        "서비스별 이미지·설정·DB 계약",
+        "release catus-v2.0.14 · 11-14 반영",
+        "Data·Realtime v2.0.14 · Business v2.0.13",
+        "Notification v2.0.11",
         "nginx와 서버 4종 한 호스트"
       ],
       "kind": "core",
@@ -59,9 +60,9 @@
       "h": 190,
       "title": "Kafka · m6g.medium",
       "lines": [
-        "Kafka 3.8.1",
+        "Kafka 3.8.1 · kafka-v1.0.3-V2",
         "알림 사건과 선택 REALTIME 경로",
-        "별도 발행·수동 CD"
+        "별도 발행·수동 CD · 마지막 성공 11-02"
       ],
       "kind": "event",
       "stage": "catus-kafka-prod-V2",
@@ -75,9 +76,10 @@
       "h": 190,
       "title": "Redis · m6g.medium",
       "lines": [
-        "Redis 7.4.11 두 인스턴스",
+        "Redis 7.4.11 두 개 · redis-v1.0.4-V2",
         "Shared maxmemory 384MB",
-        "Business maxmemory 128MB"
+        "Business maxmemory 128MB",
+        "수동 CD · 마지막 성공 11-02"
       ],
       "kind": "data",
       "stage": "noeviction · AOF · ACL",
@@ -109,7 +111,8 @@
       "lines": [
         "공지·운영진 편지·잡지·정책",
         "서버·앱 출시 현황",
-        "main → 환경 승인 → 배포"
+        "main → 환경 승인 → 배포",
+        "backoffice-v1.0.9-V2 · 11-10 반영"
       ],
       "kind": "core",
       "stage": "catus-backoffice-prod-V2",
@@ -128,7 +131,7 @@
         "SSM으로 지정한 버전 적용"
       ],
       "kind": "external",
-      "stage": "Infra revision 고정",
+      "stage": "Infra revision 69edca4d(11-04)",
       "state": "code"
     },
     {

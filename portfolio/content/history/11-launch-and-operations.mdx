@@ -1,0 +1,71 @@
+---
+title: "11월 3~18일 — 출시 뒤 개선과 운영 반영"
+summary: "iOS 공개 뒤 2주 동안 main에 들어간 79개 커밋과 운영 반영 다섯 번을 날짜순으로 묶습니다. main에 있는 것과 운영에 나간 것을 구분합니다."
+status: "시점 기록"
+date: "2026-11-18"
+order: 11
+recordType: "historical"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
+---
+
+## 한눈에
+
+| 구분 | 기준 |
+| --- | --- |
+| 기간 | 2026-11-03 ~ 11-18, phone main first-parent 커밋 79개 (`af80af042` → `1281cbfc4`) |
+| 운영 서버 | `catus-v2.0.10-V2`(11-05) → `v2.0.11`(11-10) → `v2.0.12`(11-11) → `v2.0.13`(11-13) → `v2.0.14`(11-14) |
+| 백오피스 | `backoffice-v1.0.9-V2`(11-10). 이후 백오피스 코드 변경 없음 |
+| 앱 출시 태그 | iOS `app-2.3.1-ios-13` ~ `app-2.3.7-ios-14`(11-04~11-13), Android `app-2.3.14-android-791` ~ `app-2.3.27-android-918`(11-04~11-18). 태그는 빌드 기록이며 스토어 공개와 같지 않음 |
+| main에만 있는 것 | 11-14 이후 머지한 #1668~#1675. 섬 퀘스트 삭제·시간대 겹침 금지와 잡지 홍보 칸 API는 운영 서버에 아직 없음 |
+
+배포 절차와 각 반영의 범위는 [V2 배포](/operations/06-v2-deployment)에 있습니다.
+
+## 11월 3~5일 — 측정할 수 있게 만들었다
+
+- 큰 JSON 응답에 gzip을 적용했습니다([#1569](https://github.com/OneOrThree/phone/pull/1569)). 효과와 한계는 [#1571](https://github.com/OneOrThree/phone/pull/1571)에 기록했습니다.
+- 앱 운영 빌드가 Sentry에 소스맵·네이티브 심볼을 올립니다([#1575](https://github.com/OneOrThree/phone/pull/1575)).
+- 첫 항해 체험 도착을 계정당 한 번 판정하고 광고 매체로 보내는 경로를 만들었습니다. 서버 Conversions API([#1581](https://github.com/OneOrThree/phone/pull/1581)), 앱 SDK([#1587](https://github.com/OneOrThree/phone/pull/1587)·[#1606](https://github.com/OneOrThree/phone/pull/1606)), Airbridge 표준 이벤트([#1592](https://github.com/OneOrThree/phone/pull/1592))입니다. 11-05에 새 Meta 앱으로 옮겼습니다([#1608](https://github.com/OneOrThree/phone/pull/1608)·[#1609](https://github.com/OneOrThree/phone/pull/1609)).
+- main iOS 프로젝트를 스토어 앱 번들 `com.oneorthree.gromo`로 맞췄습니다([#1586](https://github.com/OneOrThree/phone/pull/1586)·[#1584](https://github.com/OneOrThree/phone/pull/1584)).
+- Android 릴리스 빌드에서만 나던 종료 세 건을 고쳤습니다: 카카오 SDK 토큰 확인, 키보드가 뜰 때 준비 카드 높이 반복 측정, AI 모델 파일 로드([#1579](https://github.com/OneOrThree/phone/pull/1579)·[#1590](https://github.com/OneOrThree/phone/pull/1590)·[#1591](https://github.com/OneOrThree/phone/pull/1591)).
+- 앱 웹 빌드에 정원 제한 없는 웹 전용 섬 입장을 만들었습니다([#1597](https://github.com/OneOrThree/phone/pull/1597)). 11-07에는 공개 주소를 서버와 연결하지 않는 3D 섬 웹으로 바꿨습니다([#1623](https://github.com/OneOrThree/phone/pull/1623)).
+- 앱을 내보내기 전에 운영 서버와 호환되는지 검사합니다([#1613](https://github.com/OneOrThree/phone/pull/1613)).
+
+## 11월 6~8일 — 집중 화면과 바다를 다듬었다
+
+- 실드 없이 집중할 때 앱을 나가면 휴식으로 바꾸고 15초를 넘기면 끝냅니다([#1573](https://github.com/OneOrThree/phone/pull/1573)). AI를 꺼도 집중 중에는 화면이 자동으로 잠기지 않습니다([#1634](https://github.com/OneOrThree/phone/pull/1634)).
+- Android에서도 집중 중 다른 앱을 열면 Cattus로 돌아옵니다([#1635](https://github.com/OneOrThree/phone/pull/1635)). 스크린타임 안내와 측정·허용 앱 설정을 한 흐름으로 묶었습니다([#1627](https://github.com/OneOrThree/phone/pull/1627)).
+- 세 번째 집중을 끝내면 OS 기본 별점창을 한 번 띄웁니다([#1616](https://github.com/OneOrThree/phone/pull/1616)). 전망대 순위 평균은 망원경과 같은 최근 7일 하루 평균입니다([#1612](https://github.com/OneOrThree/phone/pull/1612)).
+- 무인도 항해를 90분으로 늘렸고([#1626](https://github.com/OneOrThree/phone/pull/1626)), 바다·망원경 화면과 3D 섬 웹에 움직임을 넣었습니다([#1617](https://github.com/OneOrThree/phone/pull/1617)·[#1621](https://github.com/OneOrThree/phone/pull/1621)·[#1623](https://github.com/OneOrThree/phone/pull/1623)).
+- 멈춰 있던 잡지 자동 발행을 복구하고 백오피스에서 발행본을 볼 수 있게 했습니다([#1615](https://github.com/OneOrThree/phone/pull/1615)).
+
+## 11월 9~10일 — 퀘스트를 열고 운영 도구를 붙였다
+
+- 섬 퀘스트의 출시 스위치를 없애고 outbox relay·알림 발송·알림 Kafka 수신을 배포 환경 기본값으로 켰습니다([#1638](https://github.com/OneOrThree/phone/pull/1638)).
+- 운영자가 꾸미기 아이템을 지급하고 추첨 풀을 편성할 때 두 사람이 승인합니다. Data 내부 API와 백오피스 화면입니다([#1639](https://github.com/OneOrThree/phone/pull/1639)·[#1641](https://github.com/OneOrThree/phone/pull/1641)·[#1640](https://github.com/OneOrThree/phone/pull/1640)).
+- 건설은 섬 통장 잔액으로 하고 청사진도 통장형으로 보여 줍니다([#1642](https://github.com/OneOrThree/phone/pull/1642)). 공지에 대상 플랫폼을 둡니다([#1644](https://github.com/OneOrThree/phone/pull/1644)).
+- 11-10 00시대에 `catus-v2.0.11-V2`와 `backoffice-v1.0.9-V2`를 운영에 반영했습니다.
+- 같은 날, 섬장이 목표를 바꾸면 섬원의 「각자 몫」이 초기화되는데 확인창 문구가 이를 알리지 않아 물고기가 사라졌다는 문의가 왔습니다. 처리 내용은 [사례 지도](/operations/01-incident-map)에 있습니다.
+
+## 11월 12~14일 — 신고·탈퇴·상점을 정리했다
+
+- 사용자와 콘텐츠를 신고하고 운영에서 조회합니다([#1660](https://github.com/OneOrThree/phone/pull/1660)·[#1661](https://github.com/OneOrThree/phone/pull/1661)). 서버와 앱 태그에는 들어갔지만, 11-18 Infra main의 운영 nginx 공개 경로 목록에 `/reports`가 없어 코드대로라면 운영 요청은 404입니다([시스템 구성](/spec/system-architecture)).
+- 탈퇴하면 편지와 채팅의 개인정보도 지웁니다([#1659](https://github.com/OneOrThree/phone/pull/1659)).
+- AI 집중 측정을 측정용 앱에서 검증한 모델로 바꾸고([#1658](https://github.com/OneOrThree/phone/pull/1658)), OTA 업데이트에 그 모델 파일을 함께 싣습니다([#1664](https://github.com/OneOrThree/phone/pull/1664)).
+- 상점은 그림이 있는 꾸미기만 팔고([#1654](https://github.com/OneOrThree/phone/pull/1654)), 운영 기본 발행본 v1(딸기 건물 테마 5개, 내 꾸미기 30개)을 엽니다([#1665](https://github.com/OneOrThree/phone/pull/1665)). 11-14 02시에 `catus-v2.0.14-V2`로 운영에 반영했습니다([#1667](https://github.com/OneOrThree/phone/pull/1667)).
+
+## 11월 14~18일 — main에만 있는 변경
+
+아래는 11-18 기준 main에 있고 운영 서버에는 아직 나가지 않은 변경입니다. 앱 쪽은 Android 머지 자동 빌드가 #1671까지 `app-2.3.27-android-918`로 만들었지만, 그것이 스토어 공개라는 기록은 저장소에 없습니다.
+
+- 잡지의 다음 호 홍보 칸을 주민이 읽는 API와 마을회관 카드([#1669](https://github.com/OneOrThree/phone/pull/1669)·[#1670](https://github.com/OneOrThree/phone/pull/1670))
+- 섬 퀘스트 삭제와 집중 퀘스트 시간대 겹침 금지([#1672](https://github.com/OneOrThree/phone/pull/1672)·[#1673](https://github.com/OneOrThree/phone/pull/1673))
+- 카메라 작업 수명과 Sentry 진단·심볼 누락 보완([#1671](https://github.com/OneOrThree/phone/pull/1671)), 측정할 수 없는 Android 기기에서 카메라 주기 측정 중지([#1674](https://github.com/OneOrThree/phone/pull/1674)), iOS 실시간 현황 푸시 토큰 관찰을 메인 스레드 밖으로 이동([#1675](https://github.com/OneOrThree/phone/pull/1675))
+
+11-19에 머지된 #1676·#1677(망원경 후보 섞기, 잡지에 실린 섬으로 바로 도착)은 이 기록의 기준 커밋 뒤라 다음 갱신에서 다룹니다.
+
+## 근거
+
+- [phone 기준 커밋 1281cbfc4](https://github.com/OneOrThree/phone/tree/1281cbfc4559ba3bbe991c8acd529e66257cc5fc)
+- [운영 release a579cc1c6](https://github.com/OneOrThree/phone/tree/a579cc1c65f4ee078bba3de53d7c7e1e8e345b66) (`catus-v2.0.14-V2`)
+- [앱 출시 안전 장치](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/app-release-safety.md)
+- [이전 기간: 10~11월 V2 전환](/history/10-cattus-v2)

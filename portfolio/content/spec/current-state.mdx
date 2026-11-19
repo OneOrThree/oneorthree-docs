@@ -1,11 +1,11 @@
 ---
 title: "Cattus 현재 안내 — 제품·코드·운영 문서 찾기"
-summary: "2026-11-03에 머지된 phone main을 기준으로 제품, 서버 4종, 운영 V2와 과거 기록의 읽는 순서를 정리합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+summary: "2026-11-18에 머지된 phone main을 기준으로 제품, 서버 4종, 운영 V2와 과거 기록의 읽는 순서를 정리합니다. main과 운영에 나간 범위를 나눠 적습니다."
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 0
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 ---
 
 ## 먼저 볼 문서
@@ -18,14 +18,39 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 | 어디에서 어떻게 배포하나 | [시스템 구성](/spec/system-architecture) · [V2 배포](/operations/06-v2-deployment) |
 | 로그는 어디에 쌓이고 어떻게 추적하나 | [로그·추적 도면](/diagrams/06-logging) · [수집·조회 안내](/spec/logging-and-observability) |
 | 우체통과 실시간 통신은 어떻게 다른가 | [편지·채팅·실시간 권한](/spec/messaging-and-realtime) |
-| 왜 바뀌었나 | [설계 결정](/adr) · [10~11월 변화](/history/10-cattus-v2) |
-| 수치를 어디까지 믿을 수 있나 | [성능 기록](/performance) · [그로스 자료의 범위](/growth/current-data-scope) |
+| 왜 바뀌었나 | [설계 결정](/adr) · [10~11월 변화](/history/10-cattus-v2) · [11월 3~18일](/history/11-launch-and-operations) |
+| 수치를 어디까지 믿을 수 있나 | [성능 기록](/performance) · [그로스 자료의 범위](/growth/current-data-scope) · [2.0 지표 스냅샷](/growth/cattus-2-0-snapshot-2026-11) |
+| 어떤 사고가 있었나 | [사례 지도](/operations/01-incident-map) |
 
 ## 이번 대조 기준
 
-기준은 [phone main af80af042](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/README.md)입니다. 사용자에게 보여 주는 제품 이름은 **Cattus**, 한국어 앱 이름은 **집중할고양**입니다. `GROMO-####`, `catus-*`, `docs/prd/fishcat/` 같은 코드·배포 식별자는 유지합니다.
+기준은 [phone main 1281cbfc4](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/README.md)입니다. 사용자에게 보여 주는 제품 이름은 **Cattus**, 한국어 앱 이름은 **집중할고양**입니다. `GROMO-####`, `catus-*`, `docs/prd/fishcat/` 같은 코드·배포 식별자는 유지합니다.
 
 코드에 있는 기능, 설정 기본값, 배포 기록, 실기기 확인은 서로 다른 근거입니다. 이 사이트의 현재 안내는 코드와 저장소의 운영 기록을 대조한 결과입니다. 운영 호스트를 새로 조사하거나 기능별 운영 성공을 재검증한 것은 아닙니다.
+
+## main과 운영의 차이
+
+| 단위 | 운영에 있는 것 | main에만 있는 것 |
+| --- | --- | --- |
+| 서버 4종 | `catus-v2.0.14-V2`(release `a579cc1c6`, 11-14 02:32 KST CD 성공). main #1665까지. CD는 바뀐 서비스만 교체하므로 서비스별 태그는 Data·Realtime v2.0.14, Business v2.0.13, Notification v2.0.11 | #1669 잡지 다음 호 홍보 칸 API, #1672 섬 퀘스트 삭제·집중 퀘스트 시간대 겹침 금지(Data V17) |
+| 백오피스 | `backoffice-v1.0.9-V2`(11-10). 이후 백오피스 코드 변경 없음 | 없음 |
+| Kafka·Redis | `kafka-v1.0.3-V2`·`redis-v1.0.4-V2`(11-02 CD). 11-09의 `kafka-v1.0.5`·`redis-v1.0.6`은 발행 태그만 있고 CD는 돌지 않음 | 없음 |
+| 앱 | 최신 출시 태그 iOS `app-2.3.7-ios-14`(11-13), Android `app-2.3.27-android-918`(11-18 머지 자동 빌드). 태그는 빌드 기록이며 스토어 공개와 별개 | #1670·#1673 등은 서버(#1669·#1672)가 운영에 나간 뒤 내보내야 함 |
+
+배포 기록과 순서는 [V2 배포](/operations/06-v2-deployment)를 봅니다. 태그와 CD 성공은 배포 기록이며, 기능별 운영 동작을 새로 실측한 결과가 아닙니다.
+
+## 11월 3일 이후 달라진 것
+
+| 항목 | 현재 기준 |
+| --- | --- |
+| 집중 | 실드 없는 집중에서 앱을 나가면 휴식, 15초를 넘기면 종료. Android도 접근성 서비스로 Cattus 화면에 되돌림. AI 판정 모델을 교체하고 OTA에도 실음 |
+| 건설·퀘스트 | 건설은 섬 통장 잔액으로 착공. 섬 퀘스트는 출시 스위치 없이 열림 |
+| 상점·꾸미기 | 그림 있는 상품만 판매, 운영 기본 발행본 v1. 운영자 지급·추첨 풀 편성은 2인 승인 |
+| 안전·개인정보 | 사용자·콘텐츠 신고 접수와 운영 조회(운영 nginx에 `/reports` 경로가 없어 코드상 404, [시스템 구성](/spec/system-architecture)). 탈퇴 시 편지·채팅 개인정보 삭제 |
+| 이벤트 전달 | outbox relay·알림 발송·알림 Kafka 수신이 배포 환경 기본 ON |
+| 측정 | 첫 항해 도착을 계정당 1회 판정해 광고 매체로 전달. 앱 오류는 Sentry, 큰 JSON 응답은 gzip |
+| 웹 | 공개 주소는 서버와 연결하지 않는 3D 섬 웹. 앱 웹 빌드의 웹 전용 섬(정원 제한 없음)은 코드에 있으나 현재 공개 주소가 쓰지 않음 |
+| 출시 | 앱을 내보내기 전에 운영 서버 호환성을 검사 |
 
 ## 9월 문서에서 달라진 것
 
@@ -44,8 +69,8 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 연대기·연구 노트·실험·회고는 당시 문제를 어떻게 해결했는지 보여 주는 기록입니다. 날짜를 오늘로 바꿔 현재 사실처럼 만들지 않습니다. ADR-021의 fast-forward 승격과 ADR-030의 게스트 동일 취급처럼 바뀐 결정에는 대체 상태와 후속 안내를 붙였습니다.
 
-성능 수치는 10월 22일까지 보관한 실험 조건에 한정됩니다. AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지되어 있으며 이번 갱신에서도 실행하지 않았습니다. GA4 최신 스냅샷은 저장소에 없어 기존 주간 분석을 현재 사용자 지표로 환산하지 않습니다.
+서버 성능 수치는 10월 22일까지 보관한 실험 조건에 한정됩니다. 11월의 앱 실기기 측정은 [성능 기록](/performance)에 따로 있습니다. AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지되어 있으며 이번 갱신에서도 실행하지 않았습니다. Cattus 2.0 지표는 11월 중순에 조회한 스냅샷만 싣습니다. 9월의 1.x 주간 분석을 현재 지표로 환산하지 않습니다. 범위는 [그로스 자료의 범위](/growth/current-data-scope)에 있습니다.
 
 ## 문서가 어긋날 때
 
-제품 이름은 [CONTEXT.md](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/CONTEXT.md), 기능 정책은 해당 `docs/prd/fishcat/` 문서, 구현은 고정한 커밋의 코드, 배포 절차는 [파이프라인 지도](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/pipeline-map.md)를 대조합니다. 문서와 코드가 다르면 차이를 기록하고, 의도한 정책과 현재 동작을 구분합니다. 이 사이트의 설명만으로 정책이나 운영 설정을 바꾸지 않습니다.
+제품 이름은 [CONTEXT.md](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/CONTEXT.md), 기능 정책은 해당 `docs/prd/fishcat/` 문서, 구현은 고정한 커밋의 코드, 배포 절차는 [파이프라인 지도](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/pipeline-map.md)를 대조합니다. 문서와 코드가 다르면 차이를 기록하고, 의도한 정책과 현재 동작을 구분합니다. 이 사이트의 설명만으로 정책이나 운영 설정을 바꾸지 않습니다.

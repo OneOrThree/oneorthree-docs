@@ -1,11 +1,11 @@
 ---
 title: "편지·채팅·실시간 권한"
-summary: "우체통 편지와 우리 섬 채팅방의 저장·재시도·인가, STOMP와 Redis 이동 전파의 현재 경계를 정리합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+summary: "우체통 편지와 우리 섬 채팅방의 저장·재시도·인가·탈퇴 파기, 신고 접수, STOMP와 Redis 이동 전파의 현재 경계를 정리합니다."
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 5
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 ---
 
 ## 경로별 비교
@@ -15,6 +15,7 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 | 친구 편지 | `/letters` | Data `letters` | 발송 API에 Idempotency-Key 계약 없음 |
 | 시스템 편지 | `/letters`의 kind 구분 | Data `letters`, 시설 예외 | 친구 발송 규칙과 분리 |
 | 우리 섬 채팅방 | `/islands/{id}/messages` | Realtime DB와 Redis fanout | `clientMessageId`로 중복 저장 방지 |
+| 신고 | `POST /reports` | Data `safety_reports` | `requestId`. 같은 키·같은 본문은 같은 접수 번호, 다른 본문은 409 |
 | 집중·휴식·응원 | `/ws/realtime` | Data 사건·presence와 Realtime | 현재 상태 재조회와 채널별 권한 |
 | 이동·바다 | `/ws/realtime` | Realtime 방, Redis 소유권·전파 | epoch·FullState·재입장 |
 
@@ -24,13 +25,32 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 받은 편지 목록과 상세의 우체통 시설 조건은 호출자 측 섬 기준입니다. 발송은 받는 사람 섬의 우체통 완공을 검사하지 않습니다. 시스템 편지는 일반 친구 편지의 시설 제한과 분리됩니다.
 
-차단한 상대의 보낸 편지·친구 요청·핀 목록은 조회에서 제외될 수 있고, 받은 편지 상세는 본문을 가리되 읽음 시각을 갱신하지 않는 경로가 있습니다. 차단이 모든 기존 행을 삭제한다는 뜻은 아닙니다. 상세 행렬은 [친구 편지 LLD](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/friend-letter/low-level-design.md)를 봅니다.
+차단한 상대의 보낸 편지·친구 요청·핀 목록은 조회에서 제외될 수 있고, 받은 편지 상세는 본문을 가리되 읽음 시각을 갱신하지 않는 경로가 있습니다. 차단이 모든 기존 행을 삭제한다는 뜻은 아닙니다. 상세 행렬은 [친구 편지 LLD](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/friend-letter/low-level-design.md)를 봅니다.
 
 ## 앱의 단체 채팅
 
 앱 `useIslandChat`은 REST로 전송하고 과거 메시지를 조회합니다. 화면 활성·앱 전경 조건에서 10초 폴링을 수행합니다. 현재 앱은 legacy groups STOMP 채팅을 이 기능의 수신 경로로 구독하지 않습니다.
 
 Business는 Data에서 주민 자격을 확인한 뒤 Realtime에 저장을 요청합니다. 최초 저장 때 팬아웃하고, 이후 `message.created` outbox 기록은 별도 Data 트랜잭션으로 시도합니다. 응답을 잃은 재전송은 같은 `clientMessageId`를 사용해야 하며, 친구 편지에 이 멱등 규칙을 그대로 적용하지 않습니다.
+
+## 탈퇴한 사용자의 편지와 메시지
+
+11-12(#1659)부터 탈퇴는 개인 메시지를 지웁니다. 운영 Data·Realtime(v2.0.14)에 들어 있습니다.
+
+| 단계 | 처리 | 남는 것 |
+| --- | --- | --- |
+| Data 탈퇴 트랜잭션 | 탈퇴자가 보내고 받은 편지를 본문까지 삭제(닫힌 편지·시스템 편지 포함). `user.withdrawn` 사건 기록 | 다른 사용자끼리의 편지 |
+| Realtime 사건 처리 | 탈퇴자 메시지의 본문을 비우고 `sender_id`를 지우며 `clientMessageId`를 메시지 ID로 바꿈 | 다른 사용자의 읽음·페이지 커서가 가리키는 행 ID·방·순서 |
+| Realtime V4 | 이미 받은 탈퇴 사건의 기존 메시지에도 같은 파기를 한 번 적용 | 같음 |
+| 메시지 저장 | 탈퇴와 같은 사용자 잠금·tombstone 검사로 늦은 쓰기 거절 | — |
+
+사건은 Data relay가 Realtime에 전달하므로, 탈퇴 응답과 Realtime 파기 사이에 전달 지연이 있습니다. 공개 응답은 그 전에도 탈퇴 발신자의 `senderId`를 null로 바꿉니다. 이미 기기에 전달된 메시지의 회수는 보장하지 않습니다. 신고로 따로 접수된 증거와 로그 만료 정책은 이 삭제와 별개입니다.
+
+## 신고 접수
+
+앱은 사용자·편지·섬 채팅 메시지·공지·공지 댓글·방명록·섬을 신고할 수 있습니다. Business는 검증한 세션 정보를 본문과 분리해 Data에 넘기고, Data가 현재 세션을 다시 확인합니다. 로그아웃한 세션의 신고와 재시도는 거절합니다. 계정당 1시간 20건이며 이미 접수한 요청의 재시도는 한도를 쓰지 않습니다.
+
+대상 ID와 복사한 텍스트는 신고자의 진술입니다. 접수는 대상의 존재나 위반을 증명하지 않고, 자동 차단·숨김도 하지 않습니다. 앱은 접수 번호와 시각만 받습니다. 운영 경로와 nginx 허용 목록의 차이는 [서비스 아키텍처](/spec/service-architecture)와 [시스템 아키텍처](/spec/system-architecture)에 있습니다.
 
 ## STOMP에서 열린 기능
 
@@ -48,8 +68,10 @@ JWT와 폐기 sid를 송신 시에도 확인합니다. legacy 채팅은 집중 �
 | `REALTIME_BLOCKS_FILTER_ENABLED` | false | 켜면 양방향 차단 관계를 수신 필터에 반영 |
 | `REALTIME_EVENTS_KAFKA_ENABLED` | false | REALTIME 사건의 Kafka 소비 경로 |
 | `REALTIME_MOVEMENT_MULTI_INSTANCE_ENABLED` | true | Redis 소유권·명령 라우팅·프레임 전파 |
+| Data `OUTBOX_RELAY_ENABLED` | 코드 false, 배포 프로필 `satellites` true(11-09, #1638) | Realtime 사건 HTTP 전달의 전제. 끄면 사건은 쌓이고 전달되지 않음 |
+| Data `OUTBOX_RELAY_REALTIME_KAFKA_ENABLED` | false | REALTIME 사건을 HTTP로 보냄 |
 
-이 값은 운영 활성화 증거가 아닙니다. 허용 캐시의 사건 무효화는 인스턴스 로컬이므로 여러 인스턴스에서 TTL만큼 권한 반영이 늦어질 수 있는 경계를 함께 봐야 합니다. `auth.session.revoked` 수신은 연결 폐기와 sid 차단을 담당합니다.
+Realtime 설정 값은 운영 활성화 증거가 아닙니다. Data relay는 11-09 운영 비밀 저장소에도 true가 명시돼 있다는 기록이 있습니다. 허용 캐시의 사건 무효화는 인스턴스 로컬이므로 여러 인스턴스에서 TTL만큼 권한 반영이 늦어질 수 있는 경계를 함께 봐야 합니다. `auth.session.revoked` 수신은 연결 폐기와 sid 차단을 담당합니다.
 
 ## 이동 복구
 
@@ -57,8 +79,11 @@ JWT와 폐기 sid를 송신 시에도 확인합니다. legacy 채팅은 집중 �
 
 소유권 상실 시 이전 소유자는 방을 퇴거시키고 발행을 멈춥니다. 재입장 시 FullState로 맞춥니다. 정상 종료의 좌표 인계 TTL은 30초이며 장애 전체를 복구하는 영속 이동 이력은 아닙니다. multi-instance를 끈 채 여러 JVM을 띄우면 같은 섬의 방이 갈라질 수 있습니다.
 
+공개 웹의 3D 섬은 별도 Cloudflare 방을 쓰며 이 STOMP·이동 프로토콜과 연결하지 않습니다.
+
 ## 근거
 
-- [Business API](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/business-api/README.md)
-- [Realtime 코드 안내](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/realtime/README.md) · [기본 설정](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/realtime/src/main/resources/application.yml)
-- [이동 데이터 흐름](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/prd/fishcat/island-movement/data-flow.md)
+- [Business API](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/business-api/README.md) · [신고 접수와 운영 처리](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/character-report/app-intake-operations.md)
+- [Realtime 코드 안내](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/realtime/README.md) · [기본 설정](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/realtime/src/main/resources/application.yml) · [V4 탈퇴 메시지 파기](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/realtime/src/main/resources/db/migration/V4__withdrawn_message_erasure.sql)
+- [계정 정책(탈퇴 파기)](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/account/policy.md) · [위성 런타임 스위치](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/server-separation/runtime.md)
+- [이동 데이터 흐름](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/island-movement/data-flow.md)

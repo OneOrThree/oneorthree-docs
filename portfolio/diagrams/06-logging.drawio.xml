@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" version="31.4.5">
   <diagram id="06-logging" name="Cattus · 로그 수집·보관·요청 추적">
-    <mxGraphModel dx="1760" dy="2820" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="2820">
+    <mxGraphModel dx="1760" dy="3220" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1760" pageHeight="3220">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="heading" value="Cattus · 로그 수집·보관·요청 추적" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
         </mxCell>
-        <mxCell id="subtitle" value="2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+        <mxCell id="subtitle" value="2026.11.18 · phone 1281cbfc4 + infra 69edca4d(11-04 고정) · 배포 설정 대조 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
         </mxCell>
         <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -55,6 +55,15 @@
         </mxCell>
         <mxCell id="bandSub4" value="request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="2113" width="1632" height="26" />
+        </mxCell>
+        <mxCell id="band5" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
+          <mxGeometry as="geometry" x="40" y="2770" width="1680" height="400" />
+        </mxCell>
+        <mxCell id="bandTitle5" value="06 · 앱 오류 수집 · 서버 로그 경로와 별개" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
+          <mxGeometry as="geometry" x="64" y="2782" width="1632" height="30" />
+        </mxCell>
+        <mxCell id="bandSub5" value="모바일 앱의 오류·크래시는 Sentry, JS 오류 일부는 PostHog로 간다. Datadog·Loki·S3를 거치지 않는다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+          <mxGeometry as="geometry" x="64" y="2813" width="1632" height="26" />
         </mxCell>
         <mxCell id="stdout" value="stdout/stderr → Docker 파일" source="jvm" target="docker" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=1.0;">
           <mxGeometry as="geometry" relative="1">
@@ -145,6 +154,19 @@
             <Array as="points" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="appErrorSend" value="오류·크래시 전송" source="appErrors" target="errorSaas" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1.0;entryX=0.5;entryY=1.0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="295" y="3110" />
+              <mxPoint x="1465" y="3110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="symbolUpload" value="심볼" source="appBuild" target="errorSaas" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#607583;strokeWidth=2;fontSize=14;fontColor=#405768;labelBackgroundColor=#ffffff;exitX=1.0;exitY=0.4473684210526316;entryX=0.0;entryY=0.4473684210526316;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="jvm" value="&lt;b&gt;Business·Data·Realtime·Noti&lt;/b&gt;&lt;br&gt;ObservationJsonProvider → stdout&lt;br&gt;schema_version=1 · log_id · timestamp&lt;br&gt;service / env / version / log_kind&lt;br&gt;request_id · dd.trace_id · 사건 ID&lt;br&gt;허용 필드·민감값 마스킹·크기 제한&lt;br&gt;&lt;b&gt;prod JSON · Business는 access 로그 포함&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="240" width="450" height="230" />
         </mxCell>
@@ -198,6 +220,15 @@
         </mxCell>
         <mxCell id="archiveQuery" value="&lt;b&gt;S3 · Athena SQL 템플릿&lt;/b&gt;&lt;br&gt;env/service/date/hour 먼저 제한&lt;br&gt;본문 timestamp로 최종 범위 필터&lt;br&gt;수집 지연 구간은 시간 파티션 확대&lt;br&gt;&lt;b&gt;DDL·SQL 준비됨 · Athena 적용 미확인&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="2460" width="450" height="190" />
+        </mxCell>
+        <mxCell id="appErrors" value="&lt;b&gt;모바일 앱 · 오류 SDK&lt;/b&gt;&lt;br&gt;Sentry SDK: JS 오류·네이티브 크래시&lt;br&gt;PostHog: JS 오류만 수집&lt;br&gt;구버전 Android OTA만 PostHog 네이티브&lt;br&gt;&lt;b&gt;@sentry/react-native · posthog-react-native&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="70" y="2870" width="450" height="190" />
+        </mxCell>
+        <mxCell id="appBuild" value="&lt;b&gt;운영 빌드 · Gradle·Xcode&lt;/b&gt;&lt;br&gt;JS 소스맵 업로드&lt;br&gt;Android mapping·네이티브 심볼&lt;br&gt;iOS dSYM&lt;br&gt;SENTRY_AUTH_TOKEN 있을 때만&lt;br&gt;&lt;b&gt;#1575 도입 · #1671 누락 보완&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="655" y="2870" width="450" height="190" />
+        </mxCell>
+        <mxCell id="errorSaas" value="&lt;b&gt;Sentry · PostHog&lt;/b&gt;&lt;br&gt;Sentry: 오류·크래시 이벤트&lt;br&gt;올린 심볼로 스택 복원&lt;br&gt;PostHog: JS 오류 · 제품 이벤트와 함께&lt;br&gt;&lt;b&gt;외부 SaaS · 앱 서버 Agent와 무관&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2f5f7;strokeColor=#607583;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+          <mxGeometry as="geometry" x="1240" y="2870" width="450" height="190" />
         </mxCell>
       </root>
     </mxGraphModel>

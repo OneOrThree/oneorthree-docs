@@ -8,7 +8,7 @@
         <mxCell id="heading" value="Cattus · 사용자 여정" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
         </mxCell>
-        <mxCell id="subtitle" value="2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+        <mxCell id="subtitle" value="2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
         </mxCell>
         <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -26,7 +26,7 @@
         <mxCell id="bandTitle1" value="공동 성장" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=19;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="64" y="492" width="1632" height="30" />
         </mxCell>
-        <mxCell id="bandSub1" value="목표 선택은 차감 0. 착공할 때 잔액과 조건을 검사한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
+        <mxCell id="bandSub1" value="목표 선택은 차감 0. 착공할 때 섬 통장 잔액과 조건을 검사한다." vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=16;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="64" y="523" width="1632" height="26" />
         </mxCell>
         <mxCell id="band2" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -61,16 +61,16 @@
         <mxCell id="enter" value="&lt;b&gt;01 · 섬에 들어가기&lt;/b&gt;&lt;br&gt;계정·고양이·닉네임&lt;br&gt;주민 자격과 현재 섬 확인&lt;br&gt;방문자는 구경 권한 사용&lt;br&gt;&lt;b&gt;게스트로도 시작 가능&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="230" width="450" height="190" />
         </mxCell>
-        <mxCell id="start" value="&lt;b&gt;02 · 집중하기&lt;/b&gt;&lt;br&gt;낚시섬에서 집중 시작&lt;br&gt;집중 상태·응원·이동 표시&lt;br&gt;필요하면 모닥불에서 휴식&lt;br&gt;&lt;b&gt;서버의 현재 세션 기준&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="start" value="&lt;b&gt;02 · 집중하기&lt;/b&gt;&lt;br&gt;낚시섬에서 집중 · 모닥불에서 휴식&lt;br&gt;집중 상태·응원·이동 표시&lt;br&gt;차단 없는 집중: 앱을 나가면 휴식&lt;br&gt;15초 넘게 안 돌아오면 종료&lt;br&gt;&lt;b&gt;서버의 현재 세션 기준&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="230" width="450" height="190" />
         </mxCell>
-        <mxCell id="finish" value="&lt;b&gt;03 · 마치고 확인하기&lt;/b&gt;&lt;br&gt;유효 집중 구간 정산&lt;br&gt;휴식 시간은 적립에서 제외&lt;br&gt;섬 통장과 기록 확인&lt;br&gt;&lt;b&gt;개인 물고기 지갑 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="finish" value="&lt;b&gt;03 · 마치고 확인하기&lt;/b&gt;&lt;br&gt;유효 집중 구간 정산&lt;br&gt;휴식 시간은 적립에서 제외&lt;br&gt;섬 통장과 기록 확인&lt;br&gt;세 번째 집중 뒤 OS 별점창 1회&lt;br&gt;&lt;b&gt;개인 물고기 지갑 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="230" width="450" height="190" />
         </mxCell>
         <mxCell id="wallet" value="&lt;b&gt;04 · 물고기 모으기&lt;/b&gt;&lt;br&gt;집중·퀘스트 등 도메인별 적립&lt;br&gt;원장·멱등성은 서버가 판정&lt;br&gt;잔액과 기록의 날짜 축 구분&lt;br&gt;&lt;b&gt;섬 통장 소유&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="570" width="450" height="190" />
         </mxCell>
-        <mxCell id="build" value="&lt;b&gt;05 · 건설하기&lt;/b&gt;&lt;br&gt;섬장이 다음 건물 목표 선택&lt;br&gt;물고기로 착공 → 공사 중 → 완공&lt;br&gt;동시 공사·선행 시설 조건 검사&lt;br&gt;&lt;b&gt;게스트 섬장도 가능&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="build" value="&lt;b&gt;05 · 건설하기&lt;/b&gt;&lt;br&gt;섬장이 다음 건물 목표 선택&lt;br&gt;청사진: 현재 잔액·총 건설비·건설 후 잔액&lt;br&gt;섬 통장 잔액으로 착공 → 공사 → 완공&lt;br&gt;동시 공사·선행 시설 조건 검사&lt;br&gt;&lt;b&gt;게스트 섬장도 가능&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="570" width="450" height="190" />
         </mxCell>
         <mxCell id="use" value="&lt;b&gt;06 · 시설 이용하기&lt;/b&gt;&lt;br&gt;도서관·음악·편지·순위·상점&lt;br&gt;활성 주민의 공동 구매&lt;br&gt;구매는 소셜 로그인 필요&lt;br&gt;&lt;b&gt;상품 발행·가격은 별도 조건&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
@@ -79,7 +79,7 @@
         <mxCell id="talk" value="&lt;b&gt;연락하기&lt;/b&gt;&lt;br&gt;친구 요청·편지 발송: 소셜 필요&lt;br&gt;단체 채팅: 섬 주민 자격&lt;br&gt;차단·시설 조건은 기능별 판정&lt;br&gt;&lt;b&gt;편지와 채팅은 다른 API&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="910" width="450" height="190" />
         </mxCell>
-        <mxCell id="sail" value="&lt;b&gt;항해하기&lt;/b&gt;&lt;br&gt;뗏목에서 목적지 선택&lt;br&gt;먼바다 집중·도착·하선&lt;br&gt;섬 발견·가입으로 연결&lt;br&gt;&lt;b&gt;바다 세션과 이동 구분&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="sail" value="&lt;b&gt;항해하기&lt;/b&gt;&lt;br&gt;망원경·뗏목에서 목적지 선택&lt;br&gt;목록 끝 무인도 · 항해 90분&lt;br&gt;먼바다 집중·도착·하선&lt;br&gt;섬 발견·가입으로 연결&lt;br&gt;&lt;b&gt;바다 세션과 이동 구분&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="910" width="450" height="190" />
         </mxCell>
         <mxCell id="return" value="&lt;b&gt;다시 이어하기&lt;/b&gt;&lt;br&gt;앱 복귀 시 서버 상태 조회&lt;br&gt;이동 재입장은 FullState 복구&lt;br&gt;이전 측정값과 현재 세션 구분&lt;br&gt;&lt;b&gt;연결 생존 ≠ 집중 정본&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">

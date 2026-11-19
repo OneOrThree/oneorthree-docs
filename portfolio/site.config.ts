@@ -60,7 +60,7 @@ export const sections: SectionConfig[] = [
     kicker: "DESIGN & SPEC",
     title: "설계와 명세",
     description:
-      "2026-11-03 phone main 기준의 Cattus 제품·서버·권한·운영 안내입니다. 구현과 배포 기록, 조건부 기능을 구분합니다.",
+      "2026-11-18 phone main 기준의 Cattus 제품·서버·권한·운영 안내입니다. 구현과 배포 기록, 조건부 기능을 구분합니다.",
     kind: "docs",
     search: true,
     sort: "date",
@@ -91,9 +91,9 @@ export const sections: SectionConfig[] = [
     slug: "performance",
     label: "성능·부하",
     kicker: "LOAD TEST HISTORY",
-    title: "부하테스트와 개선 기록",
+    title: "부하테스트와 성능 기록",
     description:
-      "2026년 7~10월에 보관한 측정·실패·개선 기록입니다. AWS 부하 테스트와 부하용 데이터 생성은 금지되어 있으며, 이 수치는 현재 V2 수용량을 보증하지 않습니다.",
+      "2026년 7~10월 서버 부하테스트의 측정·실패·개선 기록과 11월 앱 측정(리팩토링 전후, iPhone 15 실기기 CPU, API 응답 gzip)을 보관합니다. AWS 부하 테스트와 부하용 데이터 생성은 금지되어 있으며, 이 수치는 현재 V2 수용량을 보증하지 않습니다.",
     kind: "docs",
     search: true,
     sort: "curated",
@@ -115,7 +115,7 @@ export const sections: SectionConfig[] = [
     kicker: "GROWTH METRICS",
     title: "그로스 지표와 분석",
     description:
-      "8~9월 Gromo 1.x의 주간 분석과 기능 조사를 보존합니다. 최신 GA4 스냅샷이 없어 현재 Cattus 지표는 제공하지 않습니다.",
+      "8~9월 Gromo 1.x의 주간 분석·기능 조사와 2026년 11월 Cattus 2.0 지표 스냅샷을 싣습니다. 정본 성과 대시보드는 비공개이며, 이 사이트는 조회일을 붙인 스냅샷만 제공합니다.",
     kind: "docs",
     search: true,
     sort: "date",
@@ -144,7 +144,7 @@ export const sections: SectionConfig[] = [
     kicker: "PROJECT HISTORY",
     title: "프로젝트 연대기",
     description:
-      "소프트웨어 마에스트로 시작부터 Gromo 출시, Cattus 재설계와 V2 전환까지를 기록합니다. 과거 회의·티켓과 최근 코드·운영 기록의 기준일을 구분합니다.",
+      "소프트웨어 마에스트로 시작부터 Gromo 출시, Cattus 재설계와 V2 전환, 11월 출시 뒤 운영까지를 기록합니다. 과거 회의·티켓과 최근 코드·운영 기록의 기준일을 구분합니다.",
     kind: "docs",
     search: true,
   },
@@ -182,7 +182,7 @@ export const site = {
     kicker: "CATTUS · ONEORTHREE",
     headline: ["함께 집중하고,", "섬을 키우는 Cattus."],
     subline: "제품과 시스템, 바뀐 결정의 근거를 한곳에서.",
-    lede: "2026-11-03 main 기준으로 제품·서버 4종·V2 운영을 안내합니다. 과거 결정과 실험은 당시 날짜와 수치를 보존하고 현재 안내로 연결합니다.",
+    lede: "2026-11-18 main 기준으로 제품·서버 4종·V2 운영을 안내합니다. 과거 결정과 실험은 당시 날짜와 수치를 보존하고 현재 안내로 연결합니다.",
     actions: [
       {
         label: "현재 안내부터 읽기",
@@ -206,5 +206,5 @@ export const site = {
   ],
 
   footer:
-    "현재 안내는 2026-11-03 main 기준입니다. 과거 기록은 각 문서의 날짜·환경·적용 범위와 함께 읽어 주세요.",
+    "현재 안내는 2026-11-18 main 기준입니다. 과거 기록은 각 문서의 날짜·환경·적용 범위와 함께 읽어 주세요.",
 } as const;

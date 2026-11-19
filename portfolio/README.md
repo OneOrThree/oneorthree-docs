@@ -84,14 +84,14 @@ related:
 
 ## Cattus 다이어그램 갱신
 
-현재 IA·유저 저니 v6, 서비스·시스템 v7, AWS v3은 `scripts/make-current-diagrams.py`에서 생성합니다. 같은 노드·간선으로 SVG·draw.io XML·source JSON을 만들고 앞의 네 도면은 HTML도 생성합니다.
+현재 IA·유저 저니 v7, 서비스 v8, 시스템 v11, AWS v4, 로그·추적 v4는 `scripts/make-current-diagrams.py`에서 생성합니다. 같은 노드·간선으로 SVG·draw.io XML·source JSON을 만들고 앞의 네 도면은 HTML도 생성합니다.
 
 ```bash
 python3 scripts/make-current-diagrams.py
 npm run build
 ```
 
-기준 커밋은 phone `af80af042`입니다. main 코드와 저장소의 운영 기록을 대조한 도면이며 새 운영 실측이 아닙니다. 이전 R61 HTML과 서비스·시스템 v6, AWS v2는 버전 선택에서 볼 수 있습니다. 과거 생성기는 현재 버전의 원본이 아니며 실행하지 않습니다.
+기준 커밋은 phone `1281cbfc4`(2026-11-18)입니다. main 코드와 저장소의 운영 기록을 대조한 도면이며 새 운영 실측이 아닙니다. 이전 판(IA·유저 저니 v6 이하, 서비스 v7·시스템 v10·AWS v3·로그 v3 이하)은 버전 선택에서 볼 수 있습니다. 과거 생성기는 현재 버전의 원본이 아니며 실행하지 않습니다.
 
 HTML의 동반 SVG/XML은 빌드가 연결 그래프·다운로드와 함께 검증합니다. 근거 문서는 manifest의 `detailHref`로 연결합니다.
 

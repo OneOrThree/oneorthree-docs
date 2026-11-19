@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="2820" viewBox="0 0 1760 2820" role="img" aria-labelledby="diagramTitle diagramDesc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="3220" viewBox="0 0 1760 3220" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 로그 수집·보관·요청 추적</title>
-<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
+<desc id="diagramDesc">2026.11.18 · phone 1281cbfc4 + infra 69edca4d(11-04 고정) · 배포 설정 대조 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
-<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="2820" fill="#ffffff"/>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="3220" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 로그 수집·보관·요청 추적</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.18 · phone 1281cbfc4 + infra 69edca4d(11-04 고정) · 배포 설정 대조 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
 <rect x="40" y="140" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 앱 호스트의 입력 · 로그와 trace는 다른 데이터</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">JVM·nginx stdout을 Docker가 파일로 기록한다. APM trace와 지표는 Docker 로그를 거치지 않고 Agent로 전달된다.</text>
@@ -20,6 +20,9 @@
 <rect x="40" y="2070" width="1680" height="660" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="2104" font-size="19" fill="#334d61" font-weight="700">05 · 장애 한 건을 연결하는 키 · 수집 경로와 별개의 논리 흐름</text>
 <text x="64" y="2131" font-size="16" fill="#4d5a66" font-weight="400">request_id는 HTTP 상관키, dd.trace_id는 APM, event_id는 사건, log_id는 로그 한 건의 식별자다.</text>
+<rect x="40" y="2770" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="2804" font-size="19" fill="#334d61" font-weight="700">06 · 앱 오류 수집 · 서버 로그 경로와 별개</text>
+<text x="64" y="2831" font-size="16" fill="#4d5a66" font-weight="400">모바일 앱의 오류·크래시는 Sentry, JS 오류 일부는 PostHog로 간다. Datadog·Loki·S3를 거치지 않는다.</text>
 <g data-cell-id="stdout"><path d="M 295 470 L 295 510 L 1465 510 L 1465 470" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
 <rect x="762.25" y="484" width="235.5" height="23" rx="4" fill="#ffffff"/>
 <text x="880" y="500" font-size="14" text-anchor="middle" fill="#405768">stdout/stderr → Docker 파일</text>
@@ -67,6 +70,14 @@
 <g data-cell-id="eventDelivery"><path d="M 1105 2260 L 1240 2260" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
 <rect x="1131.0" y="2234" width="82.0" height="23" rx="4" fill="#ffffff"/>
 <text x="1172" y="2250" font-size="14" text-anchor="middle" fill="#405768">사건 소비</text>
+</g>
+<g data-cell-id="appErrorSend"><path d="M 295 3060 L 295 3110 L 1465 3110 L 1465 3060" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="810.0" y="3084" width="140.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="3100" font-size="14" text-anchor="middle" fill="#405768">오류·크래시 전송</text>
+</g>
+<g data-cell-id="symbolUpload"><path d="M 1105 2955 L 1240 2955" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1149.5" y="2929" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="2945" font-size="14" text-anchor="middle" fill="#405768">심볼</text>
 </g>
 <g data-cell-id="jvm">
 <rect x="70" y="240" width="450" height="230" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
@@ -243,5 +254,30 @@
 <text x="1260" y="2543" font-size="16" fill="#4d5a66" font-weight="400">본문 timestamp로 최종 범위 필터</text>
 <text x="1260" y="2567" font-size="16" fill="#4d5a66" font-weight="400">수집 지연 구간은 시간 파티션 확대</text>
 <text x="1260" y="2635" font-size="14" fill="#a9682b" font-weight="700">DDL·SQL 준비됨 · Athena 적용 미확인</text>
+</g>
+<g data-cell-id="appErrors">
+<rect x="70" y="2870" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="2900" font-size="21" fill="#172b3a" font-weight="700">모바일 앱 · 오류 SDK</text>
+<text x="90" y="2929" font-size="16" fill="#4d5a66" font-weight="400">Sentry SDK: JS 오류·네이티브 크래시</text>
+<text x="90" y="2953" font-size="16" fill="#4d5a66" font-weight="400">PostHog: JS 오류만 수집</text>
+<text x="90" y="2977" font-size="16" fill="#4d5a66" font-weight="400">구버전 Android OTA만 PostHog 네이티브</text>
+<text x="90" y="3045" font-size="14" fill="#607583" font-weight="700">@sentry/react-native · posthog-react-native</text>
+</g>
+<g data-cell-id="appBuild">
+<rect x="655" y="2870" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="2900" font-size="21" fill="#172b3a" font-weight="700">운영 빌드 · Gradle·Xcode</text>
+<text x="675" y="2929" font-size="16" fill="#4d5a66" font-weight="400">JS 소스맵 업로드</text>
+<text x="675" y="2953" font-size="16" fill="#4d5a66" font-weight="400">Android mapping·네이티브 심볼</text>
+<text x="675" y="2977" font-size="16" fill="#4d5a66" font-weight="400">iOS dSYM</text>
+<text x="675" y="3001" font-size="16" fill="#4d5a66" font-weight="400">SENTRY_AUTH_TOKEN 있을 때만</text>
+<text x="675" y="3045" font-size="14" fill="#3866a0" font-weight="700">#1575 도입 · #1671 누락 보완</text>
+</g>
+<g data-cell-id="errorSaas">
+<rect x="1240" y="2870" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="2900" font-size="21" fill="#172b3a" font-weight="700">Sentry · PostHog</text>
+<text x="1260" y="2929" font-size="16" fill="#4d5a66" font-weight="400">Sentry: 오류·크래시 이벤트</text>
+<text x="1260" y="2953" font-size="16" fill="#4d5a66" font-weight="400">올린 심볼로 스택 복원</text>
+<text x="1260" y="2977" font-size="16" fill="#4d5a66" font-weight="400">PostHog: JS 오류 · 제품 이벤트와 함께</text>
+<text x="1260" y="3045" font-size="14" fill="#607583" font-weight="700">외부 SaaS · 앱 서버 Agent와 무관</text>
 </g>
 </g></svg>

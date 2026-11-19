@@ -18,6 +18,8 @@ related:
 recordType: "decision"
 ---
 
+> 후속(2026-11-09): relay·알림 발송·알림 Kafka 수신의 배포 프로필(dev·prod) 기본값은 ON입니다. 코드 기본값과 `ci` 프로필은 OFF 그대로입니다. [ADR-040](/adr/adr-040-remove-launch-switches-default-on)
+
 ## 2026-11-03 적용 범위
 
 outbox와 소비자 중복 처리 원칙은 유지합니다. REALTIME은 HTTP 기본·Kafka 선택이고, 세션 폐기는 Realtime에도 전달합니다. 기본 OFF 설정을 운영 비활성 증거로 사용하지 않습니다. [현재 안내](/spec/service-architecture)

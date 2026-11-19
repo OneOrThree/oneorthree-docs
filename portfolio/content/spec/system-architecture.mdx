@@ -1,18 +1,26 @@
 ---
 title: "시스템 아키텍처 — 호스트·컨테이너·포트"
-summary: "운영 EC2의 컨테이너, 공개·내부·관리 경로, DB·Kafka·Redis 연결과 로그 수집 위치를 배포 설정으로 설명합니다."
-status: "2026-11-03 배포 설정 대조"
-date: "2026-11-03"
+summary: "운영 EC2의 컨테이너, 공개·내부·관리 경로, DB·Kafka·Redis 연결, 외부로 나가는 연결과 공개 웹의 별도 배치를 배포 설정으로 설명합니다."
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 4
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 ---
 
 ## 도면과 기준
 
-[시스템 도면 v10](/diagrams/04-system)은 공개 요청 → 앱 호스트 → 저장소 → 관측 → 백오피스 → dev 순서로 읽습니다. 각 연결에 포트와 호출 주체를 표시했습니다. [로그·추적 도면](/diagrams/06-logging)은 수집기·보관소·요청 ID 연결을 확대합니다.
+[시스템 도면](/diagrams/04-system)은 공개 요청 → 앱 호스트 → 저장소 → 관측 → 백오피스 → dev 순서로 읽습니다. 각 연결에 포트와 호출 주체를 표시했습니다. [로그·추적 도면](/diagrams/06-logging)은 수집기·보관소·요청 ID 연결을 확대합니다.
 
-앱 코드는 phone `af80af042`, 운영 구성은 11월 3일 GitHub 변수 `CATUS_PROD_INFRA_REVISION_V2`에 고정된 cattus-infra `8522746ea`를 대조했습니다. 호스트 목록·구 서버 종료·Agent health는 11월 2일 운영 기록을 따릅니다. **설정에 존재하는 경로와 지금 운영에서 수신 중인 경로는 구분합니다.** 포트·보안 그룹 설명은 배포 설정 기준입니다. S3 로그 적재와 앱 호스트의 파일 업로더 상태는 11월 3일 15:06–15:10(KST)에 읽기 전용으로 확인했으며 [로그·추적 안내](/spec/logging-and-observability)에 결과를 기록했습니다.
+앱 코드는 phone `1281cbfc4`, 운영 구성은 GitHub 변수 `CATUS_PROD_INFRA_REVISION_V2`에 11월 4일 고정된 cattus-infra `69edca4d`를 대조했습니다. 11월 3일 기준(`8522746e`)에서 바뀐 것은 구 서버 Terraform 정리(#52)와 Data env의 Meta Conversions API 선택 키(#53)뿐입니다. Compose·nginx·보안 그룹·관측 설정은 그대로입니다. 호스트 목록·구 서버 종료·Agent health는 11월 2일 운영 기록을 따릅니다.
+
+**설정에 존재하는 경로와 지금 운영에서 수신 중인 경로는 구분합니다.** 포트·보안 그룹 설명은 배포 설정 기준입니다. 이번 갱신에서 운영 호스트에 접속하거나 운영 API를 호출하지 않았습니다.
+
+| 구성 | 운영 반영 상태 | 근거 종류 |
+| --- | --- | --- |
+| 서버 4종 | 릴리스 `catus-v2.0.14-V2`, 11-14 02:32 KST `prod-cd-V2` 성공. CD는 바뀐 서비스만 교체해 서비스별 운영 태그는 Data·Realtime v2.0.14, Business v2.0.13, Notification v2.0.11 | 운영 배포 기록 |
+| 백오피스 | `backoffice-v1.0.9-V2`, 11-10 00:14 KST 배포 성공. 이후 `backoffice/` 변경 없음 | 운영 배포 기록 |
+| Kafka·Redis | 운영은 `kafka-v1.0.3-V2`·`redis-v1.0.4-V2`(11-02 CD). 11-09의 v1.0.5·v1.0.6은 발행 태그만 있고 CD는 돌지 않음 | 운영 배포 기록 |
 
 ## 공개 요청이 서버에 도착하는 과정
 
@@ -20,14 +28,22 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 | nginx 경로 | 실제 대상 | 처리 |
 | --- | --- | --- |
-| `/auth/sessions`, `/me`, `/islands`, `/focus-sessions`, `/screens`, `/friends`, `/letters` 등 공개 allowlist | `business-api:8080` | 공개 인증·DTO·화면 조합. 연결 2초·읽기 30초, 다른 upstream 자동 재시도 없음 |
+| `/auth/sessions`, `/me`, `/islands`, `/focus-sessions`, `/screens`, `/friends`, `/letters`, `/blocks`, `/customization` 등 공개 allowlist | `business-api:8080` | 공개 인증·DTO·화면 조합. 연결 2초·읽기 30초, 다른 upstream 자동 재시도 없음 |
 | `/ws/realtime` | `realtime:8081` | WebSocket upgrade, 읽기 timeout 3600초 |
 | `/l/<8자리 slug>` | nginx 고정 HTML | 초대 링크의 앱 열기·스토어 안내 |
 | `/.well-known/apple-app-site-association`, `/.well-known/assetlinks.json` | nginx 고정 JSON | 앱 연결 파일 |
 | `/static/customization/` | nginx 읽기 전용 static mount | 정적 꾸미기 자산 |
 | `/internal`, `/internal/*`, `/actuator`, `/actuator/*` 및 나머지 경로 | 404 | 내부·관리·관측 API 공개 차단 |
 
-경로 표는 주요 분기입니다. 정확한 허용 정규식은 [nginx 템플릿](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/nginx.conf-V2.template)이 정본입니다. 외부의 사용자·내부 호출자 헤더는 공개 프록시에서 제거합니다. 공개 HTTP로 들어온 우리 섬 채팅은 Business가 Realtime의 내부 REST로 전달하며, 현재 앱의 채팅 조회는 10초 폴링입니다.
+경로 표는 주요 분기입니다. 정확한 허용 정규식은 [nginx 템플릿](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/nginx.conf-V2.template)이 정본입니다. 외부의 사용자·내부 호출자 헤더는 공개 프록시에서 제거합니다. 공개 HTTP로 들어온 우리 섬 채팅은 Business가 Realtime의 내부 REST로 전달하며, 현재 앱의 채팅 조회는 10초 폴링입니다.
+
+11월 3일 이후 추가된 `POST /me/web-island`, `GET /islands/{id}/promotions/next`, `DELETE /islands/{id}/quests/{questId}`는 기존 `me`·`islands` 분기로 전달되어 nginx 변경이 필요 없습니다.
+
+<Callout label="신고 경로 주의 · 코드 대조" tone="warn">
+
+Business는 `POST /reports`를 공개하고(#1661, 운영 서버에 포함) phone의 dev·위성 nginx 예시는 `reports`를 허용 목록에 넣었습니다. 그러나 cattus-infra main의 운영 nginx 템플릿 허용 목록에는 `reports`가 없습니다. 코드대로라면 운영에서 이 경로는 마지막 `location /`의 404가 됩니다. 운영 요청으로 확인한 결과는 아닙니다.
+
+</Callout>
 
 ## 앱 EC2 안의 컨테이너
 
@@ -35,8 +51,8 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 | Compose 서비스 | 내부 포트 | 역할·연결 | 컨테이너 메모리 한도 |
 | --- | --- | --- | --- |
-| `business-api` | 8080, 관리 9091 | 공개 API → Data·Realtime·Notification 내부 HTTP. Business Redis 6380, DB 없음 | 2GiB, CPU 2 |
-| `app` = Data API | 8080, 관리 9091 | 도메인 명령·권한·정산, 코어 DB·outbox·Shared Redis | 1536MiB |
+| `business-api` | 8080, 관리 9091 | 공개 API → Data·Realtime·Notification 내부 HTTP. Business Redis 6380, DB 없음. 2KB 이상 JSON gzip | 2GiB, CPU 2 |
+| `app` = Data API | 8080, 관리 9091 | 도메인 명령·권한·정산, 코어 DB·outbox·Shared Redis. 켠 경우 Meta Conversions API로 HTTPS | 1536MiB |
 | `realtime` | 8081, 관리 9091 | 채팅 DB·WSS·이동, Shared Redis, Data 권한 조회 | 768MiB |
 | `notification` | 8082, 관리 9091 | Kafka/내부 HTTP 사건 수신·발송 이력·알림 DB → FCM HTTPS | 768MiB |
 | `datadog-agent` | APM 8126/TCP, DogStatsD 8125/UDP | Docker 로그·호스트 지표, JVM trace·runtime 지표, 앱 9091 OpenMetrics | 512MiB |
@@ -48,13 +64,24 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 Business는 read-only root, `cap_drop: ALL`, `no-new-privileges`를 적용합니다. 프로파일러용 `/ddprof`만 실행 가능한 tmpfs이고 일반 `/tmp`는 noexec입니다. 위 메모리 한도는 설정값이며 현재 사용량 측정치가 아닙니다.
 
+Data는 `prod,satellites,realtime-authorization` 프로필로 뜹니다. `satellites` 프로필은 11-09(#1638)부터 relay를 기본으로 켭니다. Notification의 `prod` 프로필도 Kafka 수신과 예약 작업을 기본으로 켭니다. 같은 날 운영 비밀 저장소에도 세 값을 true로 명시했다는 기록이 있습니다.
+
+## 서버에서 밖으로 나가는 연결
+
+| 호출 주체 → 대상 | 프로토콜 | 켜짐 조건 |
+| --- | --- | --- |
+| Notification → FCM | HTTPS | 발송 게이트·예약 작업 |
+| Data → Meta Conversions API | HTTPS | `META_CAPI_ENABLED=true`와 토큰. 코드·프로필 기본값 false. 운영 Data env 생성기는 11-04부터 이 키들을 선택 키로 전달(Infra #53) |
+
+운영 비밀 저장소의 `META_CAPI_ENABLED` 실제 값은 이 문서에서 확인하지 않았습니다.
+
 ## 저장소와 호스트 간 연결
 
 EC2는 기존 VPC의 public subnet을 사용하지만 서비스 간 통신 주소는 사설 IP입니다. 호스트마다 이름이 같은 `app-network`를 만들더라도 서로 다른 Docker 브리지입니다. Kafka·Redis 연결은 해당 EC2의 사설 IP에 publish한 포트로 나갑니다.
 
 | 호출 주체 → 대상 | 호스트·포트 | 데이터·지속성 |
 | --- | --- | --- |
-| Data → 코어 DB | 기존 RDS `catus-prod-db:5432` | `gromo`: 제품 정본·원장·receipt·outbox |
+| Data → 코어 DB | 기존 RDS `catus-prod-db:5432` | `gromo`: 제품 정본·원장·receipt·outbox·신고·첫 도착 사건 |
 | Realtime → 채팅 DB | 같은 RDS:5432 | `gromo_chat`: 채팅 정본 |
 | Notification → 알림 DB | 같은 RDS:5432 | `gromo_notification`: 수신·기기·설정·발송 이력 |
 | Data relay → Kafka → Notification | `catus-kafka-prod-V2`, 사설 9092 | Kafka 3.8.1, broker/controller 1개·RF 1. `notification-events` 및 DLT, Realtime 소비는 별도 선택 경로 |
@@ -78,15 +105,29 @@ Kafka와 Redis EC2는 각각 `m6g.medium`입니다. Kafka는 `/var/lib/catus-V2/
 
 백오피스의 Data·Notification 관리 호출은 앱 EC2의 사설 주소로 나갑니다. `backoffice-gateway` 컨테이너가 18080 → `app:8080`, 18082 → `notification:8082`를 전달합니다. 프록시는 정해진 `/internal/admin` 경로만 허용하고 서비스 인증 헤더를 전달합니다. 백오피스가 제품 DB에 직접 접속하는 경로가 아닙니다.
 
+Data는 운영자 개인별 토큰(member-1~3)마다 관리 경로를 허용합니다. 11-09 이후 꾸미기 현황·추첨 풀·지급(2인 승인)과 11-12 신고 조회·종결 경로가 Data 허용 목록에 더해졌습니다. cattus-infra main의 gateway 허용 목록에는 이 경로들이 없습니다. 운영에서 백오피스 꾸미기 화면이 이 gateway를 거쳐 동작하는지는 이번에 확인하지 않았습니다.
+
 구 `api`, `catus-api`, `focuscat-api`, `link` DNS는 11월 2일 삭제 기록이 있습니다. 구 `backoffice.oneorthree.world`는 V2 백오피스로 302 이동합니다.
+
+## 공개 웹 — AWS 밖의 별도 배치
+
+| 주소·구성 | 위치 | 연결 |
+| --- | --- | --- |
+| `try.oneorthree.world` 정적 파일 | Cloudflare 프록시 → Vercel `cattus-web-demo` | 3D 섬 웹(`app/metaverse-web`) |
+| 실시간 방 | Cloudflare Worker `cattus-3d-room`, Durable Object 하나 | `wss://…workers.dev/island-room`. Origin은 대표 주소 하나만 허용. 두 섬 합계 60명·낚시 의자 30석 |
+| 이전 API 프록시 Worker | 같은 대표 주소의 `/service-api/*` | 11-05 Expo 공개 웹이 `catus-api-v2`의 공개 경로만 전달받던 Worker. 현재 3D 웹은 호출하지 않음 |
+
+11-07(#1623)부터 대표 주소의 웹을 3D 섬 웹으로 교체했습니다. 2026-11-19 대표 주소의 `version.json`은 소스 커밋 `919a49239`(#1629)와 위 실시간 방 주소를 가리켰습니다. 3D 웹은 운영 앱의 인증·계정·섬 통장·집중 기록과 연결하지 않고, 새로고침이나 연결 종료 때 방의 집중·예약을 해제합니다.
+
+배포는 `metaverse-web-ci`가 검사만 하고, 소유자가 요청할 때 검증한 main 커밋으로 수동 배포합니다. AWS·앱 출시 워크플로와 분리돼 있습니다.
 
 ## 로깅이 실행되는 위치
 
 앱 EC2에서는 Docker stdout 파일을 Datadog Agent와 Fluent Bit이 **각각** 읽습니다. Agent는 Datadog SaaS로 로그·APM·지표를 보내고, Fluent Bit은 허용한 네 서버·nginx 로그를 Loki와 S3로 나누어 전송합니다. Loki는 앱 EC2 디스크에 7일, S3 `system_log/v2/`는 90일 만료 규칙을 갖습니다. Grafana 스위치는 OFF입니다.
 
-Kafka·Redis·백오피스 EC2는 각자의 Datadog Agent로 해당 호스트의 로그·지표를 수집합니다. 세 호스트에는 위 Fluent Bit→Loki·S3 경로가 없습니다. Data의 `user-activity.log`는 stdout 밖의 별도 파일입니다. 11월 3일 확인한 호스트에는 관련 파일 업로더 service·timer·cron·설치 파일이 없고 V2 버킷에도 사용자 행동 객체가 없습니다. 네 서버·nginx 시스템 로그의 S3 적재는 서비스별 실제 객체로 확인했습니다.
+Kafka·Redis·백오피스 EC2는 각자의 Datadog Agent로 해당 호스트의 로그·지표를 수집합니다. 세 호스트에는 위 Fluent Bit→Loki·S3 경로가 없습니다. Data의 `user-activity.log`는 stdout 밖의 별도 파일이며, 11월 3일 확인한 호스트에는 업로더가 없었습니다.
 
-로그 필드·마스킹·버퍼·유실 조건·조회 순서는 [로그·추적 안내](/spec/logging-and-observability)를 따릅니다. 11월 2일 네 Agent의 health PASS 기록은 Datadog·Loki·S3의 **최신 수신 확인**을 대신하지 않습니다.
+로그 필드·마스킹·버퍼·유실 조건·조회 순서와 앱 오류 수집(Sentry)은 [로그·추적 안내](/spec/logging-and-observability)를 따릅니다. 11월 2일 네 Agent의 health PASS 기록은 Datadog·Loki·S3의 **최신 수신 확인**을 대신하지 않습니다.
 
 ## dev V2와 배포 소유권
 
@@ -96,14 +137,15 @@ Kafka·Redis·백오피스 EC2는 각자의 Datadog Agent로 해당 호스트의
 | `catus-dev-v2-data` | e2-small | PostgreSQL 16.14:5432와 Kafka 3.8.1:9092 |
 | `catus-dev-v2-redis` | e2-micro | Shared·Business Redis 7.4.11:6379/6380 |
 
-공개 주소는 `oneorthree-v2.dev.mooo.com`입니다. main 변경은 관련 CI와 `cd-auto.dev-v2.yml`을 통해 자동 배포됩니다. dev 백오피스와 세 VM의 Datadog Agent는 없습니다. 과거 dev Prometheus·Grafana overlay를 V2의 가동 중 서비스로 표시하지 않습니다.
+dev V2는 11월 5~6일 새 GCP 프로젝트로 옮겼습니다. 같은 서울 존에 같은 이름·사양의 VM을 만들고, 쓰기를 멈춘 뒤 PostgreSQL·Kafka·Redis·정적 파일을 복사해 해시를 대조했습니다. 공개 주소 `oneorthree-v2.dev.mooo.com`의 DNS도 새 주소로 바꿨습니다. main 변경은 관련 CI와 `cd-auto.dev-v2.yml`을 통해 자동 배포됩니다. dev 백오피스와 세 VM의 Datadog Agent는 없습니다. 과거 dev Prometheus·Grafana overlay를 V2의 가동 중 서비스로 표시하지 않습니다.
 
 AWS 자원·SSM·서버/백오피스 Compose·env 계약은 `cattus-infra/prod/catus-v2/`, Kafka·Redis Compose는 phone `server/scripts/v2/prod/`가 소유합니다. 서버·Kafka·Redis는 release 발행 후 수동 CD, 백오피스는 main 머지 후 승인 배포입니다. [V2 배포 안내](/operations/06-v2-deployment)에 승격·마이그레이션·복구 제한을 정리했습니다.
 
 ## 근거
 
-- [운영 Compose](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/compose-V2.yml) · [env·관측 스위치](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/env-V2.py)
-- [보안 그룹](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/security-groups-V2.tf) · [EC2 배치](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/ec2-V2.tf)
-- [관리 gateway](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/gateway-V2.conf) · [백오피스 Compose](https://github.com/OneOrThree/cattus-infra/blob/8522746eab28cb14020aff9e4aba312556909bcc/prod/catus-v2/runtime/backoffice-V2.yml)
-- [Kafka](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/scripts/v2/prod/kafka-V2.yml) · [Redis](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/scripts/v2/prod/redis-V2.yml)
-- [11월 2일 운영 기록](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus-v2/README-V2.md) · [운영 V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md) · [dev V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/dev-v2-pipeline.md)
+- [운영 Compose](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/compose-V2.yml) · [env·관측 스위치](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/env-V2.py) · [env 허용 키](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/env_writer-V2.py)
+- [보안 그룹](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/security-groups-V2.tf) · [EC2 배치](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/ec2-V2.tf)
+- [관리 gateway](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/gateway-V2.conf) · [백오피스 Compose](https://github.com/OneOrThree/cattus-infra/blob/69edca4d5f9ef920a29cdba7f78dcca35e1be112/prod/catus-v2/runtime/backoffice-V2.yml)
+- [Kafka](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/scripts/v2/prod/kafka-V2.yml) · [Redis](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/scripts/v2/prod/redis-V2.yml) · [위성 nginx 예시](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/scripts/nginx-satellites.include.conf.example)
+- [3D 웹 배포](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/app/metaverse-web/docs/deployment.md) · [이전 공개 웹](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/app/app-dev/web-demo/README.md) · [파이프라인 지도](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/pipeline-map.md)
+- [11월 2일 운영 기록](https://github.com/OneOrThree/cattus-infra/blob/2d6fdaa87828d7b39bef12d73e5e527c3828accf/prod/catus-v2/README-V2.md) · [운영 V2](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/prod-v2-pipeline.md) · [dev V2](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/dev-v2-pipeline.md)

@@ -1,11 +1,11 @@
 ---
 title: "팀 규약 — 계약·날짜·문서·배포"
 summary: "현재 저장소 규약을 찾아가는 지도입니다. API 계약·데이터 소유권·날짜 축과 main→release 승격 규칙을 구분합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 9
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 author: "조재영"
 ---
 
@@ -13,7 +13,13 @@ author: "조재영"
 
 Business는 공개 HTTP와 화면 조합을, Data는 제품 상태와 원자 명령을 맡습니다. 공개 DTO에 DB 엔티티나 내부 전송 DTO를 그대로 노출하지 않습니다. 에러 코드·상태·retryable 같은 클라이언트 분기 계약은 서버와 앱에서 함께 검증합니다.
 
-새 기능은 가까운 구현의 관례만 복사하지 말고 [현재 규약 디렉터리](https://github.com/OneOrThree/phone/tree/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/conventions)와 해당 서비스 README를 확인합니다. 레거시와 2.0 계약의 차이를 숨기는 호환 코드를 추가하지 않습니다.
+새 기능은 가까운 구현의 관례만 복사하지 말고 [현재 규약 디렉터리](https://github.com/OneOrThree/phone/tree/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions)와 해당 서비스 README를 확인합니다. 레거시와 2.0 계약의 차이를 숨기는 호환 코드를 추가하지 않습니다.
+
+| 규약 | 11-03 이후 바뀐 점 |
+| --- | --- |
+| [Data 패키지 층](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/backend-layering.md) | 신고 `report`를 L1에 둠. `user` 조회만 참조하고 콘텐츠 원문 조회 권한을 더하지 않음 |
+| [오류 계약](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/error-contract.md) | `retryAfterMs`(상대 지연 ms)를 주는 코드에 `SEA_REMARK_LOCKED` 추가. 봉투는 바꾸지 않고 상속으로 늘림 |
+| [위성 런타임 스위치](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/server-separation/runtime.md) | relay·알림 Kafka 수신·예약 작업은 배포 프로필 기본 ON(#1638). 단계적으로 켤 새 환경은 env에 `false`를 명시함 |
 
 ## 데이터와 날짜
 
@@ -27,7 +33,11 @@ Business는 공개 HTTP와 화면 조합을, Data는 제품 상태와 원자 명
 
 승격 리뷰는 기준 SHA와 사용자 기능·수정·운영 변경을 한국어로 요약합니다. 서버·Kafka·Redis의 release 발행과 운영 CD는 별도 단계입니다. V2 버전 스크립트는 patch를 올리며 `release:major/minor/patch` 라벨을 읽지 않습니다.
 
-자세한 규칙은 [AGENTS.md](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/AGENTS.md), [Git·PR 규약](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/conventions/git-pr-conventions.md), [운영 V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md)를 따릅니다.
+Android CD는 원본 CI의 같은 실행에 서버 선행 검사 결과가 있어야 진행합니다. 검사 누락·취소·생략은 거부하고, Play internal 게시 성공을 운영 서버 호환성 검증 성공으로 보지 않습니다([Android CI/CD](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/android-ci-cd.md)). 앱 출시 전 서버 호환성 검증은 [앱 출시 검증](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/app-release-safety.md)을 따릅니다.
+
+3D 공개 웹(`app/metaverse-web`)은 PR·main에서 검사만 하고, 소유자가 요청할 때 검증한 main 커밋을 수동 배포합니다. AWS·앱 출시 워크플로와 분리돼 있습니다([파이프라인 지도](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/pipeline-map.md)).
+
+자세한 규칙은 [AGENTS.md](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/AGENTS.md), [Git·PR 규약](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/git-pr-conventions.md), [운영 V2](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/prod-v2-pipeline.md)를 따릅니다.
 
 ## 문서 기준
 

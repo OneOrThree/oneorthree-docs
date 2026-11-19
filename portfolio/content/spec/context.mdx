@@ -1,17 +1,17 @@
 ---
 title: "Cattus 제품과 용어"
 summary: "고양이가 된 사용자가 섬에서 함께 집중하고, 낚은 물고기로 섬을 키우는 앱입니다. 현재 제품과 동결된 Gromo 1.x를 구분합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 1
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 author: "조재영"
 ---
 
 ## 제품의 중심 흐름
 
-사용자는 고양이가 되어 섬에 들어가고, 낚시섬에서 집중하거나 뗏목으로 항해합니다. 집중으로 모은 물고기는 섬 통장에 쌓입니다. 주민은 시설을 이용하고, 섬장은 건설 목표를 정해 섬을 키웁니다.
+사용자는 고양이가 되어 섬에 들어가고, 낚시섬에서 집중하거나 뗏목으로 항해합니다. 집중으로 모은 물고기는 섬 통장에 쌓입니다. 주민은 시설을 이용하고 섬 퀘스트를 함께 채웁니다. 섬장은 퀘스트를 열고, 섬 통장 잔액으로 건물을 지어 섬을 키웁니다.
 
 개인 지갑에 보상을 쌓던 Gromo 1.x와는 경제·소속·화면 구조가 다릅니다. 1.x의 그룹 챌린지·내기·시간조각·개인 리그를 현재 Cattus의 기능으로 설명하지 않습니다.
 
@@ -23,10 +23,12 @@ author: "조재영"
 | 집중할고양 · cattus | 한국어·그 밖의 언어에서 보이는 앱 이름 |
 | 같이숲 · R61 | 2026년 9월 재설계 단계의 이름과 설계 기준 |
 | Gromo 1.x | 스토어 1.1.0까지의 동결된 이전 앱 |
-| `app/app-dev/` | 활성 2.0 앱 |
+| `com.oneorthree.gromo` | 스토어 앱 번들. Android와 iOS(2.3.0부터) 공통 |
+| `app/app-dev/` | 활성 2.0 앱. 같은 코드로 공개 웹 빌드도 만든다 |
+| `app/metaverse-web/` | 별도 3D 산책 웹. 자체 방 서버를 쓰며 Cattus 계정·집중 기록과 연결되지 않는다 |
 | `app/legacy/app-dev/` | 동결된 1.x 코드 |
 
-Jira 키 `GROMO`, 호스트·태그의 `catus`, 경로의 `fishcat`, 코드 패키지 `group`은 기존 식별자라 그대로 둡니다.
+Jira 키 `GROMO`, 호스트·태그의 `catus`, 경로의 `fishcat`, 코드 패키지 `group`, iOS 프로젝트 일부의 `com.oneorthree.focuscat`은 기존 식별자라 그대로 둡니다.
 
 ## 함께 쓰는 용어
 
@@ -34,23 +36,37 @@ Jira 키 `GROMO`, 호스트·태그의 `catus`, 경로의 `fishcat`, 코드 패�
 | --- | --- |
 | 주민·섬장·방문자 | 가입한 사용자·관리 권한을 가진 주민·가입하지 않고 구경하는 사용자 |
 | 메인 섬·현재 섬 | 대표로 정한 소속 섬·지금 들어가 있는 섬. 현재 섬을 바꿔도 대표 섬은 유지 |
-| 물고기·섬 통장 | 섬 소유의 재화와 잔액. 개인 물고기 지갑 없음 |
+| 물고기·섬 통장 | 섬 소유의 재화와 잔액. 개인 물고기 지갑 없음. 건설·상점 구매·잡지 홍보가 이 잔액을 쓴다 |
 | 낚시섬·항해·휴식 | 섬에서의 집중·먼바다에서의 집중·집중 적립을 멈추는 상태 |
+| 퀘스트 | 섬장이 게시판에 여는 섬 공동 목표. 시간대 집중 퀘스트와 하루 폰 사용 퀘스트 |
+| 허용 앱·측정 앱 | 집중 중에도 쓰도록 고른 앱·사용 시간을 재는 앱. 서로 다른 설정 |
 | 우체통 | 친구 편지·시스템 편지·고양이 잡지를 받는 시설 |
 | 우리 섬 채팅방 | 같은 섬 주민의 단체 채팅. 친구 편지와 별도 저장소·API 사용 |
 | 도서관 | 내 일기장·이웃 일기장에서 집중과 폰 사용 기록을 확인하는 시설 |
-| 전망대·망원경 | 섬 주간 순위·검색을 보는 시설과 항해할 섬 목록 |
-| 운영진의 편지 | 백오피스에서 게시한 개발자 공지를 앱에서 한 번 보여 주는 안내 |
+| 전망대·망원경 | 섬 순위·검색을 보는 시설과 항해할 섬 목록 |
+| 고양이 잡지 | 매일 아침 7시 발행하는 호. 섬 순위·새 섬·섬 홍보·편집부 소식을 싣는다 |
+| 운영진의 편지 | 백오피스에서 게시한 개발자 공지를 앱에서 한 번 보여 주는 안내. 대상 플랫폼(전체·iOS·Android)으로 거른다 |
 
 ## 플랫폼별 기능
 
-iOS는 네이티브 Screen Time 확장으로 허용 앱 밖의 앱을 집중 중 차단합니다. Android는 사용 시간 측정과 위젯·일반 푸시를 지원하지만 현재 `supportsFocusShield=false`이며 집중 차단 기능은 제거된 상태입니다. 두 플랫폼의 차단 경험이 같다고 설명하지 않습니다.
+| 기능 | iOS | Android |
+| --- | --- | --- |
+| 집중 중 앱 제한 | Screen Time 확장으로 허용 앱 밖의 앱을 차단 | 접근성 서비스 동의 뒤 비허용 앱에서 Cattus 화면으로 되돌린다(새 바이너리 필요) |
+| 차단·복귀가 걸리지 않은 집중에서 앱을 나갈 때 | 휴식으로 바꾸고 15초 안에 돌아오지 않으면 종료. 화면 잠금도 나간 것으로 본다 | 같은 규칙. 화면을 끈 것은 나간 것으로 보지 않는다 |
+| 사용 시간 측정 | Screen Time 측정 앱 | Usage Access 측정 |
 
-카메라로 손과 공부 도구를 확인하는 AI 집중 측정은 선택 기능입니다. 설치본·런타임·권한에 따라 가능한 기능이 달라지므로 네이티브 변경은 OTA만으로 배포하지 않습니다.
+Android 복귀 기능은 main 코드와 앱 출시 태그에 들어 있습니다. 스토어 프로덕션 공개 여부는 저장소 기록으로 확인되지 않아 여기서 단정하지 않습니다. iOS 차단과 Android 복귀는 동작이 달라 같은 기능으로 설명하지 않습니다.
+
+카메라로 손과 공부 도구를 확인하는 AI 집중 측정은 선택 기능입니다. 판정 모델과 기준은 앱 번들에 들어 있고, 모델 파일은 OTA 업데이트에도 함께 실립니다. 측정이 불가능한 Android 기기(Vulkan 1.1 없음)에서는 그 집중 동안 주기 측정을 멈춥니다. 네이티브 권한·서비스 변경은 OTA만으로 배포하지 않습니다.
+
+앱 화면 문구는 한국어·영어를 지원합니다. 서버에서 받은 공지·편지·사용자가 쓴 글은 원문 그대로 보입니다.
 
 ## 근거와 다음 문서
 
-- [제품 용어집](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/CONTEXT.md)
-- [활성 앱 README](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/app/app-dev/README.md)
+- [제품 용어집](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/CONTEXT.md)
+- [활성 앱 README](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/app/app-dev/README.md)
+- [Android 집중 중 앱 복귀 설계](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/android-focus-blocking-plan.md) · [PR #1635](https://github.com/OneOrThree/phone/pull/1635)
+- [실드 없는 집중의 이탈 처리 FR-P21](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/focus-rest-session/policy.md) · [PR #1573](https://github.com/OneOrThree/phone/pull/1573)
+- [3D 산책 웹 README](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/app/metaverse-web/README.md)
 - [주요 사용자 흐름](/spec/use-cases) · [현재 구현 범위](/spec/scope-roadmap)
 - [Gromo에서 재설계로 넘어간 기록](/history/06-reset-and-design)

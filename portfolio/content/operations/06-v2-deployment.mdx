@@ -1,12 +1,38 @@
 ---
 title: "V2 운영·배포 — 서버 먼저, 앱은 그다음"
-summary: "서버·Kafka·Redis의 release 발행과 수동 CD, 백오피스 main 배포, 앱 출시 게이트와 복구 제한을 현재 워크플로 기준으로 정리합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+summary: "서버·Kafka·Redis의 release 발행과 수동 CD, 백오피스 main 배포, 앱 출시 전 서버 호환성 검사, Android 자동 게시와 iOS 번들 전환을 현재 워크플로와 배포 기록 기준으로 정리합니다. 11월 4~14일의 운영 반영 이력과 지금 운영과 main의 차이를 함께 둡니다."
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 0
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 ---
+
+## 먼저 볼 표 — 지금 운영에 있는 것
+
+2026-11-18 main `1281cbfc4` 기준입니다. 근거는 GitHub Actions 실행 기록, Git 태그, `deployment-status` 브랜치의 `prod-V2/*.json`입니다. 이번에 운영 호스트를 새로 실측하지 않았습니다.
+
+| 단위 | 운영 기록 | 마지막 성공 CD(KST) | main과의 차이 |
+| --- | --- | --- | --- |
+| 서버 4종 | `catus-v2.0.14-V2`, release `a579cc1c6` | 11-14 02:32~02:35 ([run 43473740183](https://github.com/OneOrThree/phone/actions/runs/43473740183)) | main #1665(`432111b69`)까지 반영. #1668~#1675 미반영 |
+| Kafka | `kafka-v1.0.3-V2` | 11-02 16:22~16:24 | 그 뒤 발행 태그 `kafka-v1.0.4-V2`(11-04)·`kafka-v1.0.5-V2`(11-09)는 CD를 실행하지 않음 |
+| Redis | `redis-v1.0.4-V2` | 11-02 17:09~17:10 | 그 뒤 발행 태그 `redis-v1.0.5-V2`(11-04)·`redis-v1.0.6-V2`(11-09)는 CD를 실행하지 않음 |
+| 백오피스 | `backoffice-v1.0.9-V2`, main `d6b7881ec`(#1640) | 11-10 00:14~00:20 | 이후 `backoffice/` 변경 없음 |
+
+발행 태그와 운영 기록은 다릅니다. Kafka·Redis의 11월 9일 태그는 release 발행 때 붙은 것이고, 운영 컨테이너를 바꾸는 CD는 11월 2일 이후 돌지 않았습니다.
+
+서버 태그 하나가 네 서비스를 모두 새로 빌드하지는 않습니다. `app-proof.json`의 서비스별 소스는 Business `4b5996bd2`(v2.0.13), Data·Realtime `a579cc1c6`(v2.0.14), Notification `838a41983`(v2.0.11)입니다. 바뀌지 않은 서비스는 이전 이미지를 다시 씁니다.
+
+### main에만 있는 변경(운영 미반영)
+
+| PR | 티켓 | 영역 | 운영 영향 |
+| --- | --- | --- | --- |
+| #1669 | GROMO-2893 | 서버(Business·Data) | 주민이 다음 호 잡지 홍보 칸을 읽는 API. 운영 서버에 없음 |
+| #1672 | GROMO-2897 | 서버(Business·Data) | 섬 퀘스트 삭제, 집중 퀘스트 시간대 겹침 금지. 운영 서버에 없음 |
+| #1670·#1673 | GROMO-2894·2898 | 앱 | 위 두 API를 쓰는 화면(회관 섬 관리의 홍보 칸 카드, 게시판 퀘스트 삭제). 앱을 내기 전에 서버를 먼저 승격·배포해야 함 |
+| #1668·#1671·#1674·#1675 | GROMO-2892·2895·2899·2900 | 앱 | 측정 배지 정렬, 카메라·Sentry·실시간 현황 수정. 사용자 적용은 바이너리 또는 OTA 배포에 따름 |
+
+두 서버 변경에 DB 마이그레이션은 없습니다. 서버 차이가 있으므로 지금 main으로 iOS·OTA를 내면 아래 출시 게이트가 막습니다.
 
 ## 경로별 파이프라인
 
@@ -16,9 +42,28 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 | Kafka | release 발행 → Kafka 수동 CD·승인 | `kafka-vX.Y.Z-V2` |
 | Redis | release 발행 → Redis 수동 CD·승인 | `redis-vX.Y.Z-V2` |
 | 백오피스 | main 머지 → 테스트·빌드 → `backoffice-production` 승인 → 발행·배포 | `backoffice-vX.Y.Z-V2` |
+| Android 앱 | main 머지 → Android CI(AAB) → `app-android-cd`가 Play internal 게시 → 프로덕션은 Play 콘솔 | `app-<버전>-android-<versionCode>` |
+| iOS 앱·OTA | 로컬 `ios/testflight.sh`·`scripts/ota-update.sh` → 스토어 제출 | `app-<버전>-ios-<빌드>` |
 | dev V2 | main의 관련 CI → `cd-auto.dev-v2.yml` | 별도 dev 산출물·성공 상태 |
 
 서버·Kafka·Redis는 `release`에서 CD를 실행하며 환경 `catus-production-V2`의 승인 1회를 거칩니다. release 머지만으로 운영 컨테이너가 바뀌지 않습니다. 백오피스는 release를 거치지 않습니다.
+
+## 11월 4~14일 서버 운영 반영 이력
+
+모두 `prod-cd-V2` 성공 실행입니다. 시각은 실행 생성~종료(KST)이며 승인 대기 시간이 포함될 수 있습니다.
+
+| 태그 | 승격 PR | main 기준 | CD(KST) | 주요 서버 변경 | 새 마이그레이션 |
+| --- | --- | --- | --- | --- | --- |
+| v2.0.7 | #1582 | #1580 | 11-04 11:19·11:37·16:01(같은 커밋 3회) | 첫 항해 도착 Meta CAPI(#1581) | 없음 |
+| v2.0.8 | #1589 | #1588 | 11-04 22:03~23:53 | 첫 도착 응답의 이벤트 ID | 없음 |
+| v2.0.9 | #1601 | #1607 | 11-05 14:52~14:55 | 웹 전용 섬(#1597), 회관 없는 섬 정리 명령·새 섬 회관 심기(#1607) | Data V11 |
+| v2.0.10 | #1610 | #1608 | 11-05 17:18~17:21 | 첫 도착 CAPI를 새 Meta 데이터 세트로 | 없음 |
+| v2.0.11 | #1632 | #1641 | 11-10 00:01~00:08 | 잡지 자동 발행 복구(#1615), 퀘스트 스위치 제거(#1638), 꾸미기 지급·추첨 풀 2인 승인 API(#1639·#1641) | Data V12·V13 |
+| v2.0.12 | #1647 | #1646 | 11-11 04:08~04:12 | 섬 통장 잔액 건설(#1642), 공지 대상 플랫폼(#1644) | Data V14·V15 |
+| v2.0.13 | #1663 | #1655 | 11-13 08:43~08:57 | 신고 접수(#1661), 탈퇴 시 편지·채팅 개인정보 삭제(#1659) | Data V16, Realtime V4 |
+| v2.0.14 | #1667 | #1665 | 11-14 02:32~02:35 | 상점 기본 발행본 v1(#1665) | 없음(기본 데이터) |
+
+마이그레이션 열은 태그 사이에 추가된 파일 기준입니다. 백오피스는 #1615 머지로 시작된 CD(11-08)가 승인 대기 뒤 취소됐고, 서버 v2.0.11이 나간 뒤 #1640 커밋으로 v1.0.9가 배포됐습니다. #1615 본문은 새 백오피스가 서버 계약(`content.magazine-read.v1`)을 요구해, 서버보다 먼저 승인하면 기동 검증이 실패한다고 적습니다.
 
 ## 발행 단위와 버전
 
@@ -28,11 +73,56 @@ V2 태그와 S3 버전 기록에서 가장 큰 patch를 1 올립니다. `release
 
 서버 CD는 네 서비스를 Compose에 넘기고 이미지·env·라벨이 바뀐 서비스를 재생성합니다. Infra revision만 바뀌어도 Data는 `OBS_INFRA_REVISION` 값 때문에 재생성될 수 있습니다.
 
-## 앱 출시 게이트
+## 앱 출시 전 서버 호환성 검사
 
-서버 의존 API가 있으면 운영 서버가 먼저 나가야 합니다. `app-server-gate.py`는 `deployment-status`의 마지막 운영 성공 태그를 커밋으로 풀고, 앱 HEAD와 서버 런타임 경로 차이를 비교합니다.
+서버 의존 API가 있으면 운영 서버가 먼저 나가야 합니다. 11월 1일 앱이 서버보다 먼저 나가 첫 항해 도착 API가 404를 낸 뒤 검사 단계를 늘렸습니다([ADR-039](/adr/adr-039-app-release-server-compatibility)).
 
-마지막 CD가 실패·취소·진행 중이거나 기록을 조회할 수 없으면 판정 불가로 막습니다. 백오피스 출시 현황은 10분 캐시라 실제 실행 시의 게이트와 잠시 다를 수 있습니다. Infra·시크릿·nginx 같은 서버 코드 밖 의존성은 별도로 확인해야 합니다.
+| 단계 | 하는 일 | 위치 |
+| --- | --- | --- |
+| 1. 정적 대조 | 앱의 API 호출 메서드·경로를 서버 선언과 대조(정적 목록 122개) | `smoke/contracts/inventory.cjs` |
+| 2. 응답 계약 | 핵심 8종 성공 응답의 필드·타입. 새 필드는 허용, 필수 필드 삭제·타입 변경은 실패 | `response_contract.py` |
+| 3. dev 시나리오 | 기존 15종 + 첫 항해(TC019)·집중 여정(TC020). 앱 트리·서비스 소스 SHA를 결과에 기록 | `ops-smoke.dev-v2` |
+| 4. 버전 대조 | 빌드할 앱 트리 = dev 검사 때 트리, 운영 네 서비스 소스 = dev 검사 때 소스 | `app-server-gate.py` → `release_check.py` |
+| 5. 운영 핵심 검사 | 임시 게스트·임시 섬으로 `/me` 등 4개 조회와 입력 검증 1건. 끝나면 섬 폐쇄·계정 탈퇴, 정리 실패 시 차단 | `smoke/contracts/production.py` |
+
+- `app/app-dev`에 커밋하지 않은 변경이나 추적하지 않은 파일이 있으면 어떤 예외 설정으로도 출시를 막습니다.
+- `ALLOW_SERVER_GAP`은 서버 소스 비교만 건너뜁니다. 4·5단계는 그대로 실행합니다.
+- `APP_COMPATIBILITY_RUN_ID`(성공한 main dev smoke 실행)와 보호된 정리 기록 경로가 없으면 출시가 막힙니다. dev smoke 산출물 보존(7일)이 지나면 다시 검사합니다.
+- 마지막 운영 CD가 실패·취소·진행 중이거나 기록을 읽지 못하면 판정 불가로 막습니다. 백오피스 출시 현황은 10분 캐시라 실제 실행 때의 게이트와 잠시 다를 수 있습니다.
+- Infra·시크릿·nginx 같은 서버 코드 밖 의존성은 이 검사가 보지 않습니다. 이미 업로드한 앱의 App Store Connect 출시 버튼에도 실행되지 않습니다.
+
+11월 8일에는 소유자 요청으로 iOS TestFlight·Android internal을 서버보다 먼저 냈고, 서버는 11월 10일 v2.0.11로 따라갔습니다(#1632). 순서 예외는 PR에 기록합니다.
+
+## Android 자동 게시
+
+main 머지 → Android CI → `app-android-cd` → Play internal은 자동입니다. 프로덕션 출시는 Play 콘솔에서 사람이 승격합니다.
+
+- CI의 `server-gate` 잡은 2026-11-02부터 실패해도 다음 단계로 갑니다(`continue-on-error`). 앱이 쓰지 않는 서버 변경에도 막혀 internal 게시가 밀렸기 때문입니다. 결과는 실행 요약의 경고로 봅니다.
+- #1633(11-08)부터 CI의 일회용 서명 AAB는 Gradle이 출시 검사를 다시 돌리지 않습니다. 대신 CD가 원본 CI 같은 attempt에 서버 검사 결과가 있는지 확인하고, 누락·취소·생략이면 거부합니다.
+- internal 게시 성공은 운영 서버 호환성 검사 통과가 아닙니다. 로컬 운영 빌드는 위 5단계 검사를 모두 거칩니다. 프로덕션 승격 전에 `server-gate` 결과를 직접 봅니다.
+- 버전 이름은 Git 태그로 정합니다. 게시에 성공하면 CD가 `app-<버전>-android-<versionCode>` 태그를 달고, 메시지에 그때의 운영 서버 태그를 적습니다.
+
+11월 기록:
+
+| 날짜 | 기록 | 근거 |
+| --- | --- | --- |
+| 11-10~11-12 | Play internal 업로드 단계 5회 연속 실패 | `app-android-cd` 실행 기록 |
+| 11-13 | 2.3.24(876): Play 프로덕션 제출 뒤 접근성 설명 누락으로 거부 | 수동 태그 메시지 |
+| 11-13 | 2.3.25(904): 관리형 게시의 거부 이력 때문에 CD 자동 게시 실패, 서명 산출물을 Play 콘솔에서 프로덕션 제출 | 수동 태그 메시지 |
+| 11-13 | 2.3.26(906, `c52275e90`) CD 게시 성공 | 실행 기록·태그 |
+| 11-17 | 2.3.27(918, `f911e4e85`) CD 게시 성공. #1671 카메라 네이티브 수정 포함 | 실행 기록·태그 |
+
+Play 프로덕션에서 지금 공개된 버전은 저장소 기록으로 확인하지 못했습니다.
+
+## iOS 번들 전환
+
+iOS 2.3.0은 11월 3일 1.x와 같은 App Store 앱(`com.oneorthree.gromo`)의 업데이트로 공개됐습니다. 저장소의 iOS 프로젝트는 그때까지 다른 번들(focuscat)이었습니다.
+
+- #1584(11-04): 업데이트 편지의 iOS 스토어 버튼이 공개된 적 없는 앱을 가리켜 404였습니다. iTunes lookup으로 실제 앱 ID를 확인해 링크와 문서를 고쳤습니다. 기존 사용자에게는 OTA나 다음 바이너리가 나가야 반영됩니다.
+- #1586(11-04): main의 iOS 프로젝트·확장 5개·App Group·Fastlane `APP_ID`를 `com.oneorthree.gromo`로 바꿨습니다. App Group이 스토어 앱과 같아야 업데이트한 사용자의 위젯·스크린타임 데이터가 이어집니다. iOS runtimeVersion도 새 값으로 나눠, 옛 빌드와 OTA를 나누지 않습니다.
+- 이후 iOS 태그: 2.3.3(11-04), 2.3.4(11-05), 2.3.5(11-08), 2.3.6(11-11), 2.3.7(11-13, main `76cc23333`).
+- 11-13 #1664 본문은 「운영 2.3.6, 심사 중 2.3.7」, 11-18 #1675 본문은 Sentry 사건을 「스토어 2.3.7(14)」로 적습니다. 공개 시각 기록은 저장소에 없습니다.
+- #1671(11-18 main)부터 iOS 배포는 Sentry 인증 → 아카이브 UUID 대조 → 심볼 처리 완료를 확인한 뒤에만 TestFlight로 올립니다. 이 절차로 올린 빌드의 태그는 아직 없습니다.
 
 ## DB 변경과 복구
 
@@ -46,13 +136,18 @@ Terraform 변경은 별도 plan 승인 절차입니다. 이 문서의 CD 설명�
 
 11월 2일 구 dev·운영 서버와 V1 workflow 14개를 정리했습니다. 현행은 V2 workflow이며 공용 검사와 release 계약 검사는 유지됩니다.
 
-운영 문서가 확인한 Datadog Agent health와 웹 화면의 실제 최신 로그·APM 수신은 다른 점검입니다. 개발 환경에는 Datadog Agent를 설치하지 않습니다. [시스템 구성](/spec/system-architecture)에서 호스트별 역할을 확인합니다. 앱 배포 성공 뒤의 관측 단계 실패는 경고로만 남으므로 성공 배지만으로 로그 수집을 판정하지 않습니다. [로그·추적 안내](/spec/logging-and-observability)에 설정 상태·수집 경로·조회 방법을 정리했습니다.
+운영 문서가 확인한 Datadog Agent health와 웹 화면의 실제 최신 로그·APM 수신은 다른 점검입니다. 개발 환경에는 Datadog Agent를 설치하지 않습니다. [시스템 구성](/spec/system-architecture)에서 호스트별 역할을 확인합니다. 앱 배포 성공 뒤의 관측 단계 실패는 경고로만 남으므로 성공 배지만으로 로그 수집을 판정하지 않습니다. [로그·추적 안내](/spec/logging-and-observability)에 설정 상태·수집 경로·조회 방법을 정리했습니다. 앱 크래시 수집과 심볼 문제는 [11월 앱 크래시와 진단 공백](/operations/07-november-app-crashes-and-diagnostics)에 있습니다.
 
-AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지합니다. 과거 실험의 재시험 제안은 현재 운영 작업 지시가 아닙니다.
+AWS 부하 테스트 실행·재개와 부하용 데이터 생성은 금지합니다. 과거 실험의 재시험 제안은 현재 운영 작업 지시가 아닙니다. 위 운영 핵심 검사는 출시마다 임시 계정 1개·섬 1개로 조회 몇 건을 보내는 기능 확인이며 부하 시험이 아닙니다.
 
 ## 근거
 
-- [운영 V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md)
-- [dev V2 파이프라인](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/dev-v2-pipeline.md)
-- [파이프라인 지도](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/pipeline-map.md)
-- [발행·배포 구현](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/.github/scripts/v2/prod/catus-runtime-V2.py)
+- [운영 V2 파이프라인](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/prod-v2-pipeline.md)
+- [dev V2 파이프라인](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/dev-v2-pipeline.md)
+- [파이프라인 지도](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/pipeline-map.md)
+- [앱 출시 검증과 운영 오류 감시](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/app-release-safety.md)
+- [Android CI와 Play 내부 테스트 CD](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/android-ci-cd.md)
+- [앱 출시 게이트](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/.github/scripts/app-server-gate.py)
+- [발행·배포 구현](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/.github/scripts/v2/prod/catus-runtime-V2.py)
+- 승격 PR: [#1601](https://github.com/OneOrThree/phone/pull/1601) · [#1632](https://github.com/OneOrThree/phone/pull/1632) · [#1647](https://github.com/OneOrThree/phone/pull/1647) · [#1663](https://github.com/OneOrThree/phone/pull/1663) · [#1667](https://github.com/OneOrThree/phone/pull/1667)
+- 검사·번들: [#1613](https://github.com/OneOrThree/phone/pull/1613) · [#1633](https://github.com/OneOrThree/phone/pull/1633) · [#1584](https://github.com/OneOrThree/phone/pull/1584) · [#1586](https://github.com/OneOrThree/phone/pull/1586)

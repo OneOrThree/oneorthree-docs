@@ -1,0 +1,307 @@
+{
+  "version": 7,
+  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "title": "Cattus · 서비스 아키텍처",
+  "nodes": [
+    {
+      "id": "app",
+      "x": 70,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "모바일 앱",
+      "lines": [
+        "React Native · Expo",
+        "공개 HTTP · /screens 조합 응답",
+        "WSS는 Realtime 연결"
+      ],
+      "kind": "core",
+      "stage": "활성 2.0 앱",
+      "state": "code"
+    },
+    {
+      "id": "business",
+      "x": 655,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "Business API",
+      "lines": [
+        "공개 인증·DTO·오류·화면 조합",
+        "Data·Realtime·Notification 호출",
+        "Business Redis: 폐기 sid"
+      ],
+      "kind": "core",
+      "stage": "도메인 DB 없음",
+      "state": "code"
+    },
+    {
+      "id": "data",
+      "x": 1240,
+      "y": 230,
+      "w": 450,
+      "h": 190,
+      "title": "Data API · 코어 DB",
+      "lines": [
+        "섬·집중·물고기·상품·친구·편지",
+        "현재 주민 자격·원장·receipt",
+        "PostgreSQL 상태·outbox"
+      ],
+      "kind": "core",
+      "stage": "친구 편지는 letters에 저장",
+      "state": "code"
+    },
+    {
+      "id": "chatApp",
+      "x": 70,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "앱 · 우리 섬 채팅방",
+      "lines": [
+        "Business → Data 주민 자격 확인",
+        "Business → Realtime 내부 REST",
+        "clientMessageId로 재전송 처리"
+      ],
+      "kind": "core",
+      "stage": "저장 후 사건 기록은 별도 TX",
+      "state": "code"
+    },
+    {
+      "id": "realtime",
+      "x": 655,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "Realtime · 채팅 DB",
+      "lines": [
+        "채팅 저장·조회·fanout",
+        "집중·휴식·응원·섬 사건",
+        "이동·바다·폐기 세션 처리"
+      ],
+      "kind": "event",
+      "stage": "gromo_chat · 채팅 정본",
+      "state": "code"
+    },
+    {
+      "id": "shared",
+      "x": 1240,
+      "y": 570,
+      "w": 450,
+      "h": 190,
+      "title": "Shared Redis",
+      "lines": [
+        "presence·chat fanout",
+        "이동 lease·epoch·명령·프레임",
+        "이동 multi-instance 기본 ON"
+      ],
+      "kind": "data",
+      "stage": "제품 권한·영속 이동 로그 아님",
+      "state": "code"
+    },
+    {
+      "id": "outbox",
+      "x": 70,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "Data · outbox relay",
+      "lines": [
+        "상태와 사건을 같은 TX로 기록",
+        "대상별 전달·중복·재시도",
+        "세션 폐기는 Realtime에도 전달"
+      ],
+      "kind": "core",
+      "stage": "채팅 저장과는 별도 호출",
+      "state": "code"
+    },
+    {
+      "id": "transport",
+      "x": 655,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "Kafka · 내부 HTTP",
+      "lines": [
+        "알림: notification-events",
+        "REALTIME: 기본 HTTP",
+        "realtime-events는 선택 경로"
+      ],
+      "kind": "event",
+      "stage": "소비자 활성화는 개별 설정",
+      "state": "code"
+    },
+    {
+      "id": "notification",
+      "x": 1240,
+      "y": 910,
+      "w": 450,
+      "h": 190,
+      "title": "Notification · 알림 DB",
+      "lines": [
+        "수신·중복 방지·발송 조건",
+        "기기 설정·발송 이력",
+        "FCM으로 외부 푸시 요청"
+      ],
+      "kind": "event",
+      "stage": "gromo_notification",
+      "state": "code"
+    }
+  ],
+  "edges": [
+    {
+      "id": "http",
+      "source": "app",
+      "target": "business",
+      "points": [
+        [
+          520,
+          315
+        ],
+        [
+          655,
+          315
+        ]
+      ],
+      "label": "HTTP",
+      "at": [
+        587,
+        305
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "internal",
+      "source": "business",
+      "target": "data",
+      "points": [
+        [
+          1105,
+          315
+        ],
+        [
+          1240,
+          315
+        ]
+      ],
+      "label": "내부 HTTP",
+      "at": [
+        1172,
+        305
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "chatRest",
+      "source": "chatApp",
+      "target": "realtime",
+      "points": [
+        [
+          520,
+          655
+        ],
+        [
+          655,
+          655
+        ]
+      ],
+      "label": "내부 REST",
+      "at": [
+        587,
+        645
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "redis",
+      "source": "realtime",
+      "target": "shared",
+      "points": [
+        [
+          1105,
+          655
+        ],
+        [
+          1240,
+          655
+        ]
+      ],
+      "label": "전파·상태",
+      "at": [
+        1172,
+        645
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "relay",
+      "source": "outbox",
+      "target": "transport",
+      "points": [
+        [
+          520,
+          995
+        ],
+        [
+          655,
+          995
+        ]
+      ],
+      "label": "전달",
+      "at": [
+        587,
+        985
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "notify",
+      "source": "transport",
+      "target": "notification",
+      "points": [
+        [
+          1105,
+          995
+        ],
+        [
+          1240,
+          995
+        ]
+      ],
+      "label": "알림 사건",
+      "at": [
+        1172,
+        985
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "realtimeEvent",
+      "source": "transport",
+      "target": "realtime",
+      "points": [
+        [
+          880,
+          910
+        ],
+        [
+          880,
+          760
+        ]
+      ],
+      "label": "사건 입구",
+      "at": [
+        880,
+        802
+      ],
+      "async_": false,
+      "state": "code"
+    }
+  ]
+}

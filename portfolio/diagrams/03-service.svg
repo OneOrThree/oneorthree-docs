@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 서비스 아키텍처</title>
-<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<desc id="diagramDesc">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
 <g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 서비스 아키텍처</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
 <rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">공개 HTTP와 제품 정본</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">Business는 공개 계약, Data는 현재 권한·원자 명령·제품 데이터의 정본을 맡는다.</text>
@@ -61,10 +61,11 @@
 <g data-cell-id="data">
 <rect x="1240" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">Data API · 코어 DB</text>
-<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">섬·집중·물고기·상품·친구·편지</text>
-<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">현재 주민 자격·원장·receipt</text>
-<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL 상태·outbox</text>
-<text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">친구 편지는 letters에 저장</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">섬·집중·물고기·상품·친구·편지·신고</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">꾸미기 지급(2인 승인)·첫 도착 사건</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">백오피스 → 관리 API · 2인 승인</text>
+<text x="1260" y="361" font-size="16" fill="#4d5a66" font-weight="400">첫 섬 도착 → Meta CAPI · 기본 OFF</text>
+<text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">PostgreSQL 상태·outbox·원장·receipt</text>
 </g>
 <g data-cell-id="chatApp">
 <rect x="70" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
@@ -80,6 +81,7 @@
 <text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">채팅 저장·조회·fanout</text>
 <text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">집중·휴식·응원·섬 사건</text>
 <text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">이동·바다·폐기 세션 처리</text>
+<text x="675" y="701" font-size="16" fill="#4d5a66" font-weight="400">탈퇴자 메시지 파기(V4)</text>
 <text x="675" y="745" font-size="14" fill="#7860aa" font-weight="700">gromo_chat · 채팅 정본</text>
 </g>
 <g data-cell-id="shared">
@@ -95,16 +97,16 @@
 <text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">Data · outbox relay</text>
 <text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">상태와 사건을 같은 TX로 기록</text>
 <text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">대상별 전달·중복·재시도</text>
-<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">세션 폐기는 Realtime에도 전달</text>
-<text x="90" y="1085" font-size="14" fill="#3866a0" font-weight="700">채팅 저장과는 별도 호출</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">세션 폐기·탈퇴도 Realtime에 전달</text>
+<text x="90" y="1085" font-size="14" fill="#3866a0" font-weight="700">배포 프로필 기본 ON · 채팅 저장과 별도</text>
 </g>
 <g data-cell-id="transport">
 <rect x="655" y="910" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
 <text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">Kafka · 내부 HTTP</text>
 <text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">알림: notification-events</text>
 <text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">REALTIME: 기본 HTTP</text>
-<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">realtime-events는 선택 경로</text>
-<text x="675" y="1085" font-size="14" fill="#7860aa" font-weight="700">소비자 활성화는 개별 설정</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">realtime-events는 선택 · 기본 OFF</text>
+<text x="675" y="1085" font-size="14" fill="#7860aa" font-weight="700">Notification 수신·relay 배포 기본 ON</text>
 </g>
 <g data-cell-id="notification">
 <rect x="1240" y="910" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>

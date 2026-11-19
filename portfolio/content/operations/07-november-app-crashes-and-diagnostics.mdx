@@ -1,0 +1,113 @@
+---
+title: "11월 앱 크래시와 진단 공백 — 릴리스 빌드·OTA·카메라·심볼"
+summary: "11월 3~18일 Android·iOS 앱에서 나온 크래시와 측정 실패를 묶었습니다. 원인은 디버그 빌드에서 보이지 않는 릴리스 빌드 차이, OTA에 빠진 에셋, 카메라 작업 수명이었고, 진단을 막은 것은 크래시 수집 전환 공백과 iOS 심볼 누락이었습니다. 실제 사용자 사고와 발행 전에 찾은 위험, main 반영과 사용자 적용을 나눠 적습니다."
+status: "main 반영 · 사용자 적용·재발 확인은 사례별"
+date: "2026-11-18"
+order: 7
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
+keywords: [Android, iOS, R8, OTA, Sentry, dSYM, VisionCamera, AI 집중 측정, 크래시, GROMO-2740, GROMO-2895]
+related:
+  - label: "운영·트러블슈팅 사례 지도"
+    href: "/operations/01-incident-map"
+  - label: "V2 운영·배포 — 앱 배포 경로"
+    href: "/operations/06-v2-deployment"
+  - label: "로그·추적 안내"
+    href: "/spec/logging-and-observability"
+---
+
+## 먼저 볼 표
+
+| 사례 | 플랫폼 | 영향 구분 | 진단 근거 | 조치 | 사용자 적용 경로 |
+| --- | --- | --- | --- | --- | --- |
+| 카카오 SDK 토큰 확인 크래시(GROMO-2740) | Android 릴리스 | 실사용자 크래시 | PostHog 오류 스택, AAB dex 서명 비교 | R8 규칙 추가(#1579) | 새 바이너리 |
+| 집중 준비 카드 높이 반복(GROMO-2750) | Android 2.3.2(757) | 실사용자 크래시(1명 3회) | Sentry 스택 + OTA 소스맵 | 1px 미만 높이 변화 무시(#1590) | OTA 가능 |
+| AI 모델 파일 로드 실패(GROMO-2751) | Android 릴리스 | 실사용자 기능 실패(측정 불가) | Sentry 직전 로그 `MalformedURLException` | Android만 캐시 파일 주소로 전달(#1591) | OTA 가능 |
+| 구버전 OTA의 크래시 수집 공백(GROMO-2738) | Android 2.3.0·2.3.1 | 수집 위험(사전 발견) | AAB별 Sentry 모듈 포함 대조 | Sentry 모듈 없으면 기존 PostHog 수집 유지(#1574) | OTA 가능 |
+| OTA에 새 AI 모델 누락(GROMO-2879) | iOS·Android OTA | 발행 전 발견한 위험 | `expo export` 에셋 수 비교 | OTA 에셋 목록에 `src/assets/ml` 추가(#1664) | OTA |
+| 카메라 작업 해제·iOS 심볼 누락(GROMO-2895) | Android 2.3.25 / iOS 2.3.4 | 실사용자 크래시, 원인 일부 미확정 | Sentry 스택, 설치 패키지 소스, ASC 조회 | 네이티브 패치, 진단 수집, dSYM 배포 차단(#1671) | 새 바이너리 |
+| 측정 불가 기기의 반복 측정(GROMO-2899) | Android 2.3.27(918) | 오류 보고 반복, 카메라 반복 켜짐 | Sentry `frame_timeout` | 판정 불가 확정 시 그 세션의 주기 측정 중단(#1674) | OTA 가능 |
+| 실시간 현황 토큰 관찰 멈춤(GROMO-2900) | iOS 2.3.7(14), iPad | 실사용자 앱 멈춤(2초) | Sentry App Hanging 스택 | 토큰 관찰을 메인 스레드 밖으로(#1675) | 새 바이너리 |
+
+「영향 구분」은 PR 본문 기준입니다. 영향 사용자 수는 PR에 적힌 경우만 옮겼고, 발생률·복구 시간은 원문에 없어 적지 않습니다.
+
+## 릴리스 빌드에서만 생긴 문제
+
+디버그 빌드와 개발 서버에서는 셋 다 보이지 않았습니다. 난독화·리소스 포장·OTA 묶음이 릴리스에서만 다르게 동작했기 때문입니다.
+
+### 카카오 SDK 토큰 확인 크래시 — R8이 제네릭 정보를 지움
+
+**영향:** Android 운영 앱이 화면으로 돌아오는 순간 `Call return type must be parameterized as Call<Foo>`로 꺼졌습니다. 카카오 로그인 버튼이 없어도 SDK 초기화는 돌기 때문에 Android 사용자 전체가 대상이었습니다.
+
+**진단:** PostHog 오류 스택이 카카오 SDK의 생명주기 감시자 → `checkAccessToken` → Retrofit 호출 어댑터 생성으로 이어졌습니다. 티켓 2397에서 켠 R8 full mode가 Retrofit의 `Call<T>` 제네릭을 지운 것이 원인입니다. 같은 main에서 규칙 없이/있게 빌드해 dex 서명을 비교했습니다. 규칙이 없으면 `Call`의 타입 인자가 없고, 있으면 남습니다.
+
+**조치:** 카카오 공식 ProGuard 안내의 Retrofit·모델 유지 규칙을 넣었습니다. 에뮬레이터에서 콜드 스타트 → 홈 → 시계 이동 → 복귀까지 `FATAL EXCEPTION` 0건이었습니다. 실제 사용자 조건은 재현하지 못해, 검증은 스택과 dex 비교에 기댑니다.
+
+### AI 모델 파일 로드 실패 — 릴리스 번들의 리소스 이름
+
+**영향:** Android 릴리스에서 AI 집중 측정의 손·물체 모델이 모두 `MalformedURLException: no protocol`로 로드되지 않았습니다.
+
+**진단:** fast-tflite의 Android 로더는 URL만 받는데, 릴리스 번들의 `require(...)`는 스킴 없는 raw 리소스 이름을 줍니다.
+
+**조치:** Android에서만 `expo-asset`으로 캐시 파일에 복사한 뒤 `file://` 주소를 넘깁니다. 네이티브 패치 대신 JS로 고쳐 기존 바이너리에도 OTA로 보낼 수 있게 했습니다. 복사가 실패하면 기존 판정 불가 경로로 갑니다. 에뮬레이터에서 모델 로드는 확인했지만 판정 표시는 바뀌지 않아 실기기 확인이 남았습니다.
+
+### OTA에 새 AI 모델 누락 — 발행 전에 발견
+
+**위험:** #1658이 AI 모델을 새 파일로 바꿨는데, OTA 묶음은 `src/assets/ota/**`만 실었습니다. 그대로 OTA를 내면 JS는 새 모델을 찾고 기존 바이너리에는 옛 모델만 있어 측정이 모델을 못 읽습니다.
+
+**진단:** 운영 env로 `expo export`를 돌려 수정 전 tflite 0개, 수정 후 2개(원본 README의 파일 크기와 같음)를 확인했습니다.
+
+**조치:** `assetPatternsToBeBundled`에 `src/assets/ml/**`를 더했습니다(#1664). OTA 크기는 모델 두 개(약 9.6MB)만큼 늘어납니다. 다음 PR(#1668) 본문은 직전 OTA를 이 커밋(`c52275e90`)으로 적습니다. OTA를 받은 기기의 실제 모델 로딩 확인은 PR 단계에서 하지 않았습니다.
+
+## 크래시를 볼 수 없게 만든 공백
+
+### 구버전 Android OTA의 크래시 수집
+
+Android 2.3.0·2.3.1 바이너리에는 Sentry 네이티브 모듈이 없지만 2.3.2와 OTA 런타임이 같습니다. Sentry로 바꾼 JS를 받으면 기존 PostHog 수집까지 꺼져 네이티브 크래시를 아무도 받지 않게 됩니다. 실제 AAB 세 개를 대조해 모듈 유무를 확인했고, 모듈이 없을 때만 PostHog 수집을 유지합니다(#1574).
+
+### iOS 심볼 누락 — 원인을 확정할 수 없던 iPad 크래시
+
+**영향:** iOS 2.3.4(13) iPad에서 크래시(Sentry CATTUS-8)가 났지만 앱 실행 파일의 dSYM이 Sentry에 없어 함수·행을 해독할 수 없었습니다.
+
+**진단:**
+
+- Sentry 업로드 보관함에서 해당 UUID를 직접 조회해 없음을 확인했습니다.
+- 기존 업로드 스크립트는 토큰이 없으면 경고 후 건너뛰고 성공으로 끝났습니다. Fastlane은 심볼 확인 없이 TestFlight로 올렸습니다.
+- App Store Connect의 그 빌드는 `includesSymbols=true`였지만 dSYM 다운로드 주소가 없었습니다. Apple 안내상 Xcode 14 이후 제출은 다운로드를 제공하지 않습니다.
+- 로컬 아카이브·산출물에도 같은 UUID가 없었습니다. 같은 소스로 재빌드한 dSYM은 UUID가 달라 과거 크래시 해독에 쓸 수 없습니다.
+
+**조치(#1671):** iOS 배포를 Sentry 인증 확인 → 빌드 → 아카이브의 실행 파일·dSYM UUID 대조 → 심볼 처리 완료 확인 → TestFlight 순서로 바꿨습니다. 하나라도 실패하면 업로드하지 않습니다. 토큰 없이 올리던 빌드는 이제 막힙니다.
+
+**상태:** CATTUS-8의 원인은 확정되지 않았습니다. 심볼 누락 방지는 그 크래시의 수정이 아닙니다.
+
+### 잡은 오류도 수집되지 않음
+
+카메라 오류를 잡아 복구 UI로 보내는 경로는 `captureException`을 부르지 않았습니다. #1671은 카메라 초기화·모델·리사이저·추론·프레임 타임아웃 실패를 단계별로 보내고, 카메라·화면·앱 생명주기 상태를 크래시 문맥으로 남깁니다. 프레임·사진·과목명·집중 세션 ID는 보내지 않습니다. 진단 전용 빌드에서 처리된 JS 오류와 의도적인 네이티브 크래시를 로컬 수집기로 받아 dSYM으로 해독까지 확인했습니다. 운영 Sentry에는 시험 이벤트를 보내지 않았습니다.
+
+## 카메라 작업 수명
+
+**영향:** Android 2.3.25(904)에서 카메라 작업 해제 중 네이티브 크래시(Sentry CATTUS-D)가 났습니다.
+
+**진단:** 스택이 JNI 콜백 소멸 → Worklets 예약 작업 소멸 → JSI 포인터 해제로 이어졌습니다. 설치된 VisionCamera Worklets 5.2.3의 큐와 dispatcher는 작업을 복사해 넘기고, Android 생성 코드는 실행 뒤에도 함수를 보관합니다. 그래서 끝난 작업의 JSI 캡처가 Java finalizer에서 늦게 해제될 수 있습니다. 화면 종료 때 프레임 콜백을 해제하지 않는 문제와, 정리 작업 전에 런타임이 회수될 수 있는 문제도 함께 찾았습니다.
+
+**조치(#1671):** `patch-package`로 실행 스레드에서 캡처를 해제하고, 출력 교체·종료 때 콜백을 비우고, 예약 작업이 끝날 때까지 런타임을 유지합니다. 수정 전 실패하던 C++ 회귀 4건(ASan·UBSan)과 React·GC 회귀가 수정 후 통과했고, PR CI에 넣었습니다.
+
+**상태:** 이 검사는 해제 결함을 재현한 것이지 실제 기기의 SIGSEGV를 재현한 것이 아닙니다. 다른 카메라 크래시 여섯 건은 새 바이너리에서 따로 봐야 합니다. Android 2.3.27(918)이 이 수정을 담아 11월 17일 Play internal에 게시됐습니다. iOS는 이 수정을 담은 태그가 아직 없습니다.
+
+## 측정 불가 기기와 메인 스레드 멈춤
+
+**측정 불가 Android 기기(#1674).** Vulkan 1.1이 없는 기기에서는 손 리사이저가 만들어지지 않아 판정 불가가 확정됩니다. 그런데 주기 측정이 20초마다 카메라를 약 5초씩 다시 켜고, 5초 제한이 `frame_timeout`을 Sentry에 계속 보냈습니다. 판정 불가 조건 6개를 하나로 묶고, 확정되면 그 집중 세션 동안 주기 측정을 멈춥니다. 새 세션에서는 다시 시도합니다. 리사이저 실패 보고는 세션마다 한 번 남겨 해당 기기 수를 보는 신호로 둡니다.
+
+**iOS 실시간 현황 토큰 관찰(#1675).** 앱 시작 때 실시간 현황 푸시 토큰을 관찰하는 반복이 메인 스레드에서 돌다가 ActivityKit 내부 대기로 2초 넘게 막혔습니다(Sentry CATTUS-E). 토큰 관찰과 조회를 `Task.detached`로 옮기고, 이벤트 전송만 메인에서 합니다. 시뮬레이터는 이 경로를 재현하지 못해 새 TestFlight 빌드의 실기기 확인이 남았습니다. `sync()`는 여전히 메인에서 돕니다.
+
+## 남은 일과 읽는 법
+
+- main 반영은 사용자 적용이 아닙니다. 네이티브 수정(#1579·#1671·#1675)은 새 바이너리, JS 수정은 OTA가 나가야 사용자에게 닿습니다. OTA 발행 기록은 저장소에 PR 본문 언급으로만 남습니다.
+- 크래시가 「다시 나지 않았다」는 판정은 수정 빌드가 나간 뒤 Sentry에서 같은 스택을 봐야 합니다. 이 문서는 그 판정을 하지 않습니다.
+- 릴리스 빌드 차이(R8, 리소스 이름, OTA 에셋 필터)는 디버그 확인으로 잡히지 않습니다. 세 사례 모두 릴리스 산출물(dex, `expo export`)을 직접 열어 확인했습니다.
+
+## 근거
+
+- PR: [#1574](https://github.com/OneOrThree/phone/pull/1574) · [#1579](https://github.com/OneOrThree/phone/pull/1579) · [#1590](https://github.com/OneOrThree/phone/pull/1590) · [#1591](https://github.com/OneOrThree/phone/pull/1591) · [#1664](https://github.com/OneOrThree/phone/pull/1664) · [#1671](https://github.com/OneOrThree/phone/pull/1671) · [#1674](https://github.com/OneOrThree/phone/pull/1674) · [#1675](https://github.com/OneOrThree/phone/pull/1675)
+- [카메라 작업 해제·iOS dSYM 누락 방지(11-16)](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/sentry/2026-11-16-camera-and-dsym.md)
+- [iOS 2.3.4 재빌드 기록(11-16)](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/sentry/2026-11-16-ios-2.3.4-rebuild.md)
+- [오류 수집과 재현 문맥 보강(11-17)](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/sentry/2026-11-17-diagnostics-capture.md)

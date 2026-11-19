@@ -1,10 +1,10 @@
 ---
 title: "역할 분담과 경계 계약"
-summary: "9월에 기록한 팀 역할은 당시 범위로 보존하고, 11월 3일 현재 서비스·앱·배포 계약과 담당자 기준 PR 집계를 연결합니다."
+summary: "9월에 기록한 팀 역할은 당시 범위로 보존하고, 11월 18일 현재 서비스·앱·배포 계약과 담당자 기준 PR 집계를 연결합니다."
 status: "유효"
-date: "2026-11-03"
+date: "2026-11-18"
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 author: "조재영"
 order: 1
 keywords:
@@ -38,7 +38,7 @@ related:
 
 - **제품 판정**: 재화 귀속, 적립일, 강퇴 정산처럼 정책을 바꾸는 선택은 결정 장부와 기능 정책에 남긴다. 구현자가 리뷰 중 발견한 결함은 정책 변경과 구분한다. [2.0 재화 결정](/adr/adr-035-village-economy-boundaries)
 - **서버**: Data가 원장·멤버십·정산의 최종 상태를 갖고, Business가 공개 API와 화면 조합을 맡는다. Realtime의 presence는 최종 권한이 아니다. 알림은 Notification의 Kafka·HTTP 수신과 외부 FCM 발송을 구분한다.
-- **앱**: 서버 응답을 화면에 연결하고 네이티브 측정·배포를 담당한다. 2.0 TestFlight 업로드는 앱스토어 공개 출시와 별개다. 일반 푸시·네이티브 모듈·OTA 호환은 활성 앱 README의 현재 구현을 따른다. 서버 의존 API는 운영 서버가 먼저 나가야 한다.
+- **앱**: 서버 응답을 화면에 연결하고 네이티브 측정·배포를 담당한다. 2.0 TestFlight 업로드는 앱스토어 공개 출시와 별개다. 일반 푸시·네이티브 모듈·OTA 호환은 활성 앱 README의 현재 구현을 따른다. 서버 의존 API는 운영 서버가 먼저 나가야 하며, 11월 5일부터 앱 출시 전에 운영 서버 호환성을 검사한다([#1613](https://github.com/OneOrThree/phone/pull/1613)).
 - **인프라**: 배포 시크릿 주입, 서비스 기동, 관측·CI의 검증 경계를 맡는다. 09-23 dev 배포 문제는 배포 준비 기록으로 남기고 제품 기능 완료로 세지 않는다.
 
 근거: `phone/doc/parallel/sprint15-2026-09-20/decisions.md`, `phone/logs/09-22.md`·`09-23.md`, `phone/logs/ponytail-server-refactor-2026-09-23.md`, `phone/docs/engineering/testflight/2026-09-23-ios-release.md`. 로그는 비공개 작업 기록이므로 이 사이트에는 정책·상태만 옮긴다.

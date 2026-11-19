@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="3050" viewBox="0 0 1760 3050" role="img" aria-labelledby="diagramTitle diagramDesc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="3460" viewBox="0 0 1760 3460" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 운영 호스트·컨테이너·포트</title>
-<desc id="diagramDesc">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
+<desc id="diagramDesc">2026.11.18 · phone 1281cbfc4 + infra 69edca4d(11-04 고정) · 배포 설정 대조 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
-<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="3050" fill="#ffffff"/>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="3460" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 운영 호스트·컨테이너·포트</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone af80af042 + infra 8522746ea · 배포 설정 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.18 · phone 1281cbfc4 + infra 69edca4d(11-04 고정) · 배포 설정 대조 + 11/03 S3·앱 호스트 확인 · 검증 범위는 근거 문서</text>
 <rect x="40" y="140" width="1680" height="290" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">01 · 공개 진입</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">Cloudflare 프록시 → Origin TLS. app·backoffice의 80/443은 Cloudflare IPv4만 허용한다.</text>
@@ -22,7 +22,10 @@
 <text x="64" y="2201" font-size="16" fill="#4d5a66" font-weight="400">백오피스가 DB로 직접 들어가지 않고 앱 호스트의 관리 프록시를 거친다. Cloudflare 뒤 Origin TLS는 앱과 별도다.</text>
 <rect x="40" y="2570" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="2604" font-size="19" fill="#334d61" font-weight="700">06 · 개발 환경은 GCP V2 · 운영과 다른 배치</text>
-<text x="64" y="2631" font-size="16" fill="#4d5a66" font-weight="400">oneorthree-v2.dev.mooo.com · main 자동 CD. dev 세 VM에는 Datadog Agent가 없고 dev 백오피스도 없다.</text>
+<text x="64" y="2631" font-size="16" fill="#4d5a66" font-weight="400">oneorthree-v2.dev.mooo.com · main 자동 CD · 11-05~06 새 GCP 프로젝트, 같은 VM. dev에는 Datadog Agent·백오피스 없음.</text>
+<rect x="40" y="3010" width="1680" height="400" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="3044" font-size="19" fill="#334d61" font-weight="700">07 · 공개 3D 웹 · AWS 밖 별도 배치</text>
+<text x="64" y="3071" font-size="16" fill="#4d5a66" font-weight="400">정적 웹은 Vercel, 실시간 방은 Cloudflare Worker. Cattus 서버 4종·AWS와 연결선이 없다. 배포 문서 기준.</text>
 <g data-cell-id="internet"><path d="M 520 310 L 655 310" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
 <rect x="568.0" y="284" width="40.0" height="23" rx="4" fill="#ffffff"/>
 <text x="588" y="300" font-size="14" text-anchor="middle" fill="#405768">443</text>
@@ -103,6 +106,14 @@
 <rect x="795.0" y="2894" width="170.0" height="23" rx="4" fill="#ffffff"/>
 <text x="880" y="2910" font-size="14" text-anchor="middle" fill="#405768">앱 → Redis 사설 TCP</text>
 </g>
+<g data-cell-id="webHttps"><path d="M 520 3195 L 655 3195" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="560.0" y="3169" width="56.0" height="23" rx="4" fill="#ffffff"/>
+<text x="588" y="3185" font-size="14" text-anchor="middle" fill="#405768">HTTPS</text>
+</g>
+<g data-cell-id="webWss"><path d="M 1105 3195 L 1240 3195" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1152.0" y="3169" width="40.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="3185" font-size="14" text-anchor="middle" fill="#405768">WSS</text>
+</g>
 <g data-cell-id="client">
 <rect x="70" y="225" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
 <text x="90" y="255" font-size="21" fill="#172b3a" font-weight="700">모바일 앱</text>
@@ -123,7 +134,7 @@
 <rect x="1240" y="225" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="1260" y="255" font-size="21" fill="#172b3a" font-weight="700">nginx · 앱 호스트</text>
 <text x="1260" y="284" font-size="16" fill="#4d5a66" font-weight="400">호스트 :80 → HTTPS / :443 TLS</text>
-<text x="1260" y="308" font-size="16" fill="#4d5a66" font-weight="400">공개 경로 allowlist → Business</text>
+<text x="1260" y="308" font-size="16" fill="#4d5a66" font-weight="400">공개 allowlist → Business · reports 미허용</text>
 <text x="1260" y="332" font-size="16" fill="#4d5a66" font-weight="400">/ws/realtime → Realtime</text>
 <text x="1260" y="356" font-size="16" fill="#4d5a66" font-weight="400">/internal · /actuator → 404</text>
 <text x="1260" y="400" font-size="14" fill="#3866a0" font-weight="700">nginx:1.28-alpine · 로그 stdout/stderr</text>
@@ -142,8 +153,8 @@
 <text x="675" y="610" font-size="21" fill="#172b3a" font-weight="700">Data · app:8080</text>
 <text x="675" y="639" font-size="16" fill="#4d5a66" font-weight="400">내부 권한·도메인 명령·정산</text>
 <text x="675" y="663" font-size="16" fill="#4d5a66" font-weight="400">제품 상태 + outbox 같은 TX</text>
-<text x="675" y="687" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL · Shared Redis</text>
-<text x="675" y="711" font-size="16" fill="#4d5a66" font-weight="400">mem 1536MiB</text>
+<text x="675" y="687" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL · Shared Redis · 1536MiB</text>
+<text x="675" y="711" font-size="16" fill="#4d5a66" font-weight="400">→ Meta CAPI HTTPS · 켠 경우만</text>
 <text x="675" y="755" font-size="14" fill="#3866a0" font-weight="700">app = data-api · /actuator :9091</text>
 </g>
 <g data-cell-id="realtime">
@@ -158,10 +169,10 @@
 <g data-cell-id="gateway">
 <rect x="70" y="880" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="90" y="910" font-size="21" fill="#172b3a" font-weight="700">관리 전용 nginx</text>
-<text x="90" y="939" font-size="16" fill="#4d5a66" font-weight="400">사설 :18080 → app:8080</text>
-<text x="90" y="963" font-size="16" fill="#4d5a66" font-weight="400">사설 :18082 → notification:8082</text>
-<text x="90" y="987" font-size="16" fill="#4d5a66" font-weight="400">정해진 /internal/admin 경로만</text>
-<text x="90" y="1011" font-size="16" fill="#4d5a66" font-weight="400">SG: 백오피스 호스트만 허용</text>
+<text x="90" y="939" font-size="16" fill="#4d5a66" font-weight="400">사설 :18080 → app · :18082 → noti</text>
+<text x="90" y="963" font-size="16" fill="#4d5a66" font-weight="400">공지·잡지·정책·발행 관리 경로만</text>
+<text x="90" y="987" font-size="16" fill="#4d5a66" font-weight="400">꾸미기 현황·추첨 풀·지급 경로 없음</text>
+<text x="90" y="1011" font-size="16" fill="#4d5a66" font-weight="400">신고 관리 경로 없음 · SG: 백오피스만</text>
 <text x="90" y="1055" font-size="14" fill="#3866a0" font-weight="700">backoffice-gateway · app-network</text>
 </g>
 <g data-cell-id="notification">
@@ -280,7 +291,7 @@
 <text x="1260" y="2270" font-size="21" fill="#172b3a" font-weight="700">앱 호스트 관리 프록시</text>
 <text x="1260" y="2299" font-size="16" fill="#4d5a66" font-weight="400">사설 :18080 → Data :8080</text>
 <text x="1260" y="2323" font-size="16" fill="#4d5a66" font-weight="400">사설 :18082 → Notification :8082</text>
-<text x="1260" y="2347" font-size="16" fill="#4d5a66" font-weight="400">관리 API allowlist + 서비스 인증</text>
+<text x="1260" y="2347" font-size="16" fill="#4d5a66" font-weight="400">allowlist에 꾸미기·신고 관리 없음</text>
 <text x="1260" y="2371" font-size="16" fill="#4d5a66" font-weight="400">공개 nginx의 /internal은 404</text>
 <text x="1260" y="2415" font-size="14" fill="#3866a0" font-weight="700">02절 backoffice-gateway 재표시</text>
 </g>
@@ -307,5 +318,29 @@
 <text x="1260" y="2753" font-size="16" fill="#4d5a66" font-weight="400">:6379 / :6380 · ACL · AOF</text>
 <text x="1260" y="2777" font-size="16" fill="#4d5a66" font-weight="400">운영보다 작은 메모리 한도</text>
 <text x="1260" y="2845" font-size="14" fill="#a9682b" font-weight="700">개발 Redis</text>
+</g>
+<g data-cell-id="webVisitor">
+<rect x="70" y="3110" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="3140" font-size="21" fill="#172b3a" font-weight="700">웹 방문자 브라우저</text>
+<text x="90" y="3169" font-size="16" fill="#4d5a66" font-weight="400">try.oneorthree.world</text>
+<text x="90" y="3193" font-size="16" fill="#4d5a66" font-weight="400">앱 계정·집중 기록과 분리된 체험</text>
+<text x="90" y="3217" font-size="16" fill="#4d5a66" font-weight="400">새로고침·종료 때 방 집중·예약 해제</text>
+<text x="90" y="3285" font-size="14" fill="#607583" font-weight="700">설치 없는 체험</text>
+</g>
+<g data-cell-id="webStatic">
+<rect x="655" y="3110" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="3140" font-size="21" fill="#172b3a" font-weight="700">Vercel · 정적 3D 웹</text>
+<text x="675" y="3169" font-size="16" fill="#4d5a66" font-weight="400">정적 빌드 파일만 배포</text>
+<text x="675" y="3193" font-size="16" fill="#4d5a66" font-weight="400">해시 번들·에셋 1년 캐시</text>
+<text x="675" y="3217" font-size="16" fill="#4d5a66" font-weight="400">Cattus 서버 API 호출 없음</text>
+<text x="675" y="3285" font-size="14" fill="#607583" font-weight="700">app/metaverse-web</text>
+</g>
+<g data-cell-id="webRoom">
+<rect x="1240" y="3110" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="1260" y="3140" font-size="21" fill="#172b3a" font-weight="700">Cloudflare Worker · 방</text>
+<text x="1260" y="3169" font-size="16" fill="#4d5a66" font-weight="400">Durable Object IslandRoom 하나</text>
+<text x="1260" y="3193" font-size="16" fill="#4d5a66" font-weight="400">WSS /island-room · Origin 1개만</text>
+<text x="1260" y="3217" font-size="16" fill="#4d5a66" font-weight="400">두 섬 합계 60명 · 낚시 의자 30석</text>
+<text x="1260" y="3285" font-size="14" fill="#7860aa" font-weight="700">방 주소는 배포 때 빌드에 지정</text>
 </g>
 </g></svg>

@@ -1,0 +1,61 @@
+---
+title: "ADR-040 — 퀘스트 출시 스위치를 코드에서 없애고, 배포 프로필은 전달 경로를 기본 ON으로 둔다"
+summary: "운영에서 섬장의 퀘스트 만들기가 503으로 실패하고 ERROR 메일이 왔습니다. 원인은 결정 기록 없이 false로 남아 있던 출시 스위치였습니다. 스위치를 코드에서 지워 다시 닫히지 않게 하고, relay·알림 발송·알림 Kafka 수신은 설정이 빠져도 꺼지지 않도록 배포 프로필 기본값을 ON으로 바꿨습니다."
+status: "유효 · 운영 반영 2026-11-10(catus-v2.0.11-V2)"
+date: "2026-11-09"
+order: 40
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
+keywords: [기능 스위치, 출시 스위치, 퀘스트, outbox relay, 알림, 설정 기본값, GROMO-2822]
+related:
+  - label: "운영·트러블슈팅 사례 지도"
+    href: "/operations/01-incident-map"
+  - label: "ADR-003 — Kafka outbox"
+    href: "/adr/adr-003-kafka-outbox"
+---
+
+## 맥락
+
+섬 퀘스트 생성·정산은 `island-quest.creation-enabled`·`settlement-enabled` 스위치 뒤에 있었습니다. 두 값은 GROMO-1773부터 `application-satellites.yml`에 `false`로 고정돼 있었고, 이를 바꾼 결정 기록은 없었습니다.
+
+앱은 섬장에게 「+ 만들기」를 보여 줬습니다. 운영에서 누르면 Data가 503 `QUEST_CREATION_UNAVAILABLE`로 거절했고, Business는 이를 공개 400 「잠시 후 다시 시도해 주세요」로 바꾸면서 ERROR 로그를 남겼습니다. 그 로그로 운영 ERROR 메일(Datadog 모니터)이 왔습니다.
+
+같은 점검에서 Data의 outbox relay, Notification의 발송 잡·Kafka 수신도 코드 기본값이 OFF라는 점을 확인했습니다. 운영은 Secrets Manager에 세 값을 모두 `true`로 명시해 동작했지만, 키가 빠지면 섬 실시간 사건과 알림이 조용히 멈추는 구조였습니다.
+
+## 선택지
+
+| 대상 | 선택지 | 판단 |
+| --- | --- | --- |
+| 퀘스트 스위치 | 스위치를 두고 설정값만 `true`로 바꿈 | 기각. 다시 닫힐 수 있다. 이번에도 결정 없이 닫힌 값이 원인이었다 |
+| 퀘스트 스위치 | 스위치·닫힘 오류 코드를 코드에서 제거 | 채택 |
+| 전달 경로 스위치 | 그대로 OFF, 운영 env로만 켬 | 기각. env 키가 빠지면 조용히 멈춘다 |
+| 전달 경로 스위치 | 코드 기본값(`OutboxRelayProperties.enabled` 등)까지 ON | 기각. 프로필 없이 뜨는 테스트·브로커 없는 로컬 실행이 relay·Kafka 소비자를 띄우게 된다 |
+| 전달 경로 스위치 | 배포 프로필(dev·prod) 기본값만 ON | 채택 |
+
+판단 이유는 #1638 본문과 결정 로그 「퀘스트-개방」 행에 적힌 내용입니다.
+
+## 결정
+
+**퀘스트.** `creationEnabled`·`settlementEnabled` 분기, 설정 키, `QUEST_CREATION_UNAVAILABLE`·`QUEST_SETTLEMENT_UNAVAILABLE` 오류 코드와 번역표 항목을 지웠습니다. 닫힌 상태를 검사하던 테스트도 지웠습니다. 보상은 설정값(개인 달성 +10, 전원 달성 보너스 대상 주민 수 × 5, 전액 섬 통장)을 쓰고, 미결이던 QQ05(보상 설정 revision 등록 방식)는 별도 revision 없이 이 값을 쓰는 것으로 닫았습니다.
+
+**전달 경로.** Data `outbox.relay.enabled`는 `${OUTBOX_RELAY_ENABLED:true}`, Notification dev·prod 프로필의 `scheduling-enabled`·`kafka-enabled`는 `${...:true}`입니다. relay를 켤 때 필수인 재시도 정책에도 dev 전환 때 승인한 기본값을 넣었습니다. 값이 없으면 기동 검증이 멈추기 때문입니다. 기본 `application.yml`과 `ci` 프로필은 OFF 그대로입니다.
+
+## 근거
+
+- 출시 스위치가 남아 있으면 「켜는 결정」이 기록되지 않은 채 닫힌 상태가 오래 갈 수 있습니다. 이번 실패는 기능 결함이 아니라 그 상태였습니다.
+- 전달 경로는 설정이 빠지면 오류 없이 조용히 멈춥니다(#1638 본문). 배포 환경에서는 켜진 쪽을 기본으로 둡니다.
+- 테스트·로컬은 브로커가 없으므로 코드 기본값은 OFF로 남깁니다.
+
+## 영향
+
+- **운영.** #1638은 2026-11-10 00:08 KST `catus-v2.0.11-V2`로 운영에 반영됐습니다(배포 기록). 그 전까지 운영 퀘스트 만들기는 계속 실패했습니다.
+- **전달 경로의 운영 동작은 바뀌지 않았습니다.** PR 작성 때(11-09) 운영 Secrets Manager에 세 값이 이미 `true`로 있었습니다. 바뀐 것은 키가 빠졌을 때 꺼지지 않는다는 점입니다. relay 재시도 정책도 운영은 Secrets Manager 값을 씁니다(max-backoff만 기본값과 다름).
+- **남은 닫힌 기능.** 같은 점검에서 찾은 다른 닫힌 기능은 GROMO-2823~2827로 나눴습니다. 이 ADR은 퀘스트와 세 전달 경로에만 적용됩니다.
+- **검증 범위.** PR 시점에 퀘스트 생성·받기 앱 화면은 실제 서버에서 돌아간 적이 없었습니다. dev에서 섬장 계정으로 만들기·받기·섬 통장 적립을 확인한 뒤 운영에 올리도록 적었습니다.
+- **후속.** main의 #1672(GROMO-2897, 퀘스트 삭제·시간대 겹침 금지)는 2026-11-18 기준 운영 서버에 없습니다.
+
+## 근거 자료
+
+- [#1638 — 퀘스트 출시 스위치 제거와 배포 기본 ON](https://github.com/OneOrThree/phone/pull/1638)
+- [결정 로그 — 퀘스트-개방(2026-11-09)](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/decision-log.md)
+- [섬 퀘스트 정책 — 출시 조건](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/island-quests/policy.md)
+- [V2 운영·배포 — 반영 이력](/operations/06-v2-deployment)
