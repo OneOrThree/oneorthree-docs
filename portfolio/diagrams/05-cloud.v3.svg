@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · AWS 운영 V2</title>
+<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · AWS 운영 V2</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">공개 진입과 서버</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">현재 배치는 저장소 운영 기록 기준이며 이 도면 자체가 호스트 가용성 검사는 아니다.</text>
+<rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">분리한 런타임과 저장소</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">Kafka와 Redis는 각자 EC2. RDS는 기존 운영 인스턴스를 계속 사용한다.</text>
+<rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">운영 지원과 변경 경로</text>
+<text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">운영 기록의 Agent health와 Datadog 최신 수신 상태는 구분한다.</text>
+<g data-cell-id="edgeEntry"><path d="M 520 315 L 655 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="543.0" y="289" width="88.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="305" font-size="14" text-anchor="middle" fill="#405768">HTTPS/WSS</text>
+</g>
+<g data-cell-id="appEntry"><path d="M 1105 315 L 1240 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1142.25" y="289" width="59.5" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="305" font-size="14" text-anchor="middle" fill="#405768">라우팅</text>
+</g>
+<g data-cell-id="appDb"><path d="M 1465 420 L 1465 570" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1449.0" y="446" width="32.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1465" y="462" font-size="14" text-anchor="middle" fill="#405768">DB</text>
+</g>
+<g data-cell-id="client">
+<rect x="70" y="230" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="90" y="260" font-size="21" fill="#172b3a" font-weight="700">앱·운영자</text>
+<text x="90" y="289" font-size="16" fill="#4d5a66" font-weight="400">앱: catus-api-v2 도메인</text>
+<text x="90" y="313" font-size="16" fill="#4d5a66" font-weight="400">운영자: backoffice-v2 도메인</text>
+<text x="90" y="337" font-size="16" fill="#4d5a66" font-weight="400">HTTPS·WSS 공개 경로</text>
+<text x="90" y="405" font-size="14" fill="#607583" font-weight="700">*.oneorthree.world</text>
+</g>
+<g data-cell-id="edge">
+<rect x="655" y="230" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">Cloudflare·nginx</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">공개 주소·TLS·라우팅</text>
+<text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">HTTP는 Business로 전달</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">WSS는 Realtime으로 전달</text>
+<text x="675" y="405" font-size="14" fill="#607583" font-weight="700">내부 API는 앱 진입점 아님</text>
+</g>
+<g data-cell-id="app">
+<rect x="1240" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">서버 EC2 · m6g.large</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">Business·Data·Realtime·Notification</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">서비스별 이미지·설정·DB 계약</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">nginx와 서버 4종 한 호스트</text>
+<text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">catus-prod-V2</text>
+</g>
+<g data-cell-id="kafka">
+<rect x="70" y="570" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="90" y="600" font-size="21" fill="#172b3a" font-weight="700">Kafka · m6g.medium</text>
+<text x="90" y="629" font-size="16" fill="#4d5a66" font-weight="400">Kafka 3.8.1</text>
+<text x="90" y="653" font-size="16" fill="#4d5a66" font-weight="400">알림 사건과 선택 REALTIME 경로</text>
+<text x="90" y="677" font-size="16" fill="#4d5a66" font-weight="400">별도 발행·수동 CD</text>
+<text x="90" y="745" font-size="14" fill="#7860aa" font-weight="700">catus-kafka-prod-V2</text>
+</g>
+<g data-cell-id="redis">
+<rect x="655" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">Redis · m6g.medium</text>
+<text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">Redis 7.4.11 두 인스턴스</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">Shared maxmemory 384MB</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">Business maxmemory 128MB</text>
+<text x="675" y="745" font-size="14" fill="#a9682b" font-weight="700">noeviction · AOF · ACL</text>
+</g>
+<g data-cell-id="db">
+<rect x="1240" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="600" font-size="21" fill="#172b3a" font-weight="700">RDS PostgreSQL</text>
+<text x="1260" y="629" font-size="16" fill="#4d5a66" font-weight="400">catus-prod-db · db.t4g.small</text>
+<text x="1260" y="653" font-size="16" fill="#4d5a66" font-weight="400">서비스별 데이터 소유권</text>
+<text x="1260" y="677" font-size="16" fill="#4d5a66" font-weight="400">별도 catus-prod-db-v2는 미사용</text>
+<text x="1260" y="745" font-size="14" fill="#a9682b" font-weight="700">마이그레이션 배포 게이트</text>
+</g>
+<g data-cell-id="backoffice">
+<rect x="70" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">백오피스 · t4g.small</text>
+<text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">공지·운영진 편지·잡지·정책</text>
+<text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">서버·앱 출시 현황</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">main → 환경 승인 → 배포</text>
+<text x="90" y="1085" font-size="14" fill="#3866a0" font-weight="700">catus-backoffice-prod-V2</text>
+</g>
+<g data-cell-id="artifacts">
+<rect x="655" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">ECR·S3·SSM</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">이미지 digest·불변 릴리스</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">deployments 성공 상태 기록</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">SSM으로 지정한 버전 적용</text>
+<text x="675" y="1085" font-size="14" fill="#607583" font-weight="700">Infra revision 고정</text>
+</g>
+<g data-cell-id="observability">
+<rect x="1240" y="910" width="450" height="190" rx="12" fill="#f2f5f7" stroke="#607583" stroke-width="1.4"/>
+<text x="1260" y="940" font-size="21" fill="#172b3a" font-weight="700">관측</text>
+<text x="1260" y="969" font-size="16" fill="#4d5a66" font-weight="400">운영 4호스트 Datadog Agent</text>
+<text x="1260" y="993" font-size="16" fill="#4d5a66" font-weight="400">11월 2일 health 확인 기록</text>
+<text x="1260" y="1017" font-size="16" fill="#4d5a66" font-weight="400">로그 rollout·수신은 별도 확인</text>
+<text x="1260" y="1085" font-size="14" fill="#607583" font-weight="700">V1 로그 경로와 구분</text>
+</g>
+</g></svg>

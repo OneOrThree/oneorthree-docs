@@ -1,0 +1,71 @@
+---
+title: "ADR-039 — 앱 출시는 운영 서버 반영과 호환성 검사를 통과한 뒤에만 한다"
+summary: "11월 1일 앱이 서버보다 먼저 나가 첫 항해 도착 API가 운영에서 404를 냈습니다. PR 본문의 출시 순서 문장 대신, 마지막 운영 CD 기록과 서버 실행 코드 차이로 출시를 막고(11-02), dev 시나리오·버전 대조·운영 핵심 검사를 더했습니다(11-05). Android Play internal은 경고만 남기는 예외가 있습니다."
+status: "유효 · Android internal은 경고"
+date: "2026-11-05"
+order: 39
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
+keywords: [출시 게이트, 앱 출시, 서버 호환성, deployment-status, smoke, GROMO-2684, GROMO-2768]
+related:
+  - label: "V2 운영·배포"
+    href: "/operations/06-v2-deployment"
+  - label: "ADR-037 — 운영 V2 승격·발행·수동 배포"
+    href: "/adr/adr-037-v2-release"
+---
+
+## 맥락
+
+2.0 앱은 서버보다 먼저 스토어에 나갈 수 있습니다. 앱 바이너리·OTA는 로컬 스크립트와 Play CD로 나가고, 서버는 release 승격과 수동 CD로 나갑니다.
+
+11월 1일 새 앱이 쓰는 첫 항해 도착 API `POST /islands/{id}/intro-arrivals`가 운영 서버에 없어 404로 100건 실패했습니다. 팀은 스토어 리뷰로 알았습니다(#1534 본문).
+
+당시 다른 방향에는 강제 장치가 있었습니다. 옛 앱 → 새 서버, 백오피스 → 서버, 서버 → DB·Infra입니다. 새 앱 → 서버만 PR 본문의 출시 순서 문장으로 관리했습니다.
+
+## 선택지
+
+| 선택지 | 판단 | 이유(PR 본문) |
+| --- | --- | --- |
+| 사람이 적는 의존성 장부·PR 출시 순서 문장 | 기각 | 이번에 실패한 방식이다 |
+| 앱이 실제로 부르는 라우트만 정밀 비교 | 1단계에서 기각 | 승격 비용이 낮아, 앱과 무관한 서버 변경도 막는 쪽을 택했다 |
+| 워크플로 `head_sha`를 운영 버전으로 사용 | 기각 | 이전 태그 배포나 롤백에서 실제 운영보다 앞설 수 있다 |
+| 마지막 운영 CD 성공 기록 기준으로 서버 실행 코드 차이를 비교하고, 조회 실패도 막음 | 채택(#1534, 11-02) | 커밋 비교로 계산해 사람의 기억에 기대지 않는다 |
+| 위 비교 + 응답 계약·dev 시나리오·버전 대조·운영 핵심 검사 | 채택(#1613, 11-05) | 경로 일치만으로 응답 호환을 승인하지 않는다 |
+
+## 결정
+
+**1. 서버 선행 게이트(#1534).** `ota-update.sh`, `testflight.sh` 운영 경로, Android 운영 release Gradle이 `app-server-gate.py`를 부릅니다.
+
+- 정본은 CD가 성공 때 쓰는 `deployment-status` 브랜치의 `prod-V2/<role>.json`입니다. AWS 권한 없이 읽습니다.
+- release의 최근 `prod-cd-V2` 실행이 성공일 때만 기록을 믿습니다. 실패·취소·진행 중이면 판정 불가로 막습니다.
+- 운영 태그의 커밋과 앱 HEAD 사이에 `server/(business-api|data-api|realtime|notification)/src/main/` 변경이 있으면 막습니다.
+- 예외는 `ALLOW_SERVER_GAP="사유"` 하나입니다.
+
+**2. 호환성 검사(#1613).** 게이트 끝에서 `release_check.py`를 부릅니다.
+
+- 앱 API 호출 목록과 서버 경로를 정적으로 대조합니다.
+- 핵심 8종 응답의 필드·타입을 검사합니다.
+- dev에서 첫 항해·집중 여정 시나리오를 돌리고, 검사한 앱 트리와 서비스 소스 SHA를 기록합니다.
+- 빌드할 앱 트리와 운영 네 서비스 소스가 그 dev 검사 때와 같아야 합니다.
+- 운영 고정 주소에서 임시 게스트·임시 섬으로 핵심 조회를 확인하고, 섬 폐쇄·계정 탈퇴로 정리합니다. 정리가 실패하면 출시를 막습니다.
+- `app/app-dev`에 커밋하지 않은 변경이 있으면 예외 설정과 관계없이 막습니다. `ALLOW_SERVER_GAP`은 1번 비교만 건너뛰고 2번은 건너뛰지 않습니다.
+
+## 근거
+
+- 판정 근거가 배포 기록이라 「main에 머지됨」과 「운영에 있음」을 섞지 않습니다.
+- 소스가 다르면 호환되는 경우에도 재검증 전에는 막습니다. 문서는 이를 「보수적」이라고 적고, 서버 승격 비용이 낮다는 점을 이유로 듭니다.
+- 운영과 dev의 설정 차이는 같은 소스라는 사실로 보증되지 않습니다. 그래서 운영 실제 응답 검사를 따로 둡니다.
+
+## 영향
+
+- 서버 변경이 main에 있으면 앱을 내기 전에 서버를 먼저 승격·배포합니다. 11월 10·12일 승격 PR(#1647·#1663)은 같은 main으로 만드는 iOS·Android 운영 빌드의 서버 선행 조건을 맞추려고 열렸습니다.
+- **Android 예외.** CI의 `server-gate`는 11-02부터 `continue-on-error`라 Play internal 게시는 경고만 남깁니다. internal 게시 성공은 이 검사 통과가 아닙니다. 로컬 Android 운영 빌드와 iOS·OTA는 막힙니다.
+- **보지 못하는 것.** Infra·시크릿·nginx 의존성, 앱이 서버 변경을 실제로 쓰는지 여부, 이미 업로드한 앱의 App Store Connect 출시 버튼, 과거 모든 앱 버전과의 호환입니다.
+- **운영 쓰기.** 운영 검사는 실행마다 임시 계정 1개·섬 1개를 만들고 지웁니다. 정리 기록에는 인증 정보가 있어 보호된 영속 경로(0700/0600)에 두고 CI 산출물로 공유하지 않습니다. 부하 시험이 아닙니다.
+- **순서 예외.** 11월 8일 소유자 요청으로 iOS TestFlight·Android internal을 먼저 냈고, 서버는 11월 10일 따라갔습니다(#1632). 예외는 PR에 기록합니다.
+
+## 근거 자료
+
+- [#1534 — 서버 선행 게이트](https://github.com/OneOrThree/phone/pull/1534) · [#1613 — 호환성 검사](https://github.com/OneOrThree/phone/pull/1613) · [#1633 — Android CI 중복 검사 제거](https://github.com/OneOrThree/phone/pull/1633)
+- [앱 출시 검증과 운영 오류 감시](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/app-release-safety.md)
+- [앱 출시 게이트 구현](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/.github/scripts/app-server-gate.py)
+- [Android CI와 Play 내부 테스트 CD — 서버 선행 게이트](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/conventions/android-ci-cd.md)

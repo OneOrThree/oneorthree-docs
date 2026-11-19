@@ -8,7 +8,7 @@
         <mxCell id="heading" value="Cattus · 서비스 아키텍처" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=32;fontStyle=1;align=left;">
           <mxGeometry as="geometry" x="60" y="24" width="1640" height="45" />
         </mxCell>
-        <mxCell id="subtitle" value="2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
+        <mxCell id="subtitle" value="2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님" vertex="1" connectable="0" parent="1" style="text;html=0;fontSize=17;align=left;fontColor=#4d5a66;">
           <mxGeometry as="geometry" x="60" y="72" width="1640" height="30" />
         </mxCell>
         <mxCell id="band0" value="" vertex="1" connectable="0" parent="1" style="rounded=1;fillColor=#f8fafc;strokeColor=#dce4eb;">
@@ -79,22 +79,22 @@
         <mxCell id="business" value="&lt;b&gt;Business API&lt;/b&gt;&lt;br&gt;공개 인증·DTO·오류·화면 조합&lt;br&gt;Data·Realtime·Notification 호출&lt;br&gt;Business Redis: 폐기 sid&lt;br&gt;&lt;b&gt;도메인 DB 없음&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="230" width="450" height="190" />
         </mxCell>
-        <mxCell id="data" value="&lt;b&gt;Data API · 코어 DB&lt;/b&gt;&lt;br&gt;섬·집중·물고기·상품·친구·편지&lt;br&gt;현재 주민 자격·원장·receipt&lt;br&gt;PostgreSQL 상태·outbox&lt;br&gt;&lt;b&gt;친구 편지는 letters에 저장&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="data" value="&lt;b&gt;Data API · 코어 DB&lt;/b&gt;&lt;br&gt;섬·집중·물고기·상품·친구·편지·신고&lt;br&gt;꾸미기 지급(2인 승인)·첫 도착 사건&lt;br&gt;백오피스 → 관리 API · 2인 승인&lt;br&gt;첫 섬 도착 → Meta CAPI · 기본 OFF&lt;br&gt;&lt;b&gt;PostgreSQL 상태·outbox·원장·receipt&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="230" width="450" height="190" />
         </mxCell>
         <mxCell id="chatApp" value="&lt;b&gt;앱 · 우리 섬 채팅방&lt;/b&gt;&lt;br&gt;Business → Data 주민 자격 확인&lt;br&gt;Business → Realtime 내부 REST&lt;br&gt;clientMessageId로 재전송 처리&lt;br&gt;&lt;b&gt;저장 후 사건 기록은 별도 TX&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="570" width="450" height="190" />
         </mxCell>
-        <mxCell id="realtime" value="&lt;b&gt;Realtime · 채팅 DB&lt;/b&gt;&lt;br&gt;채팅 저장·조회·fanout&lt;br&gt;집중·휴식·응원·섬 사건&lt;br&gt;이동·바다·폐기 세션 처리&lt;br&gt;&lt;b&gt;gromo_chat · 채팅 정본&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="realtime" value="&lt;b&gt;Realtime · 채팅 DB&lt;/b&gt;&lt;br&gt;채팅 저장·조회·fanout&lt;br&gt;집중·휴식·응원·섬 사건&lt;br&gt;이동·바다·폐기 세션 처리&lt;br&gt;탈퇴자 메시지 파기(V4)&lt;br&gt;&lt;b&gt;gromo_chat · 채팅 정본&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="570" width="450" height="190" />
         </mxCell>
         <mxCell id="shared" value="&lt;b&gt;Shared Redis&lt;/b&gt;&lt;br&gt;presence·chat fanout&lt;br&gt;이동 lease·epoch·명령·프레임&lt;br&gt;이동 multi-instance 기본 ON&lt;br&gt;&lt;b&gt;제품 권한·영속 이동 로그 아님&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e8;strokeColor=#a9682b;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="1240" y="570" width="450" height="190" />
         </mxCell>
-        <mxCell id="outbox" value="&lt;b&gt;Data · outbox relay&lt;/b&gt;&lt;br&gt;상태와 사건을 같은 TX로 기록&lt;br&gt;대상별 전달·중복·재시도&lt;br&gt;세션 폐기는 Realtime에도 전달&lt;br&gt;&lt;b&gt;채팅 저장과는 별도 호출&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="outbox" value="&lt;b&gt;Data · outbox relay&lt;/b&gt;&lt;br&gt;상태와 사건을 같은 TX로 기록&lt;br&gt;대상별 전달·중복·재시도&lt;br&gt;세션 폐기·탈퇴도 Realtime에 전달&lt;br&gt;&lt;b&gt;배포 프로필 기본 ON · 채팅 저장과 별도&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#edf4fc;strokeColor=#3866a0;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="70" y="910" width="450" height="190" />
         </mxCell>
-        <mxCell id="transport" value="&lt;b&gt;Kafka · 내부 HTTP&lt;/b&gt;&lt;br&gt;알림: notification-events&lt;br&gt;REALTIME: 기본 HTTP&lt;br&gt;realtime-events는 선택 경로&lt;br&gt;&lt;b&gt;소비자 활성화는 개별 설정&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
+        <mxCell id="transport" value="&lt;b&gt;Kafka · 내부 HTTP&lt;/b&gt;&lt;br&gt;알림: notification-events&lt;br&gt;REALTIME: 기본 HTTP&lt;br&gt;realtime-events는 선택 · 기본 OFF&lt;br&gt;&lt;b&gt;Notification 수신·relay 배포 기본 ON&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">
           <mxGeometry as="geometry" x="655" y="910" width="450" height="190" />
         </mxCell>
         <mxCell id="notification" value="&lt;b&gt;Notification · 알림 DB&lt;/b&gt;&lt;br&gt;수신·중복 방지·발송 조건&lt;br&gt;기기 설정·발송 이력&lt;br&gt;FCM으로 외부 푸시 요청&lt;br&gt;&lt;b&gt;gromo_notification&lt;/b&gt;" vertex="1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0edfb;strokeColor=#7860aa;fontColor=#172b3a;fontSize=16;align=left;verticalAlign=top;spacingTop=14;spacingLeft=20;spacingRight=14;spacingBottom=12;">

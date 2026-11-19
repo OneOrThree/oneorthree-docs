@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cattus · 서비스 아키텍처</title><style>
+*{box-sizing:border-box}body{margin:0;color:#172b3a;background:#fff;font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+header{position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #dce4eb;padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button,a{font:inherit;font-size:13px;border:1px solid #dce4eb;border-radius:6px;padding:7px 10px;background:#f8fafc;color:#172b3a;text-decoration:none;cursor:pointer}
+button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0;font-size:12px;color:#4d5a66;flex-basis:100%}
+#viewport{overflow:auto;height:calc(100vh - 105px);min-height:400px}svg{display:block;width:100%;height:auto;min-width:900px}
+[data-cell-id]{transition:opacity .15s}g[role=button]{cursor:pointer}g[role=button]:focus{outline:none}g[role=button]:focus rect{stroke:#172b3a;stroke-width:4}
+.dim{opacity:.16}#text{max-width:1000px;margin:0 auto;padding:20px}article{border-bottom:1px solid #dce4eb;padding:12px 0}h2{font-size:20px}li,p{line-height:1.7}
+[hidden]{display:none!important}@media print{header{position:static}header button{display:none}#viewport{height:auto;overflow:visible}svg{width:100%!important;min-width:0}}
+</style></head><body><header>
+<button id="diagram" aria-pressed="true">다이어그램</button><button id="textView" aria-pressed="false">문서 보기</button>
+<button id="fit">전체 보기</button><button id="zoomIn" aria-label="확대">＋</button><button id="zoomOut" aria-label="축소">−</button><button id="reset">연결 강조 해제</button>
+<a href="03-service.v7.svg" download>SVG ↓</a><a href="03-service.v7.drawio.xml" download>draw.io 원본 ↓</a>
+<a href="/spec/service-architecture" target="_top">근거 문서</a><p id="hint" aria-live="polite">상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.</p>
+</header><main><div id="viewport"><svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
+<title id="diagramTitle">Cattus · 서비스 아키텍처</title>
+<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
+<g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
+<text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 서비스 아키텍처</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">공개 HTTP와 제품 정본</text>
+<text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">Business는 공개 계약, Data는 현재 권한·원자 명령·제품 데이터의 정본을 맡는다.</text>
+<rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">채팅과 실시간</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">현재 앱의 단체 채팅은 REST·10초 폴링. STOMP의 채널별 권한은 별도다.</text>
+<rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
+<text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">커밋된 사건과 알림</text>
+<text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">전달 성공·소비 성공·기기 도착은 각각 다른 단계다. 플래그 기본값과 운영값도 구분한다.</text>
+<g data-cell-id="http"><path d="M 520 315 L 655 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="563.0" y="289" width="48.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="305" font-size="14" text-anchor="middle" fill="#405768">HTTP</text>
+</g>
+<g data-cell-id="internal"><path d="M 1105 315 L 1240 315" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1129.5" y="289" width="85.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="305" font-size="14" text-anchor="middle" fill="#405768">내부 HTTP</text>
+</g>
+<g data-cell-id="chatRest"><path d="M 520 655 L 655 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="544.5" y="629" width="85.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="645" font-size="14" text-anchor="middle" fill="#405768">내부 REST</text>
+</g>
+<g data-cell-id="redis"><path d="M 1105 655 L 1240 655" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1127.75" y="629" width="88.5" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="645" font-size="14" text-anchor="middle" fill="#405768">전파·상태</text>
+</g>
+<g data-cell-id="relay"><path d="M 520 995 L 655 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="564.5" y="969" width="45.0" height="23" rx="4" fill="#ffffff"/>
+<text x="587" y="985" font-size="14" text-anchor="middle" fill="#405768">전달</text>
+</g>
+<g data-cell-id="notify"><path d="M 1105 995 L 1240 995" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="1131.0" y="969" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="1172" y="985" font-size="14" text-anchor="middle" fill="#405768">알림 사건</text>
+</g>
+<g data-cell-id="realtimeEvent"><path d="M 880 910 L 880 760" fill="none" stroke="#607583" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="839.0" y="786" width="82.0" height="23" rx="4" fill="#ffffff"/>
+<text x="880" y="802" font-size="14" text-anchor="middle" fill="#405768">사건 입구</text>
+</g>
+<g data-cell-id="app">
+<rect x="70" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="260" font-size="21" fill="#172b3a" font-weight="700">모바일 앱</text>
+<text x="90" y="289" font-size="16" fill="#4d5a66" font-weight="400">React Native · Expo</text>
+<text x="90" y="313" font-size="16" fill="#4d5a66" font-weight="400">공개 HTTP · /screens 조합 응답</text>
+<text x="90" y="337" font-size="16" fill="#4d5a66" font-weight="400">WSS는 Realtime 연결</text>
+<text x="90" y="405" font-size="14" fill="#3866a0" font-weight="700">활성 2.0 앱</text>
+</g>
+<g data-cell-id="business">
+<rect x="655" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">Business API</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">공개 인증·DTO·오류·화면 조합</text>
+<text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">Data·Realtime·Notification 호출</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">Business Redis: 폐기 sid</text>
+<text x="675" y="405" font-size="14" fill="#3866a0" font-weight="700">도메인 DB 없음</text>
+</g>
+<g data-cell-id="data">
+<rect x="1240" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="1260" y="260" font-size="21" fill="#172b3a" font-weight="700">Data API · 코어 DB</text>
+<text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">섬·집중·물고기·상품·친구·편지</text>
+<text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">현재 주민 자격·원장·receipt</text>
+<text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">PostgreSQL 상태·outbox</text>
+<text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">친구 편지는 letters에 저장</text>
+</g>
+<g data-cell-id="chatApp">
+<rect x="70" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="600" font-size="21" fill="#172b3a" font-weight="700">앱 · 우리 섬 채팅방</text>
+<text x="90" y="629" font-size="16" fill="#4d5a66" font-weight="400">Business → Data 주민 자격 확인</text>
+<text x="90" y="653" font-size="16" fill="#4d5a66" font-weight="400">Business → Realtime 내부 REST</text>
+<text x="90" y="677" font-size="16" fill="#4d5a66" font-weight="400">clientMessageId로 재전송 처리</text>
+<text x="90" y="745" font-size="14" fill="#3866a0" font-weight="700">저장 후 사건 기록은 별도 TX</text>
+</g>
+<g data-cell-id="realtime">
+<rect x="655" y="570" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">Realtime · 채팅 DB</text>
+<text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">채팅 저장·조회·fanout</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">집중·휴식·응원·섬 사건</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">이동·바다·폐기 세션 처리</text>
+<text x="675" y="745" font-size="14" fill="#7860aa" font-weight="700">gromo_chat · 채팅 정본</text>
+</g>
+<g data-cell-id="shared">
+<rect x="1240" y="570" width="450" height="190" rx="12" fill="#fff3e8" stroke="#a9682b" stroke-width="1.4"/>
+<text x="1260" y="600" font-size="21" fill="#172b3a" font-weight="700">Shared Redis</text>
+<text x="1260" y="629" font-size="16" fill="#4d5a66" font-weight="400">presence·chat fanout</text>
+<text x="1260" y="653" font-size="16" fill="#4d5a66" font-weight="400">이동 lease·epoch·명령·프레임</text>
+<text x="1260" y="677" font-size="16" fill="#4d5a66" font-weight="400">이동 multi-instance 기본 ON</text>
+<text x="1260" y="745" font-size="14" fill="#a9682b" font-weight="700">제품 권한·영속 이동 로그 아님</text>
+</g>
+<g data-cell-id="outbox">
+<rect x="70" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
+<text x="90" y="940" font-size="21" fill="#172b3a" font-weight="700">Data · outbox relay</text>
+<text x="90" y="969" font-size="16" fill="#4d5a66" font-weight="400">상태와 사건을 같은 TX로 기록</text>
+<text x="90" y="993" font-size="16" fill="#4d5a66" font-weight="400">대상별 전달·중복·재시도</text>
+<text x="90" y="1017" font-size="16" fill="#4d5a66" font-weight="400">세션 폐기는 Realtime에도 전달</text>
+<text x="90" y="1085" font-size="14" fill="#3866a0" font-weight="700">채팅 저장과는 별도 호출</text>
+</g>
+<g data-cell-id="transport">
+<rect x="655" y="910" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">Kafka · 내부 HTTP</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">알림: notification-events</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">REALTIME: 기본 HTTP</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">realtime-events는 선택 경로</text>
+<text x="675" y="1085" font-size="14" fill="#7860aa" font-weight="700">소비자 활성화는 개별 설정</text>
+</g>
+<g data-cell-id="notification">
+<rect x="1240" y="910" width="450" height="190" rx="12" fill="#f0edfb" stroke="#7860aa" stroke-width="1.4"/>
+<text x="1260" y="940" font-size="21" fill="#172b3a" font-weight="700">Notification · 알림 DB</text>
+<text x="1260" y="969" font-size="16" fill="#4d5a66" font-weight="400">수신·중복 방지·발송 조건</text>
+<text x="1260" y="993" font-size="16" fill="#4d5a66" font-weight="400">기기 설정·발송 이력</text>
+<text x="1260" y="1017" font-size="16" fill="#4d5a66" font-weight="400">FCM으로 외부 푸시 요청</text>
+<text x="1260" y="1085" font-size="14" fill="#7860aa" font-weight="700">gromo_notification</text>
+</g>
+</g></svg>
+</div><section id="text" hidden><article><h2>모바일 앱</h2><p>React Native · Expo · 공개 HTTP · /screens 조합 응답 · WSS는 Realtime 연결</p><p>활성 2.0 앱</p><ul><li>HTTP → Business API</li></ul></article><article><h2>Business API</h2><p>공개 인증·DTO·오류·화면 조합 · Data·Realtime·Notification 호출 · Business Redis: 폐기 sid</p><p>도메인 DB 없음</p><ul><li>모바일 앱 → HTTP</li><li>내부 HTTP → Data API · 코어 DB</li></ul></article><article><h2>Data API · 코어 DB</h2><p>섬·집중·물고기·상품·친구·편지 · 현재 주민 자격·원장·receipt · PostgreSQL 상태·outbox</p><p>친구 편지는 letters에 저장</p><ul><li>Business API → 내부 HTTP</li></ul></article><article><h2>앱 · 우리 섬 채팅방</h2><p>Business → Data 주민 자격 확인 · Business → Realtime 내부 REST · clientMessageId로 재전송 처리</p><p>저장 후 사건 기록은 별도 TX</p><ul><li>내부 REST → Realtime · 채팅 DB</li></ul></article><article><h2>Realtime · 채팅 DB</h2><p>채팅 저장·조회·fanout · 집중·휴식·응원·섬 사건 · 이동·바다·폐기 세션 처리</p><p>gromo_chat · 채팅 정본</p><ul><li>앱 · 우리 섬 채팅방 → 내부 REST</li><li>Kafka · 내부 HTTP → 사건 입구</li><li>전파·상태 → Shared Redis</li></ul></article><article><h2>Shared Redis</h2><p>presence·chat fanout · 이동 lease·epoch·명령·프레임 · 이동 multi-instance 기본 ON</p><p>제품 권한·영속 이동 로그 아님</p><ul><li>Realtime · 채팅 DB → 전파·상태</li></ul></article><article><h2>Data · outbox relay</h2><p>상태와 사건을 같은 TX로 기록 · 대상별 전달·중복·재시도 · 세션 폐기는 Realtime에도 전달</p><p>채팅 저장과는 별도 호출</p><ul><li>전달 → Kafka · 내부 HTTP</li></ul></article><article><h2>Kafka · 내부 HTTP</h2><p>알림: notification-events · REALTIME: 기본 HTTP · realtime-events는 선택 경로</p><p>소비자 활성화는 개별 설정</p><ul><li>Data · outbox relay → 전달</li><li>알림 사건 → Notification · 알림 DB</li><li>사건 입구 → Realtime · 채팅 DB</li></ul></article><article><h2>Notification · 알림 DB</h2><p>수신·중복 방지·발송 조건 · 기기 설정·발송 이력 · FCM으로 외부 푸시 요청</p><p>gromo_notification</p><ul><li>Kafka · 내부 HTTP → 알림 사건</li></ul></article></section></main>
+<script type="application/json" id="graph">{"nodes": [{"id": "app", "x": 70, "y": 230, "w": 450, "h": 190, "title": "모바일 앱", "lines": ["React Native · Expo", "공개 HTTP · /screens 조합 응답", "WSS는 Realtime 연결"], "kind": "core", "stage": "활성 2.0 앱", "state": "code"}, {"id": "business", "x": 655, "y": 230, "w": 450, "h": 190, "title": "Business API", "lines": ["공개 인증·DTO·오류·화면 조합", "Data·Realtime·Notification 호출", "Business Redis: 폐기 sid"], "kind": "core", "stage": "도메인 DB 없음", "state": "code"}, {"id": "data", "x": 1240, "y": 230, "w": 450, "h": 190, "title": "Data API · 코어 DB", "lines": ["섬·집중·물고기·상품·친구·편지", "현재 주민 자격·원장·receipt", "PostgreSQL 상태·outbox"], "kind": "core", "stage": "친구 편지는 letters에 저장", "state": "code"}, {"id": "chatApp", "x": 70, "y": 570, "w": 450, "h": 190, "title": "앱 · 우리 섬 채팅방", "lines": ["Business → Data 주민 자격 확인", "Business → Realtime 내부 REST", "clientMessageId로 재전송 처리"], "kind": "core", "stage": "저장 후 사건 기록은 별도 TX", "state": "code"}, {"id": "realtime", "x": 655, "y": 570, "w": 450, "h": 190, "title": "Realtime · 채팅 DB", "lines": ["채팅 저장·조회·fanout", "집중·휴식·응원·섬 사건", "이동·바다·폐기 세션 처리"], "kind": "event", "stage": "gromo_chat · 채팅 정본", "state": "code"}, {"id": "shared", "x": 1240, "y": 570, "w": 450, "h": 190, "title": "Shared Redis", "lines": ["presence·chat fanout", "이동 lease·epoch·명령·프레임", "이동 multi-instance 기본 ON"], "kind": "data", "stage": "제품 권한·영속 이동 로그 아님", "state": "code"}, {"id": "outbox", "x": 70, "y": 910, "w": 450, "h": 190, "title": "Data · outbox relay", "lines": ["상태와 사건을 같은 TX로 기록", "대상별 전달·중복·재시도", "세션 폐기는 Realtime에도 전달"], "kind": "core", "stage": "채팅 저장과는 별도 호출", "state": "code"}, {"id": "transport", "x": 655, "y": 910, "w": 450, "h": 190, "title": "Kafka · 내부 HTTP", "lines": ["알림: notification-events", "REALTIME: 기본 HTTP", "realtime-events는 선택 경로"], "kind": "event", "stage": "소비자 활성화는 개별 설정", "state": "code"}, {"id": "notification", "x": 1240, "y": 910, "w": 450, "h": 190, "title": "Notification · 알림 DB", "lines": ["수신·중복 방지·발송 조건", "기기 설정·발송 이력", "FCM으로 외부 푸시 요청"], "kind": "event", "stage": "gromo_notification", "state": "code"}], "edges": [{"id": "http", "source": "app", "target": "business", "points": [[520, 315], [655, 315]], "label": "HTTP", "at": [587, 305], "async_": false, "state": "code"}, {"id": "internal", "source": "business", "target": "data", "points": [[1105, 315], [1240, 315]], "label": "내부 HTTP", "at": [1172, 305], "async_": false, "state": "code"}, {"id": "chatRest", "source": "chatApp", "target": "realtime", "points": [[520, 655], [655, 655]], "label": "내부 REST", "at": [587, 645], "async_": false, "state": "code"}, {"id": "redis", "source": "realtime", "target": "shared", "points": [[1105, 655], [1240, 655]], "label": "전파·상태", "at": [1172, 645], "async_": false, "state": "code"}, {"id": "relay", "source": "outbox", "target": "transport", "points": [[520, 995], [655, 995]], "label": "전달", "at": [587, 985], "async_": false, "state": "code"}, {"id": "notify", "source": "transport", "target": "notification", "points": [[1105, 995], [1240, 995]], "label": "알림 사건", "at": [1172, 985], "async_": false, "state": "code"}, {"id": "realtimeEvent", "source": "transport", "target": "realtime", "points": [[880, 910], [880, 760]], "label": "사건 입구", "at": [880, 802], "async_": false, "state": "code"}]}</script><script>
+const graph=JSON.parse(document.getElementById('graph').textContent),svg=document.querySelector('svg'),hint=document.getElementById('hint');let zoom=1;
+function reset(){svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.remove('dim'));hint.textContent='상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.';}
+function select(id){const ids=new Set([id]);graph.edges.filter(e=>e.source===id||e.target===id).forEach(e=>{ids.add(e.id);ids.add(e.source);ids.add(e.target)});svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.toggle('dim',!ids.has(el.dataset.cellId)));const n=graph.nodes.find(n=>n.id===id);hint.textContent=n.title+' · '+n.lines.join(' · ')+' · '+n.stage;}
+graph.nodes.forEach(n=>{const el=svg.querySelector('[data-cell-id="'+n.id+'"]');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label',n.title+' '+n.stage);el.addEventListener('click',()=>select(n.id));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(n.id)}})});
+document.getElementById('reset').onclick=reset;document.addEventListener('keydown',e=>{if(e.key==='Escape')reset()});
+function scale(v){zoom=Math.max(.5,Math.min(3,v));svg.style.width=(zoom*100)+'%';svg.style.minWidth=zoom===1?'0':'900px';}
+document.getElementById('fit').onclick=()=>scale(1);document.getElementById('zoomIn').onclick=()=>scale(zoom+.25);document.getElementById('zoomOut').onclick=()=>scale(zoom-.25);
+function view(text){document.getElementById('text').hidden=!text;document.getElementById('viewport').hidden=text;document.getElementById('diagram').setAttribute('aria-pressed',String(!text));document.getElementById('textView').setAttribute('aria-pressed',String(text));}
+document.getElementById('diagram').onclick=()=>view(false);document.getElementById('textView').onclick=()=>view(true);
+</script></body></html>

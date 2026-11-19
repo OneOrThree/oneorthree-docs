@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "version": 8,
+  "sourceCommit": "1281cbfc4559ba3bbe991c8acd529e66257cc5fc",
   "title": "Cattus · 서비스 아키텍처",
   "nodes": [
     {
@@ -43,12 +43,13 @@
       "h": 190,
       "title": "Data API · 코어 DB",
       "lines": [
-        "섬·집중·물고기·상품·친구·편지",
-        "현재 주민 자격·원장·receipt",
-        "PostgreSQL 상태·outbox"
+        "섬·집중·물고기·상품·친구·편지·신고",
+        "꾸미기 지급(2인 승인)·첫 도착 사건",
+        "백오피스 → 관리 API · 2인 승인",
+        "첫 섬 도착 → Meta CAPI · 기본 OFF"
       ],
       "kind": "core",
-      "stage": "친구 편지는 letters에 저장",
+      "stage": "PostgreSQL 상태·outbox·원장·receipt",
       "state": "code"
     },
     {
@@ -77,7 +78,8 @@
       "lines": [
         "채팅 저장·조회·fanout",
         "집중·휴식·응원·섬 사건",
-        "이동·바다·폐기 세션 처리"
+        "이동·바다·폐기 세션 처리",
+        "탈퇴자 메시지 파기(V4)"
       ],
       "kind": "event",
       "stage": "gromo_chat · 채팅 정본",
@@ -109,10 +111,10 @@
       "lines": [
         "상태와 사건을 같은 TX로 기록",
         "대상별 전달·중복·재시도",
-        "세션 폐기는 Realtime에도 전달"
+        "세션 폐기·탈퇴도 Realtime에 전달"
       ],
       "kind": "core",
-      "stage": "채팅 저장과는 별도 호출",
+      "stage": "배포 프로필 기본 ON · 채팅 저장과 별도",
       "state": "code"
     },
     {
@@ -125,10 +127,10 @@
       "lines": [
         "알림: notification-events",
         "REALTIME: 기본 HTTP",
-        "realtime-events는 선택 경로"
+        "realtime-events는 선택 · 기본 OFF"
       ],
       "kind": "event",
-      "stage": "소비자 활성화는 개별 설정",
+      "stage": "Notification 수신·relay 배포 기본 ON",
       "state": "code"
     },
     {

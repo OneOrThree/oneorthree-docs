@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 사용자 여정</title>
-<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<desc id="diagramDesc">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
 <g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 사용자 여정</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
 <rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">매일의 집중</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">화면 타이머가 보상 정본을 대신하지 않는다.</text>
 <rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">공동 성장</text>
-<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">목표 선택은 차감 0. 착공할 때 잔액과 조건을 검사한다.</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">목표 선택은 차감 0. 착공할 때 섬 통장 잔액과 조건을 검사한다.</text>
 <rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">다음 방문으로 이어지는 활동</text>
 <text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">단체 채팅·친구 편지·항해는 각각의 권한과 복구 경로를 따른다.</text>
@@ -41,9 +41,10 @@
 <g data-cell-id="start">
 <rect x="655" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">02 · 집중하기</text>
-<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">낚시섬에서 집중 시작</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">낚시섬에서 집중 · 모닥불에서 휴식</text>
 <text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">집중 상태·응원·이동 표시</text>
-<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">필요하면 모닥불에서 휴식</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">차단 없는 집중: 앱을 나가면 휴식</text>
+<text x="675" y="361" font-size="16" fill="#4d5a66" font-weight="400">15초 넘게 안 돌아오면 종료</text>
 <text x="675" y="405" font-size="14" fill="#3866a0" font-weight="700">서버의 현재 세션 기준</text>
 </g>
 <g data-cell-id="finish">
@@ -52,6 +53,7 @@
 <text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">유효 집중 구간 정산</text>
 <text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">휴식 시간은 적립에서 제외</text>
 <text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">섬 통장과 기록 확인</text>
+<text x="1260" y="361" font-size="16" fill="#4d5a66" font-weight="400">세 번째 집중 뒤 OS 별점창 1회</text>
 <text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">개인 물고기 지갑 없음</text>
 </g>
 <g data-cell-id="wallet">
@@ -66,8 +68,9 @@
 <rect x="655" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">05 · 건설하기</text>
 <text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">섬장이 다음 건물 목표 선택</text>
-<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">물고기로 착공 → 공사 중 → 완공</text>
-<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">동시 공사·선행 시설 조건 검사</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">청사진: 현재 잔액·총 건설비·건설 후 잔액</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">섬 통장 잔액으로 착공 → 공사 → 완공</text>
+<text x="675" y="701" font-size="16" fill="#4d5a66" font-weight="400">동시 공사·선행 시설 조건 검사</text>
 <text x="675" y="745" font-size="14" fill="#3866a0" font-weight="700">게스트 섬장도 가능</text>
 </g>
 <g data-cell-id="use">
@@ -89,9 +92,10 @@
 <g data-cell-id="sail">
 <rect x="655" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">항해하기</text>
-<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">뗏목에서 목적지 선택</text>
-<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">먼바다 집중·도착·하선</text>
-<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">섬 발견·가입으로 연결</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">망원경·뗏목에서 목적지 선택</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">목록 끝 무인도 · 항해 90분</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">먼바다 집중·도착·하선</text>
+<text x="675" y="1041" font-size="16" fill="#4d5a66" font-weight="400">섬 발견·가입으로 연결</text>
 <text x="675" y="1085" font-size="14" fill="#3866a0" font-weight="700">바다 세션과 이동 구분</text>
 </g>
 <g data-cell-id="return">

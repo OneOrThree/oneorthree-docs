@@ -1,12 +1,22 @@
 ---
 title: "Cattus 아키텍처 개요"
-summary: "공개 HTTP, 제품 정본, 실시간 전송, 알림 발송을 서버 4종으로 나눕니다. 최신 구조와 조건부 기능을 구분합니다."
-status: "2026-11-03 main 대조"
-date: "2026-11-03"
+summary: "공개 HTTP, 제품 정본, 실시간 전송, 알림 발송을 서버 4종으로 나눕니다. 외부 서비스로 나가는 연결과 main·운영의 차이를 구분합니다."
+status: "2026-11-18 main 대조"
+date: "2026-11-18"
 order: 2
 recordType: "current"
-sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
+sourceCommit: "1281cbfc4559ba3bbe991c8acd529e66257cc5fc"
 ---
+
+## 먼저 볼 표
+
+| 항목 | 2026-11-18 기준 | 근거 종류 |
+| --- | --- | --- |
+| 운영 서버 4종 | 릴리스 `catus-v2.0.14-V2`, 11-14 02:32 KST `prod-cd-V2` 성공. main의 #1665까지 포함. 서비스별 운영 태그는 Data·Realtime v2.0.14, Business v2.0.13, Notification v2.0.11(바뀐 서비스만 교체) | 운영 배포 기록 |
+| main에만 있는 서버 변경 | 잡지 홍보 칸 읽기 API(#1669), 섬 퀘스트 삭제·집중 퀘스트 시간대 겹침 금지(#1672, Data V17) | 코드에 있음 |
+| 배포 환경의 relay·알림 수신·예약 발송 | 11-09(#1638)부터 배포 프로필 기본 ON | 설정 기본값 |
+| 첫 섬 도착 Meta Conversions API | Data에 전송 작업이 있고 `META_CAPI_ENABLED` 기본 false | 설정 기본값 |
+| 공개 웹 `try.oneorthree.world` | 3D 섬 웹. Cattus 서버를 부르지 않는 별도 체험 | 코드·공개 주소 확인 |
 
 ## 전체 연결
 
@@ -14,9 +24,9 @@ sourceCommit: "af80af04241cefaa33b9f2a1e383548ecc9b10fa"
 
 | 서비스 | 소유하는 것 | 호출·전달 |
 | --- | --- | --- |
-| Business API | 공개 DTO·오류·화면 조합, 폐기 세션 확인 | Data·Realtime·Notification 내부 HTTP |
-| Data API | 계정·주민 자격·섬·집중·물고기·편지·원장·outbox | PostgreSQL, Shared Redis presence, 사건 전달 |
-| Realtime | 채팅 메시지 DB, 웹소켓 세션, 섬 이동 방 | Data 권한 조회, Shared Redis fanout·소유권 |
+| Business API | 공개 DTO·오류·화면 조합, 폐기 세션 확인, 2KB 이상 JSON 응답 gzip | Data·Realtime·Notification 내부 HTTP |
+| Data API | 계정·주민 자격·섬·집중·물고기·편지·원장·outbox, 신고 접수, 꾸미기 지급·추첨 풀, 첫 섬 도착 사건 | PostgreSQL, Shared Redis presence, 사건 전달, Meta Conversions API(켠 경우) |
+| Realtime | 채팅 메시지 DB, 웹소켓 세션, 섬 이동 방, 탈퇴자 메시지 파기 | Data 권한 조회, Shared Redis fanout·소유권 |
 | Notification | 사건 수신·중복 방지·발송 이력·설정 | Kafka/내부 HTTP 수신, FCM 요청 |
 
 [서비스 그림](/diagrams/03-service)은 앱 코드 기준, [시스템 그림](/diagrams/04-system)과 [로그·추적 그림](/diagrams/06-logging)은 앱 코드에 고정한 Infra revision을 더해 대조합니다. 과거 버전은 그림의 버전 선택에서 볼 수 있습니다.
@@ -29,22 +39,40 @@ Redis는 공유 팬아웃, 집중 presence, 이동 소유권, 캐시, 폐기된 
 
 ## 성공 응답과 후속 전달
 
-Data의 상태 변경과 outbox를 같은 트랜잭션으로 기록하는 경로는 커밋된 사건을 나중에 다시 전달할 수 있습니다. 집중·휴식의 REALTIME 대상은 HTTP가 기본이고 Kafka는 별도 플래그로 선택합니다. 알림에는 Kafka 경로가 있습니다.
+Data의 상태 변경과 outbox를 같은 트랜잭션으로 기록하는 경로는 커밋된 사건을 나중에 다시 전달할 수 있습니다. relay의 코드 기본값은 OFF이지만, 배포 프로필(`satellites`)은 11-09부터 `OUTBOX_RELAY_ENABLED` 기본값을 true로 둡니다. 집중·휴식의 REALTIME 대상은 HTTP가 기본이고 Kafka는 별도 플래그로 선택합니다. 알림에는 Kafka 경로가 있습니다.
 
 모든 작업이 하나의 트랜잭션인 것은 아닙니다. 섬 채팅은 Realtime에 먼저 저장·팬아웃한 뒤 Data의 `message.created` outbox를 별도 호출합니다. 후속 기록 실패를 이미 저장한 메시지의 롤백으로 설명하면 안 됩니다.
+
+탈퇴는 Data의 한 트랜잭션에서 편지를 지우고 `user.withdrawn` 사건을 기록합니다. Realtime은 이 사건을 받아 메시지 본문과 발신자를 파기합니다(#1659). 두 단계 사이에는 사건 전달만큼의 지연이 있습니다.
+
+## 외부 서비스로 나가는 연결
+
+| 보내는 쪽 | 받는 쪽 | 무엇을 | 켜짐 조건 |
+| --- | --- | --- | --- |
+| Data | Meta Conversions API | 계정당 1회인 첫 섬 도착 사건 | `META_CAPI_ENABLED=true`와 토큰이 있을 때. 기본 false |
+| Notification | FCM | 푸시 발송 요청 | 발송 게이트와 예약 작업 |
+| 앱 | Airbridge → Google Ads | 첫 섬 도착을 `Complete Tutorial` 표준 이벤트로 | 운영 release 빌드, 서버가 준 첫 도착 사건 ID가 있을 때 |
+| 앱 | Meta SDK | 첫 섬 도착·등록 완료 앱 이벤트 | 앱 빌드 설정 |
+| 앱 | PostHog, Sentry | 행동 분석, 오류·크래시 | [로그·추적 안내](/spec/logging-and-observability) |
+
+Meta 전송은 서버가 첫 도착을 판정한 뒤 Data의 전송 작업이 한 건씩 보냅니다. Google Ads 전환은 앱 SDK 호출이므로 서버 전송과 같은 전달 보장을 하지 않습니다.
 
 ## 배포와 조건부 기능
 
 운영 V2에서는 네 서버가 한 EC2에 있으며 Kafka·Redis·백오피스는 별도 EC2에 있습니다. 코드에서 경계를 나눴다는 사실과 서비스마다 호스트가 하나씩 있다는 주장은 다릅니다.
 
-Realtime membership authorization, 차단 필터, Kafka 사건 소비는 독립된 설정입니다. 저장소 기본값이 OFF인 기능을 운영에서도 꺼져 있다고 단정하지 않습니다. 이동의 multi-instance 기능 기본값은 ON입니다. 실제 설정과 확인 범위는 [실시간 계약](/spec/messaging-and-realtime)에 모았습니다.
+Data relay, Notification Kafka 수신·예약 작업은 배포 프로필에서 기본 ON이고, 운영 비밀 저장소에도 true를 명시했다는 기록이 있습니다(11-09). Realtime membership authorization, 차단 필터, REALTIME 사건의 Kafka 소비는 여전히 저장소 기본값이 OFF인 독립 설정입니다. 저장소 기본값만 보고 운영 값을 단정하지 않습니다. 실제 설정과 확인 범위는 [실시간 계약](/spec/messaging-and-realtime)에 모았습니다.
+
+공개 웹 `try.oneorthree.world`는 11-07부터 3D 섬 웹입니다. 정적 파일은 Vercel, 실시간 방은 Cloudflare Durable Object에 있으며 운영 앱의 계정·섬·집중 기록과 연결하지 않습니다. 자세한 배치는 [시스템 아키텍처](/spec/system-architecture)에 있습니다.
 
 ## 로그와 장애 추적
 
-네 서버의 JSON stdout을 Datadog와 Fluent Bit이 각각 읽습니다. APM·지표는 별도 Agent 경로, Fluent Bit 로그는 Loki·S3로 나갑니다. [로그·추적 안내](/spec/logging-and-observability)에 ID 연결·보관·조회 순서와 Grafana OFF·사용자 행동 파일의 별도 확인 범위를 명시했습니다.
+네 서버의 JSON stdout을 Datadog와 Fluent Bit이 각각 읽습니다. APM·지표는 별도 Agent 경로, Fluent Bit 로그는 Loki·S3로 나갑니다. 앱의 오류와 크래시는 Sentry로 따로 수집합니다. [로그·추적 안내](/spec/logging-and-observability)에 ID 연결·보관·조회 순서, Grafana OFF, 사용자 행동 파일과 앱 심볼 업로드의 확인 범위를 적었습니다.
 
 ## 근거
 
-- [서버 README](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/README.md)
-- [Business API](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/business-api/README.md) · [Realtime](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/server/realtime/README.md)
-- [운영 V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/prod-v2-pipeline.md) · [dev V2](https://github.com/OneOrThree/phone/blob/af80af04241cefaa33b9f2a1e383548ecc9b10fa/docs/engineering/dev-v2-pipeline.md)
+- [서버 README](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/README.md) · [Data README](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/data-api/README.md) · [Notification README](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/notification/README.md)
+- [Business API](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/business-api/README.md) · [Realtime](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/realtime/README.md)
+- [위성 런타임 스위치](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/server-separation/runtime.md) · [outbox 켜고 끄기](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/prd/fishcat/server-separation/outbox.md)
+- [Meta 전송 작업](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/server/data-api/src/main/java/com/oneorthree/phone/group/service/FirstIslandArrivalCapiSender.java) · [Google Ads 첫 도착 전환](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/app/app-dev/analytics/google-ads-conversions.md)
+- [운영 V2](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/prod-v2-pipeline.md) · [dev V2](https://github.com/OneOrThree/phone/blob/1281cbfc4559ba3bbe991c8acd529e66257cc5fc/docs/engineering/dev-v2-pipeline.md)

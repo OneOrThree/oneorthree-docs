@@ -1,8 +1,8 @@
 {
-  "version": 10,
-  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "version": 11,
+  "sourceCommit": "1281cbfc4559ba3bbe991c8acd529e66257cc5fc",
   "title": "Cattus · 운영 호스트·컨테이너·포트",
-  "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
+  "infraSourceCommit": "69edca4d5f9ef920a29cdba7f78dcca35e1be112",
   "nodes": [
     {
       "id": "client",
@@ -45,7 +45,7 @@
       "title": "nginx · 앱 호스트",
       "lines": [
         "호스트 :80 → HTTPS / :443 TLS",
-        "공개 경로 allowlist → Business",
+        "공개 allowlist → Business · reports 미허용",
         "/ws/realtime → Realtime",
         "/internal · /actuator → 404"
       ],
@@ -80,8 +80,8 @@
       "lines": [
         "내부 권한·도메인 명령·정산",
         "제품 상태 + outbox 같은 TX",
-        "PostgreSQL · Shared Redis",
-        "mem 1536MiB"
+        "PostgreSQL · Shared Redis · 1536MiB",
+        "→ Meta CAPI HTTPS · 켠 경우만"
       ],
       "kind": "core",
       "stage": "app = data-api · /actuator :9091",
@@ -112,10 +112,10 @@
       "h": 190,
       "title": "관리 전용 nginx",
       "lines": [
-        "사설 :18080 → app:8080",
-        "사설 :18082 → notification:8082",
-        "정해진 /internal/admin 경로만",
-        "SG: 백오피스 호스트만 허용"
+        "사설 :18080 → app · :18082 → noti",
+        "공지·잡지·정책·발행 관리 경로만",
+        "꾸미기 현황·추첨 풀·지급 경로 없음",
+        "신고 관리 경로 없음 · SG: 백오피스만"
       ],
       "kind": "core",
       "stage": "backoffice-gateway · app-network",
@@ -346,7 +346,7 @@
       "lines": [
         "사설 :18080 → Data :8080",
         "사설 :18082 → Notification :8082",
-        "관리 API allowlist + 서비스 인증",
+        "allowlist에 꾸미기·신고 관리 없음",
         "공개 nginx의 /internal은 404"
       ],
       "kind": "core",
@@ -399,6 +399,54 @@
       ],
       "kind": "data",
       "stage": "개발 Redis",
+      "state": "code"
+    },
+    {
+      "id": "webVisitor",
+      "x": 70,
+      "y": 3110,
+      "w": 450,
+      "h": 190,
+      "title": "웹 방문자 브라우저",
+      "lines": [
+        "try.oneorthree.world",
+        "앱 계정·집중 기록과 분리된 체험",
+        "새로고침·종료 때 방 집중·예약 해제"
+      ],
+      "kind": "external",
+      "stage": "설치 없는 체험",
+      "state": "code"
+    },
+    {
+      "id": "webStatic",
+      "x": 655,
+      "y": 3110,
+      "w": 450,
+      "h": 190,
+      "title": "Vercel · 정적 3D 웹",
+      "lines": [
+        "정적 빌드 파일만 배포",
+        "해시 번들·에셋 1년 캐시",
+        "Cattus 서버 API 호출 없음"
+      ],
+      "kind": "external",
+      "stage": "app/metaverse-web",
+      "state": "code"
+    },
+    {
+      "id": "webRoom",
+      "x": 1240,
+      "y": 3110,
+      "w": 450,
+      "h": 190,
+      "title": "Cloudflare Worker · 방",
+      "lines": [
+        "Durable Object IslandRoom 하나",
+        "WSS /island-room · Origin 1개만",
+        "두 섬 합계 60명 · 낚시 의자 30석"
+      ],
+      "kind": "event",
+      "stage": "방 주소는 배포 때 빌드에 지정",
       "state": "code"
     }
   ],
@@ -883,6 +931,50 @@
       "at": [
         880,
         2910
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "webHttps",
+      "source": "webVisitor",
+      "target": "webStatic",
+      "points": [
+        [
+          520,
+          3195
+        ],
+        [
+          655,
+          3195
+        ]
+      ],
+      "label": "HTTPS",
+      "at": [
+        588,
+        3185
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "webWss",
+      "source": "webStatic",
+      "target": "webRoom",
+      "points": [
+        [
+          1105,
+          3195
+        ],
+        [
+          1240,
+          3195
+        ]
+      ],
+      "label": "WSS",
+      "at": [
+        1172,
+        3185
       ],
       "async_": false,
       "state": "code"

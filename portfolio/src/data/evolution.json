@@ -1,8 +1,419 @@
 {
   "source": "OneOrThree/phone · origin/main · first-parent",
-  "generatedFrom": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
-  "generatedAt": "2026-11-03",
+  "generatedFrom": "b5ab3ec2f0b05dd2829a70f4dea2ee7d54a7e75d",
+  "generatedAt": "2026-11-18",
   "entries": [
+    {
+      "sha": "b5ab3ec2f0b05dd2829a70f4dea2ee7d54a7e75d",
+      "date": "2026-11-18",
+      "subject": "[FEAT] GROMO-2897 섬 퀘스트 삭제와 집중 퀘스트 시간대 겹침 금지 (#1672)",
+      "files": [
+        "docs/prd/fishcat/api-platform/low-level-design.md",
+        "docs/prd/fishcat/island-quests/low-level-design.md",
+        "server/scripts/nginx-satellites.include.conf.example"
+      ],
+      "shortSha": "b5ab3ec",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/b5ab3ec2f0b05dd2829a70f4dea2ee7d54a7e75d"
+    },
+    {
+      "sha": "f911e4e859244316f57f4120a08065f936b9a778",
+      "date": "2026-11-18",
+      "subject": "[FIX] GROMO-2895 카메라 작업 수명과 Sentry 진단·심볼 누락을 보완한다 (#1671)",
+      "files": [
+        ".github/workflows/app-lint.yml",
+        "docs/engineering/sentry/2026-11-16-camera-and-dsym.md",
+        "docs/engineering/sentry/2026-11-16-ios-2.3.4-rebuild.md",
+        "docs/engineering/sentry/2026-11-17-diagnostics-capture.md",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/after-auth-relaunch.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/auth-http.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/auth-rotation.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-after.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-after.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-before.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-before.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-boundary-backport.patch",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-comparison-result.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-initialization-crash.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-regression.log",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/camera-unavailable-alive.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-auth-27-2.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-build-evidence.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-local-login-27-2.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-settings-rotation-27-2.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-smoke-27-2.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/cattus-234-source-verification.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/expire-token.js",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/first-screen.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/fixture-server.py",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/focus-after-rest.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/focus-entry.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/focus-fixture-server.py",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/focus-rest-after.xml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/focus-rest-after.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/landscape-home.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/login-local.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/rest-visible.png",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/result.json",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/settings-rotation.yaml",
+        "docs/engineering/sentry/evidence/ios-2.3.4-2026-11-16/startup.yaml",
+        "docs/engineering/sentry/evidence/observability-2026-11-17/jest.log",
+        "docs/engineering/sentry/evidence/observability-2026-11-17/native-symbolication.txt",
+        "docs/engineering/sentry/evidence/observability-2026-11-17/received-events.json"
+      ],
+      "shortSha": "f911e4e",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/f911e4e859244316f57f4120a08065f936b9a778"
+    },
+    {
+      "sha": "94063b7fa30b0d819111bbe70020b326780135c8",
+      "date": "2026-11-17",
+      "subject": "[FEAT] GROMO-2893 주민이 다음 호 잡지 홍보 칸을 읽는 API (#1669)",
+      "files": [
+        "server/scripts/nginx-satellites.include.conf.example"
+      ],
+      "shortSha": "94063b7",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/94063b7fa30b0d819111bbe70020b326780135c8"
+    },
+    {
+      "sha": "432111b697faba42ecd37b5e48c7a829d3097f1b",
+      "date": "2026-11-13",
+      "subject": "[FEAT] GROMO-2890 운영 상점에 딸기 건물 테마 5개와 내 꾸미기 30개를 기본 발행본 v1 로 판매한다 (#1665)",
+      "files": [
+        "docs/prd/fishcat/decision-log.md",
+        "docs/prd/fishcat/island-shop/policy.md"
+      ],
+      "shortSha": "432111b",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/432111b697faba42ecd37b5e48c7a829d3097f1b"
+    },
+    {
+      "sha": "76cc23333511d3eedf0d6ed8f70b8caa020335c0",
+      "date": "2026-11-13",
+      "subject": "[FIX] GROMO-2874 섬 이동·온보딩·튜토리얼과 건물·설정 화면 개선 (#1655)",
+      "files": [
+        "docs/prd/fishcat/island-records/ios-screen-time-implementation.md",
+        "docs/prd/fishcat/island-shop/low-level-design.md"
+      ],
+      "shortSha": "76cc233",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/76cc23333511d3eedf0d6ed8f70b8caa020335c0"
+    },
+    {
+      "sha": "e3dc4d2ca7ef9d6f77886873feeabf8a94f71aaa",
+      "date": "2026-11-12",
+      "subject": "[FEAT] GROMO-2881 사용자와 콘텐츠 신고 접수 및 운영 조회 (#1661)",
+      "files": [
+        "docs/conventions/backend-layering.md",
+        "docs/prd/fishcat/character-report/app-intake-operations.md",
+        "docs/prd/fishcat/character-report/policy.md",
+        "server/scripts/nginx-dev-2.0-routes.conf.example",
+        "server/scripts/nginx-satellites.include.conf.example"
+      ],
+      "shortSha": "e3dc4d2",
+      "category": "아키텍처",
+      "href": "https://github.com/OneOrThree/phone/commit/e3dc4d2ca7ef9d6f77886873feeabf8a94f71aaa"
+    },
+    {
+      "sha": "86ea2933052ae405ede496e67f791e3be8c5162f",
+      "date": "2026-11-12",
+      "subject": "[FIX] GROMO-2880 탈퇴 시 편지와 채팅 개인정보 삭제 (#1659)",
+      "files": [
+        "docs/prd/fishcat/account/policy.md"
+      ],
+      "shortSha": "86ea293",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/86ea2933052ae405ede496e67f791e3be8c5162f"
+    },
+    {
+      "sha": "0fa6d706c6d0903873cb5bbe3242bb0544087ba3",
+      "date": "2026-11-10",
+      "subject": "[FIX] GROMO-2832 앱의 한국어 하드코딩과 언어 전환 누락 보완 (#1643)",
+      "files": [
+        "docs/prd/fishcat/l10n/high-level-design.md"
+      ],
+      "shortSha": "0fa6d70",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/0fa6d706c6d0903873cb5bbe3242bb0544087ba3"
+    },
+    {
+      "sha": "066b9cea1eba1de1ffdab4572531a2b8db32a420",
+      "date": "2026-11-10",
+      "subject": "[FEAT] GROMO-2761 섬 통장 잔액으로 건설하고 청사진을 통장형으로 바꾼다 (#1642)",
+      "files": [
+        "docs/prd/fishcat/island-construction/policy.md"
+      ],
+      "shortSha": "066b9ce",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/066b9cea1eba1de1ffdab4572531a2b8db32a420"
+    },
+    {
+      "sha": "ba11ca0fccd41f4821735bf35d108bc3aae24f85",
+      "date": "2026-11-09",
+      "subject": "[FIX] GROMO-2822 퀘스트 출시 스위치를 없애고 relay·알림 발송·알림 Kafka 수신을 배포 환경 기본으로 켠다 (#1638)",
+      "files": [
+        "docs/prd/fishcat/decision-log.md",
+        "docs/prd/fishcat/island-quests/low-level-design.md",
+        "docs/prd/fishcat/island-quests/policy.md",
+        "docs/prd/fishcat/island-records/policy.md",
+        "docs/prd/fishcat/magazine/ops-runbook.md",
+        "docs/prd/fishcat/server-separation/outbox.md",
+        "docs/prd/fishcat/server-separation/runtime.md",
+        "server/scripts/README.md",
+        "server/scripts/docker-compose.kafka.yml"
+      ],
+      "shortSha": "ba11ca0",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/ba11ca0fccd41f4821735bf35d108bc3aae24f85"
+    },
+    {
+      "sha": "71bc10d5c838616ac6e2e6ec554c81b4d35ef489",
+      "date": "2026-11-08",
+      "subject": "[FEAT] GROMO-2820 편집냥 팁을 25개로 늘리고 잡지를 열 때마다 바꾼다 (#1636)",
+      "files": [
+        "docs/prd/fishcat/magazine/ops-runbook.md"
+      ],
+      "shortSha": "71bc10d",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/71bc10d5c838616ac6e2e6ec554c81b4d35ef489"
+    },
+    {
+      "sha": "5c10ed9efbe0025e244409f21f64f474ae336bb8",
+      "date": "2026-11-08",
+      "subject": "[FEAT] GROMO-2798 Android 집중 복귀를 연결하고 Play 제출 자료를 준비한다 (#1635)",
+      "files": [
+        "docs/engineering/android-focus-blocking-plan.md",
+        "docs/engineering/android-focus-return-play-submission.md",
+        "docs/engineering/android-focus-return-release-qa.md"
+      ],
+      "shortSha": "5c10ed9",
+      "category": "문서",
+      "href": "https://github.com/OneOrThree/phone/commit/5c10ed9efbe0025e244409f21f64f474ae336bb8"
+    },
+    {
+      "sha": "15385603d85211f88b9456ddd744b9827e3a1eed",
+      "date": "2026-11-08",
+      "subject": "[FIX] GROMO-2766 잡지 자동 발행 복구와 백오피스 발행본 열람 (#1615)",
+      "files": [
+        "docs/prd/fishcat/backoffice/README.md",
+        "docs/prd/fishcat/magazine/ops-runbook.md"
+      ],
+      "shortSha": "1538560",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/15385603d85211f88b9456ddd744b9827e3a1eed"
+    },
+    {
+      "sha": "7d7d5c3266b5dd851ef20fc8e31d2f010aca1691",
+      "date": "2026-11-08",
+      "subject": "[FIX] GROMO-2800 Android CI 일회용 AAB의 출시 검사 중복 제거 (#1633)",
+      "files": [
+        ".github/workflows/app-android-ci.yml",
+        "docs/conventions/android-ci-cd.md",
+        "docs/engineering/app-release-safety.md"
+      ],
+      "shortSha": "7d7d5c3",
+      "category": "아키텍처",
+      "href": "https://github.com/OneOrThree/phone/commit/7d7d5c3266b5dd851ef20fc8e31d2f010aca1691"
+    },
+    {
+      "sha": "b631ff8020fc59c8df08b66c5b849bfeaafb10fb",
+      "date": "2026-11-07",
+      "subject": "[FEAT] GROMO-2795 스크린타임 통합 안내와 측정·허용 앱 설정을 연결한다 (#1627)",
+      "files": [
+        "docs/engineering/android-focus-blocking-plan.md"
+      ],
+      "shortSha": "b631ff8",
+      "category": "문서",
+      "href": "https://github.com/OneOrThree/phone/commit/b631ff8020fc59c8df08b66c5b849bfeaafb10fb"
+    },
+    {
+      "sha": "ec30469b08396d4cb5d696823f066af6d8287b78",
+      "date": "2026-11-07",
+      "subject": "[FEAT] GROMO-2786 3D 섬 웹을 최적화하고 공개 배포 기반을 추가한다 (#1623)",
+      "files": [
+        ".github/workflows/metaverse-web-ci.yml",
+        "docs/engineering/pipeline-map.md"
+      ],
+      "shortSha": "ec30469",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/ec30469b08396d4cb5d696823f066af6d8287b78"
+    },
+    {
+      "sha": "32f1fe329219b57aa5260e43bc1da039bae31e37",
+      "date": "2026-11-06",
+      "subject": "[FIX] GROMO-2769 전망대 섬 순위의 평균을 망원경과 같은 최근 7일 하루 평균으로 바꾼다 (#1612)",
+      "files": [
+        "docs/prd/fishcat/island-rankings/README.md",
+        "docs/prd/fishcat/island-rankings/policy.md",
+        "docs/prd/fishcat/island-rankings/prd.md"
+      ],
+      "shortSha": "32f1fe3",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/32f1fe329219b57aa5260e43bc1da039bae31e37"
+    },
+    {
+      "sha": "65bef45b62b950da9d3fd6afa032ffff961e6943",
+      "date": "2026-11-06",
+      "subject": "[CHORE] GROMO-2735 실기기 계측 기록과 개선 전후 정리 (#1578)",
+      "files": [
+        "docs/README.md",
+        "docs/engineering/app-performance/device-iphone15-2026-11.md",
+        "docs/engineering/app-performance/measurements.md"
+      ],
+      "shortSha": "65bef45",
+      "category": "문서",
+      "href": "https://github.com/OneOrThree/phone/commit/65bef45b62b950da9d3fd6afa032ffff961e6943"
+    },
+    {
+      "sha": "3976dd9b9ac39410bfd0f623eaf623663cce0204",
+      "date": "2026-11-05",
+      "subject": "dev GCP 이전 배포 구성 병합",
+      "files": [
+        ".github/workflows/data-api-ci.dev-v2.yml",
+        ".github/workflows/ops-smoke.dev-v2.yml",
+        ".github/workflows/satellite-ci.dev-v2.yml",
+        "server/scripts/v2/dev/app/deploy.py"
+      ],
+      "shortSha": "3976dd9",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/3976dd9b9ac39410bfd0f623eaf623663cce0204"
+    },
+    {
+      "sha": "e748bf4dbec07a31e5fce209e2e0543987bf8990",
+      "date": "2026-11-05",
+      "subject": "[FIX] GROMO-2768 앱 출시 전 서버 호환성을 검증한다 (#1613)",
+      "files": [
+        ".github/workflows/ops-smoke.dev-v2.yml",
+        ".github/workflows/smoke-check.yml",
+        "docs/engineering/app-release-safety.md"
+      ],
+      "shortSha": "e748bf4",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/e748bf4dbec07a31e5fce209e2e0543987bf8990"
+    },
+    {
+      "sha": "02defbac5db0c590a93c94f655e503eea93f410c",
+      "date": "2026-11-05",
+      "subject": "[FIX] GROMO-2765 11월 5일 앱 개선 묶음 — AI 안내·라벨 겹침·바다 한마디 잠금·회관 없는 섬 정리 (#1607)",
+      "files": [
+        "docs/conventions/error-contract.md",
+        "docs/prd/fishcat/island-membership/hall-less-island-cleanup.md",
+        "docs/prd/fishcat/island-membership/low-level-design.md"
+      ],
+      "shortSha": "02defba",
+      "category": "아키텍처",
+      "href": "https://github.com/OneOrThree/phone/commit/02defbac5db0c590a93c94f655e503eea93f410c"
+    },
+    {
+      "sha": "8531367d78f03cb80601f79a8439cc9ecf289748",
+      "date": "2026-11-05",
+      "subject": "[FEAT] GROMO-2752 공개 웹과 정원 제한 없는 웹 전용 섬 입장을 제공한다 (#1597)",
+      "files": [
+        "server/scripts/nginx-satellites.include.conf.example"
+      ],
+      "shortSha": "8531367",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/8531367d78f03cb80601f79a8439cc9ecf289748"
+    },
+    {
+      "sha": "6e91846c93783c005eef01ab5300e69e5bddd173",
+      "date": "2026-11-03",
+      "subject": "[CHORE] GROMO-2739 앱 운영 빌드가 Sentry에 소스맵·네이티브 심볼을 올린다 (#1575)",
+      "files": [
+        ".github/workflows/app-android-ci.yml"
+      ],
+      "shortSha": "6e91846",
+      "category": "전달·운영",
+      "href": "https://github.com/OneOrThree/phone/commit/6e91846c93783c005eef01ab5300e69e5bddd173"
+    },
+    {
+      "sha": "3129188b420698bfae7a66cb98923ddebdae0130",
+      "date": "2026-11-03",
+      "subject": "[FEAT] GROMO-2635 실드 없는 집중에서 앱을 나가면 휴식으로 바꾸고 15초 넘기면 끝낸다 (#1573)",
+      "files": [
+        "docs/prd/fishcat/focus-rest-session/policy.md"
+      ],
+      "shortSha": "3129188",
+      "category": "제품 설계",
+      "href": "https://github.com/OneOrThree/phone/commit/3129188b420698bfae7a66cb98923ddebdae0130"
+    },
+    {
+      "sha": "4ff791d586d0dde2ecc40b6a6d2fb68fc9becc21",
+      "date": "2026-11-03",
+      "subject": "[CHORE] GROMO-2734 API 응답 압축 성과와 한계 문서화 (#1571)",
+      "files": [
+        "docs/README.md",
+        "docs/engineering/api-response-compression.md"
+      ],
+      "shortSha": "4ff791d",
+      "category": "문서",
+      "href": "https://github.com/OneOrThree/phone/commit/4ff791d586d0dde2ecc40b6a6d2fb68fc9becc21"
+    },
+    {
+      "sha": "b0940c7860557004be51b4befd2ba0c28e21e4d4",
+      "date": "2026-11-03",
+      "subject": "[REFACTOR] GROMO-2714 앱 모듈 구조와 자원 수명 정리 (#1570)",
+      "files": [
+        "docs/engineering/app-refactoring-2026-11/after-static.json",
+        "docs/engineering/app-refactoring-2026-11/architecture.md",
+        "docs/engineering/app-refactoring-2026-11/asset-inventory.json",
+        "docs/engineering/app-refactoring-2026-11/assets.md",
+        "docs/engineering/app-refactoring-2026-11/audit.md",
+        "docs/engineering/app-refactoring-2026-11/baseline-static.json",
+        "docs/engineering/app-refactoring-2026-11/baseline.md",
+        "docs/engineering/app-refactoring-2026-11/bundle-comparison.json",
+        "docs/engineering/app-refactoring-2026-11/bundle.md",
+        "docs/engineering/app-refactoring-2026-11/changes.md",
+        "docs/engineering/app-refactoring-2026-11/comparison.md",
+        "docs/engineering/app-refactoring-2026-11/dependencies.json",
+        "docs/engineering/app-refactoring-2026-11/file-ownership.json",
+        "docs/engineering/app-refactoring-2026-11/lifecycle.md",
+        "docs/engineering/app-refactoring-2026-11/measurement/android-journeys.yaml",
+        "docs/engineering/app-refactoring-2026-11/measurement/cpu-android.py",
+        "docs/engineering/app-refactoring-2026-11/measurement/journeys.yaml",
+        "docs/engineering/app-refactoring-2026-11/measurement/measure-android.py",
+        "docs/engineering/app-refactoring-2026-11/measurement/measure-ios.py",
+        "docs/engineering/app-refactoring-2026-11/measurement/render-instrumentation.json",
+        "docs/engineering/app-refactoring-2026-11/measurement/soak-ios.py",
+        "docs/engineering/app-refactoring-2026-11/measurement/warm-cycle.yaml",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-android-fresh-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-android-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-fresh-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-memory-1.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-memory-10.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-memory-end.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-ios-memory-start.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-journeys.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/after-observation.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/android-cpu-60s.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/artifact-hashes.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-android-fresh-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-android-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-fresh-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-home-runs.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-memory-1.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-memory-10.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-memory-end.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-ios-memory-start.txt",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-journeys.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/baseline-observation.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/exploratory-excluded.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/home-capture-checks.json",
+        "docs/engineering/app-refactoring-2026-11/measurements/measurement-host-load.json",
+        "docs/engineering/app-refactoring-2026-11/native-comparison.json",
+        "docs/engineering/app-refactoring-2026-11/png-compression.json",
+        "docs/engineering/app-refactoring-2026-11/progress.md",
+        "docs/engineering/app-refactoring-2026-11/regression-matrix.md",
+        "docs/engineering/app-refactoring-2026-11/render-counts.json",
+        "docs/engineering/app-refactoring-2026-11/rendering.md",
+        "docs/engineering/app-refactoring-2026-11/validation.json"
+      ],
+      "shortSha": "b0940c7",
+      "category": "문서",
+      "href": "https://github.com/OneOrThree/phone/commit/b0940c7860557004be51b4befd2ba0c28e21e4d4"
+    },
     {
       "sha": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
       "date": "2026-11-03",
@@ -3378,369 +3789,6 @@
       "shortSha": "0d3c5e3",
       "category": "제품 설계",
       "href": "https://github.com/OneOrThree/phone/commit/0d3c5e3d7fde1baa0ee070f4a9b4eb12f14bfae9"
-    },
-    {
-      "sha": "940f827d1eaac991e4340057081f15742db3efd2",
-      "date": "2026-09-21",
-      "subject": "[FEAT] GROMO-1990 집중 보상을 종료 정산에서 60초마다 섬 적립으로 전환한다 (#855)",
-      "files": [
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/focus-rest-session/low-level-design.md",
-        "docs/prd/fishcat/focus-rest-session/policy.md",
-        "docs/prd/fishcat/focus-rest-session/prd.md",
-        "docs/prd/fishcat/island-construction/low-level-design.md",
-        "server/scripts/README.md",
-        "server/scripts/docker-compose.dev.yml"
-      ],
-      "shortSha": "940f827",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/940f827d1eaac991e4340057081f15742db3efd2"
-    },
-    {
-      "sha": "a2b1a61329dafc1fe54847454ebbff9b77539621",
-      "date": "2026-09-21",
-      "subject": "[FEAT] GROMO-1765 섬 실시간 전달을 열고 응원 SEND 를 구현한다 (#854)",
-      "files": [
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/focus-rest-session/high-level-design.md",
-        "docs/prd/fishcat/focus-rest-session/low-level-design.md",
-        "docs/prd/fishcat/focus-rest-session/policy.md",
-        "docs/prd/fishcat/focus-rest-session/prd.md",
-        "docs/prd/fishcat/realtime-events/low-level-design.md",
-        "docs/prd/fishcat/realtime-events/prd.md",
-        "server/scripts/README.md"
-      ],
-      "shortSha": "a2b1a61",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/a2b1a61329dafc1fe54847454ebbff9b77539621"
-    },
-    {
-      "sha": "47b8491e1d8e677945a8ce0f23342b793cae1e88",
-      "date": "2026-09-20",
-      "subject": "[FEAT] GROMO-1986 사용자 입력 6종에 금칙어 검증을 넣는다 (#852)",
-      "files": [
-        "docs/conventions/error-contract.md"
-      ],
-      "shortSha": "47b8491",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/47b8491e1d8e677945a8ce0f23342b793cae1e88"
-    },
-    {
-      "sha": "2a73e2106e014d980bf4b9856b0be997a59df1df",
-      "date": "2026-09-20",
-      "subject": "[REFACTOR] GROMO-1947 2.0 앱 /me 전환에 맞춰 레거시 /api/v1 계정 컨트롤러를 삭제한다 (#849)",
-      "files": [
-        "docs/engineering/legacy-v1-retirement/README.md"
-      ],
-      "shortSha": "2a73e21",
-      "category": "문서",
-      "href": "https://github.com/OneOrThree/phone/commit/2a73e2106e014d980bf4b9856b0be997a59df1df"
-    },
-    {
-      "sha": "78a55ad136f233e45b85337befbdd1ea5a73dedf",
-      "date": "2026-09-20",
-      "subject": "[CHORE] GROMO-1957 2.0 서비스 전체를 dev·prod 도커 컴포즈에 정리한다 (#848)",
-      "files": [
-        "docs/prd/fishcat/account/policy.md",
-        "docs/prd/fishcat/server-separation/runtime.md",
-        "server/scripts/README.md",
-        "server/scripts/docker-compose.business.yml",
-        "server/scripts/docker-compose.datadog.yml",
-        "server/scripts/docker-compose.dev.yml",
-        "server/scripts/docker-compose.kafka.yml",
-        "server/scripts/docker-compose.local.yml",
-        "server/scripts/docker-compose.observability.yml",
-        "server/scripts/docker-compose.prod.yml",
-        "server/scripts/docker-compose.realtime.yml",
-        "server/scripts/docker-compose.satellites.yml",
-        "server/scripts/prepare-satellite-deploy.py"
-      ],
-      "shortSha": "78a55ad",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/78a55ad136f233e45b85337befbdd1ea5a73dedf"
-    },
-    {
-      "sha": "f224d297a75dae0d537071209d3a9249e28fe2b9",
-      "date": "2026-09-20",
-      "subject": "[FEAT] GROMO-1945 고양이 색과 온보딩 완료 사건을 연결하고 PATCH /me 를 연다 (#845)",
-      "files": [
-        "docs/conventions/outbox-events.md",
-        "docs/prd/fishcat/account/README.md",
-        "docs/prd/fishcat/account/low-level-design.md",
-        "docs/prd/fishcat/account/policy.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-management/low-level-design.md"
-      ],
-      "shortSha": "f224d29",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/f224d297a75dae0d537071209d3a9249e28fe2b9"
-    },
-    {
-      "sha": "65c50b64861b2cd65e022d2032f4df07033c27f8",
-      "date": "2026-09-20",
-      "subject": "[FEAT] GROMO-1769 회관 기록(도서관) 통계 API 3종을 구현한다 (#847)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/bff-screens/low-level-design.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-records/README.md",
-        "docs/prd/fishcat/island-records/low-level-design.md",
-        "docs/prd/fishcat/island-records/policy.md",
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "65c50b6",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/65c50b64861b2cd65e022d2032f4df07033c27f8"
-    },
-    {
-      "sha": "e7f329b10838c00e58f4bebf76061d73888a9056",
-      "date": "2026-09-20",
-      "subject": "[FEAT] GROMO-1781 상점 조회·구매 API 를 데이터만 넣으면 동작하게 구현한다 (#846)",
-      "files": [
-        "docs/conventions/outbox-events.md",
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-shop/policy.md",
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "e7f329b",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/e7f329b10838c00e58f4bebf76061d73888a9056"
-    },
-    {
-      "sha": "c247e7108b1296a3f76c280553fa8779d221d753",
-      "date": "2026-09-19",
-      "subject": "[CHORE] GROMO-1897 missingFragments 키를 화면 계약에 정식으로 올린다 (#843)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/bff-screens/low-level-design.md",
-        "docs/prd/fishcat/bff-screens/policy.md",
-        "docs/prd/fishcat/decision-log.md"
-      ],
-      "shortSha": "c247e71",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/c247e7108b1296a3f76c280553fa8779d221d753"
-    },
-    {
-      "sha": "ddc4a9218ed0d9b080923eef1f1c6fa4362bc178",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1954 data-api 에서 realtime 으로 이벤트를 보내는 전송 계층을 HTTP·Kafka 이중으로 연결한다 (#842)",
-      "files": [
-        "docs/conventions/outbox-events.md",
-        "docs/prd/fishcat/decision-log.md",
-        "server/scripts/docker-compose.realtime.yml"
-      ],
-      "shortSha": "ddc4a92",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/ddc4a9218ed0d9b080923eef1f1c6fa4362bc178"
-    },
-    {
-      "sha": "59fce357e4ef86cef874c198d6d039b9e626b0e9",
-      "date": "2026-09-19",
-      "subject": "[REFACTOR] GROMO-1953 outbox 이벤트 봉투와 발신 어댑터를 규약에 맞게 통일한다 (#841)",
-      "files": [
-        "docs/conventions/outbox-events.md",
-        "docs/prd/fishcat/island-appearance/low-level-design.md",
-        "docs/prd/fishcat/island-playback/low-level-design.md"
-      ],
-      "shortSha": "59fce35",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/59fce357e4ef86cef874c198d6d039b9e626b0e9"
-    },
-    {
-      "sha": "6ebb6b26f0c5264835ba43f62bca1c2095e76fdd",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1952 탈퇴 파기에 퀘스트 작성자와 상점 결제자 연결을 포함한다 (#836)",
-      "files": [
-        "docs/prd/fishcat/account/low-level-design.md"
-      ],
-      "shortSha": "6ebb6b2",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/6ebb6b26f0c5264835ba43f62bca1c2095e76fdd"
-    },
-    {
-      "sha": "5c8bdb1292ceb40069e5f2257e1f61af5864e43b",
-      "date": "2026-09-19",
-      "subject": "[CHORE] GROMO-1798 위성 명령 발신 규약을 문서화한다 (#837)",
-      "files": [
-        "docs/conventions/backend-layering.md",
-        "docs/conventions/outbox-events.md",
-        "docs/prd/fishcat/server-separation/outbox.md"
-      ],
-      "shortSha": "5c8bdb1",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/5c8bdb1292ceb40069e5f2257e1f61af5864e43b"
-    },
-    {
-      "sha": "04999e80bc24b946c3b0e9dcfaa56591ae8a50f1",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1898 화면 집계 3차 — board·library·shop·playback 4종을 구현한다 (#835)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "04999e8",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/04999e80bc24b946c3b0e9dcfaa56591ae8a50f1"
-    },
-    {
-      "sha": "e5a344310aad073efc688e4682fcb6463adf3b08",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1897 home·focus 화면에 방송기 조각을 연결한다 (#829)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md"
-      ],
-      "shortSha": "e5a3443",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/e5a344310aad073efc688e4682fcb6463adf3b08"
-    },
-    {
-      "sha": "4ffd2aac8e320cfe672f895d0a1a2207651258a5",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1950 탈퇴 파기에 퀘스트·외양 테이블의 탈퇴자 연결을 포함한다 (#832)",
-      "files": [
-        "docs/prd/fishcat/account/low-level-design.md"
-      ],
-      "shortSha": "4ffd2aa",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/4ffd2aac8e320cfe672f895d0a1a2207651258a5"
-    },
-    {
-      "sha": "0e4f24a339b8d7af48d0ea8a8e2d11af538b6d46",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1937 다른 섬 방문자에게 주민 목록·게시판·퀘스트 읽기를 연다 (#834)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/bff-screens/low-level-design.md",
-        "docs/prd/fishcat/bff-screens/policy.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-board/policy.md",
-        "docs/prd/fishcat/island-management/low-level-design.md",
-        "docs/prd/fishcat/island-management/permissions.md",
-        "docs/prd/fishcat/island-membership/low-level-design.md",
-        "docs/prd/fishcat/island-quests/low-level-design.md"
-      ],
-      "shortSha": "0e4f24a",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/0e4f24a339b8d7af48d0ea8a8e2d11af538b6d46"
-    },
-    {
-      "sha": "41f6752cc34f8847ff2edcf61f815c7151f86bff",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1899 화면 집계 4차 — mailbox·friends 2종과 Realtime 조각 클라이언트를 구현한다 (#830)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "41f6752",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/41f6752cc34f8847ff2edcf61f815c7151f86bff"
-    },
-    {
-      "sha": "2d5b7bec592b1feff0d780fbb645eaec75606cbd",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1781 상점 테이블을 선구축한다 (#827)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/policy.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-shop/low-level-design.md",
-        "docs/prd/fishcat/island-shop/policy.md"
-      ],
-      "shortSha": "2d5b7be",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/2d5b7bec592b1feff0d780fbb645eaec75606cbd"
-    },
-    {
-      "sha": "92a55d3c8d47148714222472ada4630aafa9779e",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1779 공용 음악(방송기) 재생 상태 조회·변경 API 를 구현한다 (#825)",
-      "files": [
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "92a55d3",
-      "category": "전달·운영",
-      "href": "https://github.com/OneOrThree/phone/commit/92a55d3c8d47148714222472ada4630aafa9779e"
-    },
-    {
-      "sha": "5db84cda8bbe0476013333bdbf399e7a21ad2941",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1773 섬 퀘스트 API 5종을 구현한다 (#820)",
-      "files": [
-        "docs/conventions/backend-layering.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/island-quests/low-level-design.md",
-        "docs/prd/fishcat/island-quests/policy.md",
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "5db84cd",
-      "category": "아키텍처",
-      "href": "https://github.com/OneOrThree/phone/commit/5db84cda8bbe0476013333bdbf399e7a21ad2941"
-    },
-    {
-      "sha": "c1d13a35beb6e8430840752b69f32aac5f78626c",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1924 집중 세션 시작 게이트의 선행 조건을 해소하고 게이트를 연다 (#815)",
-      "files": [
-        "docs/prd/fishcat/api-platform/policy.md",
-        "docs/prd/fishcat/decision-log.md",
-        "docs/prd/fishcat/focus-rest-session/low-level-design.md",
-        "docs/prd/fishcat/focus-rest-session/policy.md",
-        "docs/prd/fishcat/focus-rest-session/prd.md"
-      ],
-      "shortSha": "c1d13a3",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/c1d13a35beb6e8430840752b69f32aac5f78626c"
-    },
-    {
-      "sha": "1d863755ec9f8a5ca8cd3da121c7502dd0c45134",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1897 home 화면에 휴식 중 주민을 싣는다 (#826)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/bff-screens/policy.md"
-      ],
-      "shortSha": "1d86375",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/1d863755ec9f8a5ca8cd3da121c7502dd0c45134"
-    },
-    {
-      "sha": "641be43c3795fdaa27fc2a7f787ca7f8b755315e",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1895 화면 조각의 빠진 재료 3종 — 가입 대기 목록·공동 가계부·주민별 누적 물고기 (#824)",
-      "files": [
-        "docs/prd/fishcat/bff-screens/implementation-business-api.md",
-        "docs/prd/fishcat/bff-screens/implementation-data-api.md",
-        "docs/prd/fishcat/bff-screens/planning-v1-mapping.md",
-        "docs/prd/fishcat/bff-screens/policy.md",
-        "docs/prd/fishcat/island-construction/low-level-design.md",
-        "docs/prd/fishcat/island-membership/low-level-design.md",
-        "docs/prd/fishcat/island-records/low-level-design.md"
-      ],
-      "shortSha": "641be43",
-      "category": "제품 설계",
-      "href": "https://github.com/OneOrThree/phone/commit/641be43c3795fdaa27fc2a7f787ca7f8b755315e"
-    },
-    {
-      "sha": "b0d574a0f02da2ef1e74b4eb19c204c4d3af5988",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1897 화면 집계 2차 — home·focus·town-hall 3종을 구현한다 (#823)",
-      "files": [
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "b0d574a",
-      "category": "전달·운영",
-      "href": "https://github.com/OneOrThree/phone/commit/b0d574a0f02da2ef1e74b4eb19c204c4d3af5988"
-    },
-    {
-      "sha": "e098029a1a1d9467abff10b910f1d244c103f21e",
-      "date": "2026-09-19",
-      "subject": "[FEAT] GROMO-1896 화면 집계 1차 — launch·raft·account·explore·visit 5종을 구현한다 (#822)",
-      "files": [
-        "server/scripts/nginx-satellites.include.conf.example"
-      ],
-      "shortSha": "e098029",
-      "category": "전달·운영",
-      "href": "https://github.com/OneOrThree/phone/commit/e098029a1a1d9467abff10b910f1d244c103f21e"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
-  "version": 3,
-  "sourceCommit": "af80af04241cefaa33b9f2a1e383548ecc9b10fa",
+  "version": 4,
+  "sourceCommit": "1281cbfc4559ba3bbe991c8acd529e66257cc5fc",
   "title": "Cattus · 로그 수집·보관·요청 추적",
-  "infraSourceCommit": "8522746eab28cb14020aff9e4aba312556909bcc",
+  "infraSourceCommit": "69edca4d5f9ef920a29cdba7f78dcca35e1be112",
   "nodes": [
     {
       "id": "jvm",
@@ -322,6 +322,55 @@
       ],
       "kind": "data",
       "stage": "DDL·SQL 준비됨 · Athena 적용 미확인",
+      "state": "code"
+    },
+    {
+      "id": "appErrors",
+      "x": 70,
+      "y": 2870,
+      "w": 450,
+      "h": 190,
+      "title": "모바일 앱 · 오류 SDK",
+      "lines": [
+        "Sentry SDK: JS 오류·네이티브 크래시",
+        "PostHog: JS 오류만 수집",
+        "구버전 Android OTA만 PostHog 네이티브"
+      ],
+      "kind": "external",
+      "stage": "@sentry/react-native · posthog-react-native",
+      "state": "code"
+    },
+    {
+      "id": "appBuild",
+      "x": 655,
+      "y": 2870,
+      "w": 450,
+      "h": 190,
+      "title": "운영 빌드 · Gradle·Xcode",
+      "lines": [
+        "JS 소스맵 업로드",
+        "Android mapping·네이티브 심볼",
+        "iOS dSYM",
+        "SENTRY_AUTH_TOKEN 있을 때만"
+      ],
+      "kind": "core",
+      "stage": "#1575 도입 · #1671 누락 보완",
+      "state": "code"
+    },
+    {
+      "id": "errorSaas",
+      "x": 1240,
+      "y": 2870,
+      "w": 450,
+      "h": 190,
+      "title": "Sentry · PostHog",
+      "lines": [
+        "Sentry: 오류·크래시 이벤트",
+        "올린 심볼로 스택 복원",
+        "PostHog: JS 오류 · 제품 이벤트와 함께"
+      ],
+      "kind": "external",
+      "stage": "외부 SaaS · 앱 서버 Agent와 무관",
       "state": "code"
     }
   ],
@@ -670,6 +719,58 @@
       "at": [
         1172,
         2250
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "appErrorSend",
+      "source": "appErrors",
+      "target": "errorSaas",
+      "points": [
+        [
+          295,
+          3060
+        ],
+        [
+          295,
+          3110
+        ],
+        [
+          1465,
+          3110
+        ],
+        [
+          1465,
+          3060
+        ]
+      ],
+      "label": "오류·크래시 전송",
+      "at": [
+        880,
+        3100
+      ],
+      "async_": false,
+      "state": "code"
+    },
+    {
+      "id": "symbolUpload",
+      "source": "appBuild",
+      "target": "errorSaas",
+      "points": [
+        [
+          1105,
+          2955
+        ],
+        [
+          1240,
+          2955
+        ]
+      ],
+      "label": "심볼",
+      "at": [
+        1172,
+        2945
       ],
       "async_": false,
       "state": "code"

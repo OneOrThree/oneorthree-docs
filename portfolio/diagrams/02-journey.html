@@ -16,17 +16,17 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <a href="/spec/use-cases" target="_top">근거 문서</a><p id="hint" aria-live="polite">상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.</p>
 </header><main><div id="viewport"><svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1220" viewBox="0 0 1760 1220" role="img" aria-labelledby="diagramTitle diagramDesc">
 <title id="diagramTitle">Cattus · 사용자 여정</title>
-<desc id="diagramDesc">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
+<desc id="diagramDesc">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#607583"/></marker></defs>
 <g font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif"><rect width="1760" height="1220" fill="#ffffff"/>
 <text x="60" y="58" font-size="32" fill="#172b3a" font-weight="700">Cattus · 사용자 여정</text>
-<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.03 · phone main af80af042 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
+<text x="60" y="92" font-size="17" fill="#4d5a66" font-weight="400">2026.11.18 · phone main 1281cbfc4 · 코드와 저장소 운영 기록 대조 · 새 운영 실측 아님</text>
 <rect x="40" y="140" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="174" font-size="19" fill="#334d61" font-weight="700">매일의 집중</text>
 <text x="64" y="201" font-size="16" fill="#4d5a66" font-weight="400">화면 타이머가 보상 정본을 대신하지 않는다.</text>
 <rect x="40" y="480" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="514" font-size="19" fill="#334d61" font-weight="700">공동 성장</text>
-<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">목표 선택은 차감 0. 착공할 때 잔액과 조건을 검사한다.</text>
+<text x="64" y="541" font-size="16" fill="#4d5a66" font-weight="400">목표 선택은 차감 0. 착공할 때 섬 통장 잔액과 조건을 검사한다.</text>
 <rect x="40" y="820" width="1680" height="310" rx="18" fill="#f8fafc" stroke="#dce4eb"/>
 <text x="64" y="854" font-size="19" fill="#334d61" font-weight="700">다음 방문으로 이어지는 활동</text>
 <text x="64" y="881" font-size="16" fill="#4d5a66" font-weight="400">단체 채팅·친구 편지·항해는 각각의 권한과 복구 경로를 따른다.</text>
@@ -57,9 +57,10 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <g data-cell-id="start">
 <rect x="655" y="230" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="260" font-size="21" fill="#172b3a" font-weight="700">02 · 집중하기</text>
-<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">낚시섬에서 집중 시작</text>
+<text x="675" y="289" font-size="16" fill="#4d5a66" font-weight="400">낚시섬에서 집중 · 모닥불에서 휴식</text>
 <text x="675" y="313" font-size="16" fill="#4d5a66" font-weight="400">집중 상태·응원·이동 표시</text>
-<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">필요하면 모닥불에서 휴식</text>
+<text x="675" y="337" font-size="16" fill="#4d5a66" font-weight="400">차단 없는 집중: 앱을 나가면 휴식</text>
+<text x="675" y="361" font-size="16" fill="#4d5a66" font-weight="400">15초 넘게 안 돌아오면 종료</text>
 <text x="675" y="405" font-size="14" fill="#3866a0" font-weight="700">서버의 현재 세션 기준</text>
 </g>
 <g data-cell-id="finish">
@@ -68,6 +69,7 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <text x="1260" y="289" font-size="16" fill="#4d5a66" font-weight="400">유효 집중 구간 정산</text>
 <text x="1260" y="313" font-size="16" fill="#4d5a66" font-weight="400">휴식 시간은 적립에서 제외</text>
 <text x="1260" y="337" font-size="16" fill="#4d5a66" font-weight="400">섬 통장과 기록 확인</text>
+<text x="1260" y="361" font-size="16" fill="#4d5a66" font-weight="400">세 번째 집중 뒤 OS 별점창 1회</text>
 <text x="1260" y="405" font-size="14" fill="#3866a0" font-weight="700">개인 물고기 지갑 없음</text>
 </g>
 <g data-cell-id="wallet">
@@ -82,8 +84,9 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <rect x="655" y="570" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="600" font-size="21" fill="#172b3a" font-weight="700">05 · 건설하기</text>
 <text x="675" y="629" font-size="16" fill="#4d5a66" font-weight="400">섬장이 다음 건물 목표 선택</text>
-<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">물고기로 착공 → 공사 중 → 완공</text>
-<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">동시 공사·선행 시설 조건 검사</text>
+<text x="675" y="653" font-size="16" fill="#4d5a66" font-weight="400">청사진: 현재 잔액·총 건설비·건설 후 잔액</text>
+<text x="675" y="677" font-size="16" fill="#4d5a66" font-weight="400">섬 통장 잔액으로 착공 → 공사 → 완공</text>
+<text x="675" y="701" font-size="16" fill="#4d5a66" font-weight="400">동시 공사·선행 시설 조건 검사</text>
 <text x="675" y="745" font-size="14" fill="#3866a0" font-weight="700">게스트 섬장도 가능</text>
 </g>
 <g data-cell-id="use">
@@ -105,9 +108,10 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <g data-cell-id="sail">
 <rect x="655" y="910" width="450" height="190" rx="12" fill="#edf4fc" stroke="#3866a0" stroke-width="1.4"/>
 <text x="675" y="940" font-size="21" fill="#172b3a" font-weight="700">항해하기</text>
-<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">뗏목에서 목적지 선택</text>
-<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">먼바다 집중·도착·하선</text>
-<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">섬 발견·가입으로 연결</text>
+<text x="675" y="969" font-size="16" fill="#4d5a66" font-weight="400">망원경·뗏목에서 목적지 선택</text>
+<text x="675" y="993" font-size="16" fill="#4d5a66" font-weight="400">목록 끝 무인도 · 항해 90분</text>
+<text x="675" y="1017" font-size="16" fill="#4d5a66" font-weight="400">먼바다 집중·도착·하선</text>
+<text x="675" y="1041" font-size="16" fill="#4d5a66" font-weight="400">섬 발견·가입으로 연결</text>
 <text x="675" y="1085" font-size="14" fill="#3866a0" font-weight="700">바다 세션과 이동 구분</text>
 </g>
 <g data-cell-id="return">
@@ -119,8 +123,8 @@ button[aria-pressed=true]{background:#edf4fc;border-color:#3866a0}#hint{margin:0
 <text x="1260" y="1085" font-size="14" fill="#3866a0" font-weight="700">연결 생존 ≠ 집중 정본</text>
 </g>
 </g></svg>
-</div><section id="text" hidden><article><h2>01 · 섬에 들어가기</h2><p>계정·고양이·닉네임 · 주민 자격과 현재 섬 확인 · 방문자는 구경 권한 사용</p><p>게스트로도 시작 가능</p><ul><li>시작 → 02 · 집중하기</li></ul></article><article><h2>02 · 집중하기</h2><p>낚시섬에서 집중 시작 · 집중 상태·응원·이동 표시 · 필요하면 모닥불에서 휴식</p><p>서버의 현재 세션 기준</p><ul><li>01 · 섬에 들어가기 → 시작</li><li>종료 → 03 · 마치고 확인하기</li></ul></article><article><h2>03 · 마치고 확인하기</h2><p>유효 집중 구간 정산 · 휴식 시간은 적립에서 제외 · 섬 통장과 기록 확인</p><p>개인 물고기 지갑 없음</p><ul><li>02 · 집중하기 → 종료</li></ul></article><article><h2>04 · 물고기 모으기</h2><p>집중·퀘스트 등 도메인별 적립 · 원장·멱등성은 서버가 판정 · 잔액과 기록의 날짜 축 구분</p><p>섬 통장 소유</p><ul><li>잔액 → 05 · 건설하기</li></ul></article><article><h2>05 · 건설하기</h2><p>섬장이 다음 건물 목표 선택 · 물고기로 착공 → 공사 중 → 완공 · 동시 공사·선행 시설 조건 검사</p><p>게스트 섬장도 가능</p><ul><li>04 · 물고기 모으기 → 잔액</li><li>완공 → 06 · 시설 이용하기</li></ul></article><article><h2>06 · 시설 이용하기</h2><p>도서관·음악·편지·순위·상점 · 활성 주민의 공동 구매 · 구매는 소셜 로그인 필요</p><p>상품 발행·가격은 별도 조건</p><ul><li>05 · 건설하기 → 완공</li></ul></article><article><h2>연락하기</h2><p>친구 요청·편지 발송: 소셜 필요 · 단체 채팅: 섬 주민 자격 · 차단·시설 조건은 기능별 판정</p><p>편지와 채팅은 다른 API</p><ul></ul></article><article><h2>항해하기</h2><p>뗏목에서 목적지 선택 · 먼바다 집중·도착·하선 · 섬 발견·가입으로 연결</p><p>바다 세션과 이동 구분</p><ul></ul></article><article><h2>다시 이어하기</h2><p>앱 복귀 시 서버 상태 조회 · 이동 재입장은 FullState 복구 · 이전 측정값과 현재 세션 구분</p><p>연결 생존 ≠ 집중 정본</p><ul></ul></article></section></main>
-<script type="application/json" id="graph">{"nodes": [{"id": "enter", "x": 70, "y": 230, "w": 450, "h": 190, "title": "01 · 섬에 들어가기", "lines": ["계정·고양이·닉네임", "주민 자격과 현재 섬 확인", "방문자는 구경 권한 사용"], "kind": "core", "stage": "게스트로도 시작 가능", "state": "code"}, {"id": "start", "x": 655, "y": 230, "w": 450, "h": 190, "title": "02 · 집중하기", "lines": ["낚시섬에서 집중 시작", "집중 상태·응원·이동 표시", "필요하면 모닥불에서 휴식"], "kind": "core", "stage": "서버의 현재 세션 기준", "state": "code"}, {"id": "finish", "x": 1240, "y": 230, "w": 450, "h": 190, "title": "03 · 마치고 확인하기", "lines": ["유효 집중 구간 정산", "휴식 시간은 적립에서 제외", "섬 통장과 기록 확인"], "kind": "core", "stage": "개인 물고기 지갑 없음", "state": "code"}, {"id": "wallet", "x": 70, "y": 570, "w": 450, "h": 190, "title": "04 · 물고기 모으기", "lines": ["집중·퀘스트 등 도메인별 적립", "원장·멱등성은 서버가 판정", "잔액과 기록의 날짜 축 구분"], "kind": "core", "stage": "섬 통장 소유", "state": "code"}, {"id": "build", "x": 655, "y": 570, "w": 450, "h": 190, "title": "05 · 건설하기", "lines": ["섬장이 다음 건물 목표 선택", "물고기로 착공 → 공사 중 → 완공", "동시 공사·선행 시설 조건 검사"], "kind": "core", "stage": "게스트 섬장도 가능", "state": "code"}, {"id": "use", "x": 1240, "y": 570, "w": 450, "h": 190, "title": "06 · 시설 이용하기", "lines": ["도서관·음악·편지·순위·상점", "활성 주민의 공동 구매", "구매는 소셜 로그인 필요"], "kind": "core", "stage": "상품 발행·가격은 별도 조건", "state": "code"}, {"id": "talk", "x": 70, "y": 910, "w": 450, "h": 190, "title": "연락하기", "lines": ["친구 요청·편지 발송: 소셜 필요", "단체 채팅: 섬 주민 자격", "차단·시설 조건은 기능별 판정"], "kind": "core", "stage": "편지와 채팅은 다른 API", "state": "code"}, {"id": "sail", "x": 655, "y": 910, "w": 450, "h": 190, "title": "항해하기", "lines": ["뗏목에서 목적지 선택", "먼바다 집중·도착·하선", "섬 발견·가입으로 연결"], "kind": "core", "stage": "바다 세션과 이동 구분", "state": "code"}, {"id": "return", "x": 1240, "y": 910, "w": 450, "h": 190, "title": "다시 이어하기", "lines": ["앱 복귀 시 서버 상태 조회", "이동 재입장은 FullState 복구", "이전 측정값과 현재 세션 구분"], "kind": "core", "stage": "연결 생존 ≠ 집중 정본", "state": "code"}], "edges": [{"id": "enterStart", "source": "enter", "target": "start", "points": [[520, 315], [655, 315]], "label": "시작", "at": [587, 305], "async_": false, "state": "code"}, {"id": "startFinish", "source": "start", "target": "finish", "points": [[1105, 315], [1240, 315]], "label": "종료", "at": [1172, 305], "async_": false, "state": "code"}, {"id": "walletBuild", "source": "wallet", "target": "build", "points": [[520, 655], [655, 655]], "label": "잔액", "at": [587, 645], "async_": false, "state": "code"}, {"id": "buildUse", "source": "build", "target": "use", "points": [[1105, 655], [1240, 655]], "label": "완공", "at": [1172, 645], "async_": false, "state": "code"}]}</script><script>
+</div><section id="text" hidden><article><h2>01 · 섬에 들어가기</h2><p>계정·고양이·닉네임 · 주민 자격과 현재 섬 확인 · 방문자는 구경 권한 사용</p><p>게스트로도 시작 가능</p><ul><li>시작 → 02 · 집중하기</li></ul></article><article><h2>02 · 집중하기</h2><p>낚시섬에서 집중 · 모닥불에서 휴식 · 집중 상태·응원·이동 표시 · 차단 없는 집중: 앱을 나가면 휴식 · 15초 넘게 안 돌아오면 종료</p><p>서버의 현재 세션 기준</p><ul><li>01 · 섬에 들어가기 → 시작</li><li>종료 → 03 · 마치고 확인하기</li></ul></article><article><h2>03 · 마치고 확인하기</h2><p>유효 집중 구간 정산 · 휴식 시간은 적립에서 제외 · 섬 통장과 기록 확인 · 세 번째 집중 뒤 OS 별점창 1회</p><p>개인 물고기 지갑 없음</p><ul><li>02 · 집중하기 → 종료</li></ul></article><article><h2>04 · 물고기 모으기</h2><p>집중·퀘스트 등 도메인별 적립 · 원장·멱등성은 서버가 판정 · 잔액과 기록의 날짜 축 구분</p><p>섬 통장 소유</p><ul><li>잔액 → 05 · 건설하기</li></ul></article><article><h2>05 · 건설하기</h2><p>섬장이 다음 건물 목표 선택 · 청사진: 현재 잔액·총 건설비·건설 후 잔액 · 섬 통장 잔액으로 착공 → 공사 → 완공 · 동시 공사·선행 시설 조건 검사</p><p>게스트 섬장도 가능</p><ul><li>04 · 물고기 모으기 → 잔액</li><li>완공 → 06 · 시설 이용하기</li></ul></article><article><h2>06 · 시설 이용하기</h2><p>도서관·음악·편지·순위·상점 · 활성 주민의 공동 구매 · 구매는 소셜 로그인 필요</p><p>상품 발행·가격은 별도 조건</p><ul><li>05 · 건설하기 → 완공</li></ul></article><article><h2>연락하기</h2><p>친구 요청·편지 발송: 소셜 필요 · 단체 채팅: 섬 주민 자격 · 차단·시설 조건은 기능별 판정</p><p>편지와 채팅은 다른 API</p><ul></ul></article><article><h2>항해하기</h2><p>망원경·뗏목에서 목적지 선택 · 목록 끝 무인도 · 항해 90분 · 먼바다 집중·도착·하선 · 섬 발견·가입으로 연결</p><p>바다 세션과 이동 구분</p><ul></ul></article><article><h2>다시 이어하기</h2><p>앱 복귀 시 서버 상태 조회 · 이동 재입장은 FullState 복구 · 이전 측정값과 현재 세션 구분</p><p>연결 생존 ≠ 집중 정본</p><ul></ul></article></section></main>
+<script type="application/json" id="graph">{"nodes": [{"id": "enter", "x": 70, "y": 230, "w": 450, "h": 190, "title": "01 · 섬에 들어가기", "lines": ["계정·고양이·닉네임", "주민 자격과 현재 섬 확인", "방문자는 구경 권한 사용"], "kind": "core", "stage": "게스트로도 시작 가능", "state": "code"}, {"id": "start", "x": 655, "y": 230, "w": 450, "h": 190, "title": "02 · 집중하기", "lines": ["낚시섬에서 집중 · 모닥불에서 휴식", "집중 상태·응원·이동 표시", "차단 없는 집중: 앱을 나가면 휴식", "15초 넘게 안 돌아오면 종료"], "kind": "core", "stage": "서버의 현재 세션 기준", "state": "code"}, {"id": "finish", "x": 1240, "y": 230, "w": 450, "h": 190, "title": "03 · 마치고 확인하기", "lines": ["유효 집중 구간 정산", "휴식 시간은 적립에서 제외", "섬 통장과 기록 확인", "세 번째 집중 뒤 OS 별점창 1회"], "kind": "core", "stage": "개인 물고기 지갑 없음", "state": "code"}, {"id": "wallet", "x": 70, "y": 570, "w": 450, "h": 190, "title": "04 · 물고기 모으기", "lines": ["집중·퀘스트 등 도메인별 적립", "원장·멱등성은 서버가 판정", "잔액과 기록의 날짜 축 구분"], "kind": "core", "stage": "섬 통장 소유", "state": "code"}, {"id": "build", "x": 655, "y": 570, "w": 450, "h": 190, "title": "05 · 건설하기", "lines": ["섬장이 다음 건물 목표 선택", "청사진: 현재 잔액·총 건설비·건설 후 잔액", "섬 통장 잔액으로 착공 → 공사 → 완공", "동시 공사·선행 시설 조건 검사"], "kind": "core", "stage": "게스트 섬장도 가능", "state": "code"}, {"id": "use", "x": 1240, "y": 570, "w": 450, "h": 190, "title": "06 · 시설 이용하기", "lines": ["도서관·음악·편지·순위·상점", "활성 주민의 공동 구매", "구매는 소셜 로그인 필요"], "kind": "core", "stage": "상품 발행·가격은 별도 조건", "state": "code"}, {"id": "talk", "x": 70, "y": 910, "w": 450, "h": 190, "title": "연락하기", "lines": ["친구 요청·편지 발송: 소셜 필요", "단체 채팅: 섬 주민 자격", "차단·시설 조건은 기능별 판정"], "kind": "core", "stage": "편지와 채팅은 다른 API", "state": "code"}, {"id": "sail", "x": 655, "y": 910, "w": 450, "h": 190, "title": "항해하기", "lines": ["망원경·뗏목에서 목적지 선택", "목록 끝 무인도 · 항해 90분", "먼바다 집중·도착·하선", "섬 발견·가입으로 연결"], "kind": "core", "stage": "바다 세션과 이동 구분", "state": "code"}, {"id": "return", "x": 1240, "y": 910, "w": 450, "h": 190, "title": "다시 이어하기", "lines": ["앱 복귀 시 서버 상태 조회", "이동 재입장은 FullState 복구", "이전 측정값과 현재 세션 구분"], "kind": "core", "stage": "연결 생존 ≠ 집중 정본", "state": "code"}], "edges": [{"id": "enterStart", "source": "enter", "target": "start", "points": [[520, 315], [655, 315]], "label": "시작", "at": [587, 305], "async_": false, "state": "code"}, {"id": "startFinish", "source": "start", "target": "finish", "points": [[1105, 315], [1240, 315]], "label": "종료", "at": [1172, 305], "async_": false, "state": "code"}, {"id": "walletBuild", "source": "wallet", "target": "build", "points": [[520, 655], [655, 655]], "label": "잔액", "at": [587, 645], "async_": false, "state": "code"}, {"id": "buildUse", "source": "build", "target": "use", "points": [[1105, 655], [1240, 655]], "label": "완공", "at": [1172, 645], "async_": false, "state": "code"}]}</script><script>
 const graph=JSON.parse(document.getElementById('graph').textContent),svg=document.querySelector('svg'),hint=document.getElementById('hint');let zoom=1;
 function reset(){svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.remove('dim'));hint.textContent='상자를 선택하면 연결을 강조합니다. Esc로 해제 · 실선은 main 구현이며 운영 실측을 뜻하지 않습니다.';}
 function select(id){const ids=new Set([id]);graph.edges.filter(e=>e.source===id||e.target===id).forEach(e=>{ids.add(e.id);ids.add(e.source);ids.add(e.target)});svg.querySelectorAll('[data-cell-id]').forEach(el=>el.classList.toggle('dim',!ids.has(el.dataset.cellId)));const n=graph.nodes.find(n=>n.id===id);hint.textContent=n.title+' · '+n.lines.join(' · ')+' · '+n.stage;}

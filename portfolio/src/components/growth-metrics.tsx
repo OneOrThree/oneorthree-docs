@@ -4,7 +4,7 @@ import growthData from "@/data/growth.json";
  * GA4 지표 블록 — 그로스 섹션 인덱스 상단.
  *
  * 데이터는 손으로 만들지 않는다. 수집 결과가 growth.json에 들어오면 기준일과 함께 표시한다.
- * 2026-11-03 저장소 스냅샷은 비어 있으며 자동 수집의 현재 가동 여부는 확인되지 않았다.
+ * 2026-11-18 기준 growth.json은 비어 있으며(2.0 수치는 cattus-2-0-snapshot-2026-11.mdx) 자동 수집의 현재 가동 여부는 확인되지 않았다.
  *
  * 차트는 외부 라이브러리 없이 인라인 SVG다 — ContributionDonuts와 같은 규칙.
  */
@@ -49,7 +49,7 @@ export function GrowthMetrics() {
   if (!g.asOf || !g.summary) {
     return (
       <section className="mb-12 rounded-card border border-dashed border-border px-5 py-8 text-center text-sm text-muted-foreground">
-        최신 GA4 스냅샷이 없습니다. 아래 분석은 각 문서에 적힌 기간의 기록입니다.
+        사이트에 연결된 GA4 지표는 없습니다. 2.0 수치는 2026년 11월 스냅샷 문서에 있고, 각 분석은 문서에 적힌 기간의 기록입니다.
         {" "}<a href="/growth/current-data-scope" className="text-primary underline">자료의 범위 확인하기</a>
       </section>
     );
